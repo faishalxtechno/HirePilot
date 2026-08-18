@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../ui/Button';
-import { Sparkles, Menu, X, ArrowRight, User as UserIcon, LayoutDashboard, LogOut } from 'lucide-react';
+import { Sparkles, Menu, X, ArrowRight, User as UserIcon, LayoutDashboard, LogOut, Mail } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { user, profile, signOut } = useAuth();
@@ -29,7 +29,7 @@ export const Navbar: React.FC = () => {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600 dark:text-slate-300">
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
           <a href="/#features" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
             Features
           </a>
@@ -37,13 +37,16 @@ export const Navbar: React.FC = () => {
             How It Works
           </a>
           <a href="/#interview-types" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
-            Interview Types
+            Interview Catalog
           </a>
           <a href="/#pricing" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
             Pricing
           </a>
-          <a href="/#faq" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
-            FAQ
+          <a href="/#about" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+            About
+          </a>
+          <a href="/#contact" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+            Contact
           </a>
         </nav>
 
@@ -53,7 +56,7 @@ export const Navbar: React.FC = () => {
             <div className="relative">
               <button
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-2.5 p-1.5 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 transition-colors"
+                className="flex items-center gap-2.5 p-1.5 pr-3 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
                 <div className="w-7 h-7 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-semibold overflow-hidden">
                   {profile?.avatar_url ? (
@@ -69,13 +72,13 @@ export const Navbar: React.FC = () => {
 
               {userDropdownOpen && (
                 <div
-                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xl py-1.5 z-50 animate-slide-up"
+                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl py-1.5 z-50 animate-modal-in"
                   onMouseLeave={() => setUserDropdownOpen(false)}
                 >
                   <Link
                     to="/dashboard"
                     onClick={() => setUserDropdownOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                    className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                   >
                     <LayoutDashboard className="w-4 h-4 text-brand-600" />
                     Dashboard
@@ -83,7 +86,7 @@ export const Navbar: React.FC = () => {
                   <Link
                     to="/profile"
                     onClick={() => setUserDropdownOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                    className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                   >
                     <UserIcon className="w-4 h-4 text-slate-500" />
                     Profile & Settings
@@ -95,7 +98,7 @@ export const Navbar: React.FC = () => {
                       signOut();
                       navigate('/');
                     }}
-                    className="w-full flex items-center gap-2 px-4 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                    className="w-full flex items-center gap-2 px-4 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors text-left"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout
@@ -122,7 +125,8 @@ export const Navbar: React.FC = () => {
         {/* Mobile Menu Trigger */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -130,22 +134,25 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-2 pb-6 space-y-3">
-          <nav className="flex flex-col gap-2 font-medium text-sm text-slate-700 dark:text-slate-300">
-            <a href="/#features" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50">
+        <div className="md:hidden border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 pt-3 pb-6 space-y-3 animate-slide-up">
+          <nav className="flex flex-col gap-1 font-medium text-sm text-slate-700 dark:text-slate-300">
+            <a href="/#features" onClick={() => setMobileMenuOpen(false)} className="py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
               Features
             </a>
-            <a href="/#how-it-works" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50">
+            <a href="/#how-it-works" onClick={() => setMobileMenuOpen(false)} className="py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
               How It Works
             </a>
-            <a href="/#interview-types" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50">
-              Interview Types
+            <a href="/#interview-types" onClick={() => setMobileMenuOpen(false)} className="py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
+              Interview Catalog
             </a>
-            <a href="/#pricing" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50">
+            <a href="/#pricing" onClick={() => setMobileMenuOpen(false)} className="py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
               Pricing
             </a>
-            <a href="/#faq" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50">
-              FAQ
+            <a href="/#about" onClick={() => setMobileMenuOpen(false)} className="py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
+              About
+            </a>
+            <a href="/#contact" onClick={() => setMobileMenuOpen(false)} className="py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
+              Contact
             </a>
           </nav>
 

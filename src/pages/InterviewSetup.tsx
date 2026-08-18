@@ -66,9 +66,9 @@ const INTERVIEW_TYPES = [
 ];
 
 const DIFFICULTIES: Array<{ id: DifficultyLevel; title: string; desc: string; color: string }> = [
-  { id: 'easy', title: 'Easy', desc: 'Fundamentals, basic syntax, and definitions', color: 'text-emerald-600' },
-  { id: 'medium', title: 'Medium', desc: 'Real-world scenarios, architectural trade-offs', color: 'text-amber-600' },
-  { id: 'hard', title: 'Hard', desc: 'Complex edge cases, distributed scaling, nuances', color: 'text-rose-600' },
+  { id: 'easy', title: 'Easy', desc: 'Fundamentals, basic syntax, and definitions', color: 'text-emerald-600 dark:text-emerald-400' },
+  { id: 'medium', title: 'Medium', desc: 'Real-world scenarios, architectural trade-offs', color: 'text-amber-600 dark:text-amber-400' },
+  { id: 'hard', title: 'Hard', desc: 'Complex edge cases, distributed scaling, nuances', color: 'text-rose-600 dark:text-rose-400' },
 ];
 
 const QUESTION_COUNTS = [5, 10, 15];
@@ -190,10 +190,10 @@ export const InterviewSetup: React.FC = () => {
                   key={role}
                   type="button"
                   onClick={() => setSelectedRole(role)}
-                  className={`p-3 rounded-xl border text-left text-xs font-semibold transition-all duration-150 flex items-center justify-between ${
+                  className={`p-3 rounded-xl border text-left text-xs font-semibold transition-all duration-200 flex items-center justify-between cursor-pointer ${
                     isSelected
-                      ? 'border-brand-600 bg-brand-50/80 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 ring-2 ring-brand-500/20'
-                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'
+                      ? 'border-brand-600 bg-brand-50/80 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 ring-2 ring-brand-500/20 shadow-xs'
+                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 hover:-translate-y-0.5'
                   }`}
                 >
                   <span className="truncate">{role}</span>
@@ -236,14 +236,14 @@ export const InterviewSetup: React.FC = () => {
                   key={type.id}
                   type="button"
                   onClick={() => setSelectedType(type.id as InterviewType)}
-                  className={`p-4 rounded-xl border text-left transition-all duration-150 flex flex-col justify-between space-y-3 ${
+                  className={`p-4 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between space-y-3 cursor-pointer ${
                     isSelected
-                      ? 'border-brand-600 bg-brand-50/80 dark:bg-brand-950/60 ring-2 ring-brand-500/20'
-                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300'
+                      ? 'border-brand-600 bg-brand-50/80 dark:bg-brand-950/60 ring-2 ring-brand-500/20 shadow-xs'
+                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 hover:-translate-y-0.5'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isSelected ? 'bg-brand-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isSelected ? 'bg-brand-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'}`}>
                       <Icon className="w-4 h-4" />
                     </div>
                     {isSelected && <Check className="w-4 h-4 text-brand-600" />}
@@ -279,10 +279,10 @@ export const InterviewSetup: React.FC = () => {
                     key={diff.id}
                     type="button"
                     onClick={() => setSelectedDifficulty(diff.id)}
-                    className={`w-full p-3 rounded-xl border text-left text-xs transition-all duration-150 flex items-center justify-between ${
+                    className={`w-full p-3.5 rounded-xl border text-left text-xs transition-all duration-200 flex items-center justify-between cursor-pointer ${
                       isSelected
-                        ? 'border-brand-600 bg-brand-50/80 dark:bg-brand-950/60 ring-2 ring-brand-500/20'
-                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300'
+                        ? 'border-brand-600 bg-brand-50/80 dark:bg-brand-950/60 ring-2 ring-brand-500/20 shadow-xs'
+                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 hover:-translate-y-0.5'
                     }`}
                   >
                     <div>
@@ -315,10 +315,10 @@ export const InterviewSetup: React.FC = () => {
                     key={count}
                     type="button"
                     onClick={() => setTotalQuestions(count)}
-                    className={`p-4 rounded-xl border text-center font-mono font-bold transition-all duration-150 ${
+                    className={`p-4 rounded-xl border text-center font-mono font-bold transition-all duration-200 cursor-pointer ${
                       isSelected
-                        ? 'border-brand-600 bg-brand-600 text-white shadow-sm ring-2 ring-brand-500/30'
-                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:border-slate-300'
+                        ? 'border-brand-600 bg-brand-600 text-white shadow-md shadow-brand-500/25 ring-2 ring-brand-500/30'
+                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:border-slate-300 hover:-translate-y-0.5'
                     }`}
                   >
                     <span className="text-xl block">{count}</span>

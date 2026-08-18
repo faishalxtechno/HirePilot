@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { cn } from '../../lib/utils';
 import { X } from 'lucide-react';
 
@@ -19,23 +19,51 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   maxWidth = 'md',
 }) => {
+  const [mounted, setMounted] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMounted(true);
+      setIsClosing(false);
+      document.body.style.overflow = 'hidden';
+    } else if (mounted) {
+      setIsClosing(true);
+      const timer = setTimeout(() => {
+        setMounted(false);
+        setIsClosing(false);
+        document.body.style.overflow = 'unset';
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape' && isOpen && !isClosing) {
+        handleDismiss();
+      }
     };
 
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
+    if (mounted) {
       window.addEventListener('keydown', handleEscape);
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [mounted, isOpen, isClosing]);
 
-  if (!isOpen) return null;
+  const handleDismiss = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+      setIsClosing(false);
+    }, 200);
+  };
+
+  if (!mounted) return null;
 
   const maxWidths = {
     sm: 'max-w-sm',
@@ -45,25 +73,46 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={title ? 'modal-title' : undefined}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+    >
+      {/* Backdrop */}
       <div
         className={cn(
-          'relative w-full bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 animate-slide-up',
-          maxWidths[maxWidth]
+          'fixed inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity duration-200',
+          isClosing ? 'opacity-0' : 'opacity-100 animate-fade-in'
+        )}
+        onClick={handleDismiss}
+      />
+
+      {/* Modal Dialog Card */}
+      <div
+        className={cn(
+          'relative w-full bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 transition-all duration-200',
+          maxWidths[maxWidth],
+          isClosing ? 'animate-modal-out' : 'animate-modal-in'
         )}
       >
-        <div className="flex items-center justify-between pb-3">
+        <div className="flex items-start justify-between pb-3 gap-3">
           <div>
-            {title && <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>}
-            {description && <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{description}</p>}
+            {title && (
+              <h3 id="modal-title" className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+                {title}
+              </h3>
+            )}
+            {description && (
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                {description}
+              </p>
+            )}
           </div>
           <button
-            onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            onClick={handleDismiss}
+            aria-label="Close modal"
+            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
           >
             <X className="w-5 h-5" />
           </button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { cn } from '../../lib/utils';
 import {
@@ -34,18 +34,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-64 h-full flex flex-col justify-between border-r border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-5 select-none">
+    <aside className="w-64 h-full flex flex-col justify-between border-r border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-5 select-none transition-colors">
       {/* Top Brand & Navigation */}
       <div className="space-y-6">
         {/* Brand */}
-        <div className="px-3 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-sm shadow-brand-500/20">
+        <Link to="/" className="px-3 flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-sm shadow-brand-500/20 group-hover:scale-105 transition-transform">
             <Sparkles className="w-4 h-4" />
           </div>
           <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight">
             Hire<span className="text-brand-600">Pilot</span>
           </span>
-        </div>
+        </Link>
 
         {/* Links */}
         <nav className="space-y-1">
@@ -56,10 +56,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={onCloseMobile}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
+                  'relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 font-semibold shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 font-semibold shadow-xs before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-brand-600 before:rounded-r-full'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white'
                 )
               }
             >
@@ -73,7 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Bottom Profile, Quota & Logout */}
       <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
         {/* Monthly Quota Indicator */}
-        <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60 space-y-2">
+        <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60 space-y-2">
           <div className="flex items-center justify-between text-xs">
             <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
@@ -85,12 +85,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
           <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
             <div
-              className="h-full bg-brand-500 rounded-full transition-all duration-300"
-              style={{ width: `${(monthlyRemaining / monthlyMax) * 100}%` }}
+              className="h-full bg-gradient-to-r from-brand-500 to-indigo-500 rounded-full transition-all duration-500"
+              style={{ width: `${Math.min(100, Math.max(0, (monthlyRemaining / monthlyMax) * 100))}%` }}
             />
           </div>
           <p className="text-[11px] text-slate-500 dark:text-slate-400">
-            {monthlyRemaining === 0 ? 'Limit reached this month' : `${monthlyRemaining} free interviews left this month`}
+            {monthlyRemaining === 0 ? 'Monthly limit reached' : `${monthlyRemaining} free mock sessions left this month`}
           </p>
         </div>
 

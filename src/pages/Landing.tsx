@@ -5,6 +5,7 @@ import { Footer } from '../components/layout/Footer';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
+import { useScrollAnimationGroup } from '../lib/useScrollAnimation';
 import {
   Sparkles,
   ArrowRight,
@@ -21,12 +22,19 @@ import {
   Binary,
   Layers,
   ChevronDown,
-  ShieldCheck,
   Play,
+  Mail,
+  Send,
+  UserCheck,
+  Shield,
+  Briefcase,
+  Compass,
+  FileText,
 } from 'lucide-react';
 
 export const Landing: React.FC = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const containerRef = useScrollAnimationGroup<HTMLDivElement>({ threshold: 0.08 });
 
   const features = [
     {
@@ -147,20 +155,23 @@ export const Landing: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white selection:bg-brand-500 selection:text-white">
+    <div ref={containerRef} className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white selection:bg-brand-500 selection:text-white">
       <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-brand-500/10 dark:bg-brand-500/15 rounded-full blur-3xl pointer-events-none" />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-semibold shadow-xs">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-semibold shadow-xs animate-fade-in">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>The Next-Gen AI Mock Interview Platform</span>
+            <span>AI-Powered Career & Mock Interview Platform</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight max-w-4xl mx-auto leading-[1.15]">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight max-w-4xl mx-auto leading-[1.15] animate-fade-in-up">
             Practice Smarter.{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400">
               Interview Better.
@@ -169,12 +180,12 @@ export const Landing: React.FC = () => {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Practice realistic technical and HR interviews with an AI interviewer that evaluates your answers in real time and helps you improve.
+          <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up stagger-1">
+            HirePilot is designed to help students and job seekers discover opportunities, improve resumes, prepare for interviews, and manage applications with instant Gemini AI feedback.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 animate-fade-in-up stagger-2">
             <Link to="/signup" className="w-full sm:w-auto">
               <Button
                 variant="primary"
@@ -193,8 +204,8 @@ export const Landing: React.FC = () => {
           </div>
 
           {/* Hero Interactive UI Preview */}
-          <div className="pt-10 max-w-4xl mx-auto">
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden text-left">
+          <div className="pt-10 max-w-4xl mx-auto reveal-init stagger-3">
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden text-left transition-all duration-300 hover:shadow-glow">
               {/* Window Header */}
               <div className="bg-slate-100 dark:bg-slate-850 px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -256,7 +267,7 @@ export const Landing: React.FC = () => {
       {/* Features Section */}
       <section id="features" className="py-20 bg-white dark:bg-slate-900/40 border-y border-slate-200/80 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
             <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
               Core Capabilities
             </h2>
@@ -269,8 +280,12 @@ export const Landing: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f) => (
-              <Card key={f.title} className="p-6 space-y-4" hoverable>
+            {features.map((f, idx) => (
+              <Card
+                key={f.title}
+                className={`p-6 space-y-4 reveal-init stagger-${(idx % 3) + 1}`}
+                hoverable
+              >
                 <div className="flex items-center justify-between">
                   <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center">
                     <f.icon className="w-5 h-5" />
@@ -291,21 +306,21 @@ export const Landing: React.FC = () => {
 
       {/* How It Works Section */}
       <section id="how-it-works" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="text-center space-y-3 max-w-2xl mx-auto">
+        <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
           <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
             Simple 4-Step Process
           </h2>
           <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
             How HirePilot Works
           </h3>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             From setup to complete performance report in four streamlined steps.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {steps.map((s, idx) => (
-            <Card key={s.step} className="p-6 space-y-3 relative overflow-hidden">
+            <Card key={s.step} className={`p-6 space-y-3 relative overflow-hidden reveal-init stagger-${idx + 1}`} hoverable>
               <div className="font-mono text-3xl font-black text-brand-600/30 dark:text-brand-400/20">
                 {s.step}
               </div>
@@ -319,21 +334,21 @@ export const Landing: React.FC = () => {
       {/* Interview Types Section */}
       <section id="interview-types" className="py-20 bg-slate-100/60 dark:bg-slate-900/60 border-y border-slate-200/80 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
             <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
               Interview Catalog
             </h2>
             <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
               Specialized Interview Modes
             </h3>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               Select the exact interview style you want to practice for your upcoming rounds.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {interviewTypes.map((t) => (
-              <Card key={t.type} className="p-5 flex flex-col justify-between space-y-4" hoverable>
+            {interviewTypes.map((t, idx) => (
+              <Card key={t.type} className={`p-5 flex flex-col justify-between space-y-4 reveal-init stagger-${idx + 1}`} hoverable>
                 <div className="space-y-3">
                   <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-brand-600 flex items-center justify-center">
                     <t.icon className="w-5 h-5" />
@@ -358,20 +373,20 @@ export const Landing: React.FC = () => {
 
       {/* Pricing / Free Tier Limits Section */}
       <section id="pricing" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="text-center space-y-3 max-w-2xl mx-auto">
+        <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
           <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
             Pricing & Quota
           </h2>
           <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
             Free forever for early career candidates
           </h3>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             Transparent usage limits designed to keep the platform free for students and job seekers.
           </p>
         </div>
 
-        <div className="max-w-lg mx-auto">
-          <Card className="p-8 border-2 border-brand-500/80 dark:border-brand-500 shadow-xl space-y-6 relative">
+        <div className="max-w-lg mx-auto reveal-init">
+          <Card className="p-8 border-2 border-brand-500/80 dark:border-brand-500 shadow-xl space-y-6 relative" hoverable>
             <div className="absolute -top-3 right-6">
               <Badge variant="brand" size="md">
                 Standard Free Tier
@@ -419,10 +434,152 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
+      {/* ABOUT / FOUNDER SECTION */}
+      <section id="about" className="py-20 bg-white dark:bg-slate-900/50 border-t border-slate-200/80 dark:border-slate-800">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
+            <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+              About The Platform
+            </h2>
+            <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+              Empowering Job Seekers & Students
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Built to level the playing field with intelligent mock preparation.
+            </p>
+          </div>
+
+          <Card className="p-8 sm:p-10 border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-50/70 via-white to-brand-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-slate-850 shadow-lg reveal-init">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+              {/* Mission Statement */}
+              <div className="md:col-span-2 space-y-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200/80 dark:border-brand-900/60 text-brand-700 dark:text-brand-300 text-xs font-semibold">
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>Our Mission</span>
+                </div>
+                <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+                  HirePilot is an AI-powered job search and career assistance platform designed to help students and job seekers discover opportunities, improve their resumes, prepare for interviews, and manage their applications.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <div className="p-3.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 flex items-center gap-3">
+                    <Briefcase className="w-4 h-4 text-brand-600 shrink-0" />
+                    <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Opportunity Discovery</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 flex items-center gap-3">
+                    <FileText className="w-4 h-4 text-indigo-600 shrink-0" />
+                    <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Resume & Answer Refinement</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Founder Profile Card */}
+              <div className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 shadow-sm text-center space-y-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-indigo-600 text-white font-black text-xl flex items-center justify-center mx-auto shadow-md shadow-brand-500/25">
+                  FN
+                </div>
+                <div>
+                  <span className="text-[11px] text-brand-600 dark:text-brand-400 font-bold uppercase tracking-wider block">
+                    Founder & Developer
+                  </span>
+                  <h4 className="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">
+                    Mr. Faishal Naushad
+                  </h4>
+                </div>
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-700">
+                  <a
+                    href="mailto:connectwithfaishal@gmail.com"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline break-all"
+                  >
+                    <Mail className="w-3.5 h-3.5 shrink-0" />
+                    <span>connectwithfaishal@gmail.com</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* CONTACT SECTION */}
+      <section id="contact" className="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
+          <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+            Get In Touch
+          </h2>
+          <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            Official Contact
+          </h3>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Reach out directly for platform inquiries, support, partnerships, or developer feedback.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-init">
+          {/* Direct Email Card */}
+          <Card className="p-6 space-y-4 md:col-span-2" hoverable>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 flex items-center justify-center">
+                <Mail className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-base font-bold text-slate-900 dark:text-white">Email the Founder</h4>
+                <p className="text-xs text-slate-500">Direct channel for all inquiries and support</p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <span className="text-[11px] text-slate-400 uppercase font-semibold">Official Contact Email</span>
+                <p className="text-sm font-bold text-slate-900 dark:text-white font-mono mt-0.5">
+                  connectwithfaishal@gmail.com
+                </p>
+              </div>
+              <a
+                href="mailto:connectwithfaishal@gmail.com?subject=HirePilot%20Inquiry"
+                className="w-full sm:w-auto"
+              >
+                <Button variant="primary" size="sm" className="w-full" leftIcon={<Send className="w-3.5 h-3.5" />}>
+                  Send Email
+                </Button>
+              </a>
+            </div>
+
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Whether you have feedback on AI interview question quality, need help navigating the dashboard, or want to suggest new features for job preparation, your emails go straight to the developer.
+            </p>
+          </Card>
+
+          {/* Quick Info Card */}
+          <Card className="p-6 space-y-4 flex flex-col justify-between" hoverable>
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
+                <UserCheck className="w-5 h-5" />
+              </div>
+              <h4 className="text-base font-bold text-slate-900 dark:text-white">Platform Leadership</h4>
+              <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                <p><strong>Founder & Developer:</strong> Mr. Faishal Naushad</p>
+                <p><strong>Platform:</strong> HirePilot AI Mock Interviews</p>
+                <p><strong>Support:</strong> 100% Free Community Tier</p>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
+              <a
+                href="mailto:connectwithfaishal@gmail.com"
+                className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline inline-flex items-center gap-1"
+              >
+                <span>Write to Faishal Naushad</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </Card>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section id="faq" className="py-20 bg-slate-50 dark:bg-slate-900/40 border-t border-slate-200/80 dark:border-slate-800">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="text-center space-y-3">
+          <div className="text-center space-y-3 reveal-init">
             <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
               Got Questions?
             </h2>
@@ -431,7 +588,7 @@ export const Landing: React.FC = () => {
             </h3>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3 reveal-init">
             {faqs.map((faq, idx) => (
               <Card
                 key={idx}
@@ -449,7 +606,7 @@ export const Landing: React.FC = () => {
                   />
                 </div>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 pt-0 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3">
+                  <div className="px-5 pb-5 pt-0 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3 animate-fade-in">
                     {faq.a}
                   </div>
                 )}
@@ -461,7 +618,7 @@ export const Landing: React.FC = () => {
 
       {/* CTA Strip */}
       <section className="py-16 bg-gradient-to-r from-brand-600 to-indigo-700 text-white text-center">
-        <div className="max-w-4xl mx-auto px-4 space-y-6">
+        <div className="max-w-4xl mx-auto px-4 space-y-6 reveal-init">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
             Ready to ace your next technical or HR interview?
           </h2>
