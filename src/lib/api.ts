@@ -11,7 +11,7 @@ import {
   DifficultyLevel,
 } from '../types';
 
-const WORKER_URL = import.meta.env.VITE_WORKER_API_URL || '/api';
+const WORKER_URL = 'https://hirepilot-api.hirepilotapp.workers.dev/api';
 
 async function getAuthHeader(): Promise<HeadersInit> {
   const { data: { session } } = await supabase.auth.getSession();
