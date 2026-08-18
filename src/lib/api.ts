@@ -278,9 +278,14 @@ function fallbackCreateInterview(payload: CreateInterviewPayload): { interview: 
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
+
   const monthlyUsed = interviews.filter(i => {
     const d = new Date(i.started_at);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    return (
+      i.status === 'completed' &&
+      d.getMonth() === currentMonth &&
+      d.getFullYear() === currentYear
+    );
   }).length;
 
   if (monthlyUsed >= 3) {
@@ -514,10 +519,14 @@ function fallbackGetDashboardData(): DashboardData {
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
   const monthlyUsed = interviews.filter(i => {
-    const d = new Date(i.started_at);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-  }).length;
+  const d = new Date(i.started_at);
 
+  return (
+    i.status === 'completed' &&
+    d.getMonth() === currentMonth &&
+    d.getFullYear() === currentYear
+  );
+}).length;
   return {
     stats: {
       interviewsCompleted: completed.length,
