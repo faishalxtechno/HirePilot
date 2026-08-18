@@ -13,7 +13,6 @@ export async function checkMonthlyInterviewQuota(supabase: any, userId: string):
     .from('interviews')
     .select('id', { count: 'exact', head: true })
     .eq('user_id', userId)
-    .eq('status', 'completed')
     .gte('started_at', startOfMonth);
 
   if (error) {
