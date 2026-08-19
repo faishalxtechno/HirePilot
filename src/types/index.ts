@@ -80,13 +80,16 @@ export interface InterviewReport {
   user_id: string;
   overall_score: number;
   technical_score: number;
-  problem_solving_score: number;
+  problem_solving_score?: number;
   communication_score: number;
-  answer_quality_score: number;
+  confidence_score?: number;
+  answer_quality_score?: number;
   strengths: string[];
   weaknesses: string[];
-  recommendations: string[];
+  recommendations?: string[];
   ai_summary: string;
+  certificate_id?: string;
+  result_id?: string;
   created_at?: string;
 }
 

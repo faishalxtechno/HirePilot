@@ -23,7 +23,7 @@ export const Footer: React.FC = () => {
             <div className="pt-1">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-medium border border-slate-200/60 dark:border-slate-700">
                 <Code2 className="w-3.5 h-3.5 text-brand-600" />
-                <span>Founded & Developed by <strong>Mr. Faishal Naushad</strong></span>
+                <span>Founder — <strong>Faishal Naushad</strong></span>
               </div>
             </div>
           </div>
@@ -127,7 +127,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Credits & Copyright */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
-          <p>© {new Date().getFullYear()} HirePilot. Founded & Developed by Mr. Faishal Naushad.</p>
+          <p>© {new Date().getFullYear()} HirePilot. Founder — Faishal Naushad.</p>
           <div className="flex items-center gap-2 text-[11px]">
             <span>Official Email:</span>
             <a

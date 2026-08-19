@@ -97,8 +97,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* User Profile Card */}
         <div className="flex items-center justify-between px-2 pt-1">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-700 dark:text-slate-200 shrink-0">
-              {profile?.name?.charAt(0).toUpperCase() || 'U'}
+            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-700 dark:text-slate-200 shrink-0 overflow-hidden">
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover" />
+              ) : (
+                profile?.name?.charAt(0).toUpperCase() || 'U'
+              )}
             </div>
             <div className="min-w-0">
               <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">

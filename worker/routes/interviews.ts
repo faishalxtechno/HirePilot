@@ -389,6 +389,10 @@ interviewRouter.post('/:id/complete', async (c) => {
     items: sessionItems,
   });
 
+  // Generate unique Certificate ID (e.g. HP-CERT-8F29A1)
+  const certHex = Math.random().toString(36).substring(2, 8).toUpperCase();
+  const certificateId = `HP-CERT-${certHex}`;
+
   // Save report to Supabase
   const { data: report, error: repError } = await supabase
     .from('interview_reports')
@@ -399,11 +403,13 @@ interviewRouter.post('/:id/complete', async (c) => {
       technical_score: reportOutput.technical_score,
       problem_solving_score: reportOutput.problem_solving_score,
       communication_score: reportOutput.communication_score,
+      confidence_score: reportOutput.answer_quality_score || reportOutput.communication_score || 80,
       answer_quality_score: reportOutput.answer_quality_score,
       strengths: reportOutput.strengths,
       weaknesses: reportOutput.weaknesses,
       recommendations: reportOutput.recommendations,
       ai_summary: reportOutput.ai_summary,
+      certificate_id: certificateId,
     })
     .select()
     .single();
@@ -427,6 +433,7 @@ interviewRouter.post('/:id/complete', async (c) => {
       ...reportOutput,
       interview_id: interviewId,
       user_id: user.userId,
+      certificate_id: certificateId,
     },
   });
 });

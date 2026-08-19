@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -7,6 +7,7 @@ import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
+import { uploadProfilePhoto, deleteProfilePhoto } from '../lib/storage';
 import {
   User as UserIcon,
   Mail,
@@ -18,10 +19,16 @@ import {
   Award,
   BarChart,
   Calendar,
+  Camera,
+  Trash2,
+  Loader2,
+  AlertCircle,
+  UploadCloud,
 } from 'lucide-react';
 
 export const Profile: React.FC = () => {
   const { user, profile, updateProfile } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState(profile?.name || '');
   const [targetRole, setTargetRole] = useState(profile?.target_role || 'Software Engineer');
@@ -37,6 +44,12 @@ export const Profile: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+
+  // Profile Photo Upload State
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [isRemovingPhoto, setIsRemovingPhoto] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const [photoSuccess, setPhotoSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     if (profile) {
@@ -56,6 +69,65 @@ export const Profile: React.FC = () => {
       }
     }).catch(() => {});
   }, [profile]);
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset file input value so user can re-select the same file if desired
+    e.target.value = '';
+
+    setPhotoError(null);
+    setPhotoSuccess(null);
+    setIsUploadingPhoto(true);
+
+    const userId = user?.id || profile?.id || 'guest-user-123';
+    const uploadResult = await uploadProfilePhoto(file, userId);
+
+    if (uploadResult.error || !uploadResult.url) {
+      setPhotoError(uploadResult.error || 'Failed to upload image.');
+      setIsUploadingPhoto(false);
+      return;
+    }
+
+    // Save avatar_url to user profile in Supabase & context
+    const { error: profileError } = await updateProfile({
+      avatar_url: uploadResult.url,
+    });
+
+    setIsUploadingPhoto(false);
+
+    if (profileError) {
+      setPhotoError(profileError.message);
+    } else {
+      setPhotoSuccess('Profile photo updated successfully!');
+      setTimeout(() => setPhotoSuccess(null), 4000);
+    }
+  };
+
+  const handlePhotoRemove = async () => {
+    if (!profile?.avatar_url) return;
+
+    setPhotoError(null);
+    setPhotoSuccess(null);
+    setIsRemovingPhoto(true);
+
+    const userId = user?.id || profile?.id || 'guest-user-123';
+    await deleteProfilePhoto(userId, profile.avatar_url);
+
+    const { error } = await updateProfile({
+      avatar_url: '',
+    });
+
+    setIsRemovingPhoto(false);
+
+    if (error) {
+      setPhotoError(error.message);
+    } else {
+      setPhotoSuccess('Profile photo removed.');
+      setTimeout(() => setPhotoSuccess(null), 4000);
+    }
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,6 +150,13 @@ export const Profile: React.FC = () => {
     }
   };
 
+  const initials = (profile?.name || name || 'Candidate')
+    .split(' ')
+    .map((n: string) => n.charAt(0))
+    .join('')
+    .substring(0, 2)
+    .toUpperCase();
+
   return (
     <DashboardLayout>
       <div className="max-w-4xl mx-auto space-y-8 animate-fade-in pb-12">
@@ -87,7 +166,7 @@ export const Profile: React.FC = () => {
             Profile & Career Preferences
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            Manage your personal information, experience level, and target job roles.
+            Manage your profile picture, personal information, experience level, and target job roles.
           </p>
         </div>
 
@@ -123,12 +202,117 @@ export const Profile: React.FC = () => {
           </Card>
         </div>
 
+        {/* Profile Photo Card */}
+        <Card className="p-6 sm:p-8 space-y-6">
+          <CardHeader className="p-0 pb-2">
+            <CardTitle>Profile Photo</CardTitle>
+            <CardDescription>
+              Your profile photo will be displayed on your dashboard, interview performance reports, and certificates of completion.
+            </CardDescription>
+          </CardHeader>
+
+          {photoSuccess && (
+            <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 text-xs text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <span>{photoSuccess}</span>
+            </div>
+          )}
+
+          {photoError && (
+            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{photoError}</span>
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 pt-2">
+            {/* Avatar Preview */}
+            <div className="relative group">
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-800 shadow-md bg-gradient-to-br from-brand-500 to-indigo-700 flex items-center justify-center text-white shrink-0 relative">
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt={profile.name || 'User profile'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-3xl font-extrabold tracking-wider">{initials}</span>
+                )}
+
+                {(isUploadingPhoto || isRemovingPhoto) && (
+                  <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center text-white">
+                    <Loader2 className="w-7 h-7 animate-spin" />
+                  </div>
+                )}
+              </div>
+
+              {/* Quick Camera Action Badge */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploadingPhoto || isRemovingPhoto}
+                className="absolute bottom-1 right-1 p-2 rounded-full bg-brand-600 hover:bg-brand-700 text-white shadow-md transition-transform hover:scale-105 cursor-pointer disabled:opacity-50"
+                title="Change Photo"
+              >
+                <Camera className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Photo Action Controls */}
+            <div className="flex-1 space-y-3 text-center sm:text-left">
+              <div>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                  {profile?.name || name || 'Candidate'}
+                </h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Allowed formats: JPEG, PNG, WebP, GIF. Maximum file size: 5 MB.
+                </p>
+              </div>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
+
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-1">
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  isLoading={isUploadingPhoto}
+                  leftIcon={<UploadCloud className="w-4 h-4" />}
+                >
+                  {profile?.avatar_url ? 'Change Photo' : 'Upload Photo'}
+                </Button>
+
+                {profile?.avatar_url && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePhotoRemove}
+                    isLoading={isRemovingPhoto}
+                    leftIcon={<Trash2 className="w-4 h-4 text-rose-500" />}
+                    className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                  >
+                    Remove Photo
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </Card>
+
         {/* Profile Details Form */}
         <Card className="p-6 sm:p-8 space-y-6">
           <CardHeader className="p-0 pb-4">
-            <CardTitle>Personal Information</CardTitle>
+            <CardTitle>Personal Information & Career Preferences</CardTitle>
             <CardDescription>
-              Your default target role is used to pre-configure new interview simulations.
+              Your name and target role are used dynamically across interviews, reports, and completion certificates.
             </CardDescription>
           </CardHeader>
 
@@ -140,18 +324,20 @@ export const Profile: React.FC = () => {
           )}
 
           {saveError && (
-            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300">
-              {saveError}
+            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{saveError}</span>
             </div>
           )}
 
           <form onSubmit={handleSave} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Full Name"
+                label="Full Name (Dynamic Candidate Name)"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 leftIcon={<UserIcon className="w-4 h-4" />}
+                placeholder="e.g. Faishal Naushad, Rahul Kumar"
                 required
               />
 
@@ -160,14 +346,14 @@ export const Profile: React.FC = () => {
                 value={user?.email || profile?.email || ''}
                 disabled
                 leftIcon={<Mail className="w-4 h-4" />}
-                helperText="Email cannot be changed directly."
+                helperText="Email is linked to your authenticated account."
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 label="Target Role"
-                placeholder="e.g. Frontend Developer, Backend Engineer"
+                placeholder="e.g. Software Developer, Frontend Engineer"
                 value={targetRole}
                 onChange={(e) => setTargetRole(e.target.value)}
                 leftIcon={<Briefcase className="w-4 h-4" />}

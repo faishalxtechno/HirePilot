@@ -1,4 +1,5 @@
 import { supabase, isSupabaseConfigured } from './supabase';
+import { generateCertificateId, generateResultId } from './storage';
 import {
   CreateInterviewPayload,
   Interview,
@@ -421,15 +422,33 @@ function fallbackCompleteInterview(interviewId: string): { report: InterviewRepo
     ? Math.round(answers.reduce((acc, a) => acc + ((a.relevance + a.accuracy + a.completeness + a.clarity) / 4) * 10, 0) / answers.length)
     : 78;
 
+  // Check if report already exists for this interview
+  const reports = getLocalData<InterviewReport[]>(LOCAL_STORAGE_KEY_REPORTS, []);
+  const existingReport = reports.find(r => r.interview_id === interviewId);
+  if (existingReport) {
+    if (!existingReport.certificate_id) {
+      existingReport.certificate_id = generateCertificateId(interviewId);
+      existingReport.result_id = generateResultId(interviewId);
+      saveLocalData(LOCAL_STORAGE_KEY_REPORTS, reports);
+    }
+    return { report: existingReport, interview };
+  }
+
+  const certificateId = generateCertificateId(interviewId);
+  const resultId = generateResultId(interviewId);
+
   const report: InterviewReport = {
     id: 'rep-' + Math.random().toString(36).substring(2, 9),
     interview_id: interviewId,
     user_id: 'local-user',
     overall_score: avg,
-    technical_score: Math.min(100, avg + 3),
-    problem_solving_score: Math.max(0, avg - 2),
-    communication_score: Math.min(100, avg + 2),
+    technical_score: avg,
+    problem_solving_score: avg,
+    communication_score: avg,
+    confidence_score: avg,
     answer_quality_score: avg,
+    certificate_id: certificateId,
+    result_id: resultId,
     strengths: [
       `Strong foundational understanding of ${interview?.role || 'software engineering'} principles`,
       'Clear, logical explanations and good technical terminology',
@@ -456,7 +475,6 @@ function fallbackCompleteInterview(interviewId: string): { report: InterviewRepo
     saveLocalData(LOCAL_STORAGE_KEY_INTERVIEWS, interviews);
   }
 
-  const reports = getLocalData<InterviewReport[]>(LOCAL_STORAGE_KEY_REPORTS, []);
   reports.push(report);
   saveLocalData(LOCAL_STORAGE_KEY_REPORTS, reports);
 
@@ -471,15 +489,28 @@ function fallbackGetInterview(interviewId: string) {
   const questions = getLocalData<Question[]>(LOCAL_STORAGE_KEY_QUESTIONS, []).filter(q => q.interview_id === interviewId);
   const answers = getLocalData<any[]>(LOCAL_STORAGE_KEY_ANSWERS, []).filter(a => a.interview_id === interviewId);
   const reports = getLocalData<InterviewReport[]>(LOCAL_STORAGE_KEY_REPORTS, []);
-  const report = reports.find(r => r.interview_id === interviewId) || null;
+  let report = reports.find(r => r.interview_id === interviewId) || null;
+
+  if (report && !report.certificate_id) {
+    report.certificate_id = generateCertificateId(interviewId);
+    report.result_id = generateResultId(interviewId);
+    saveLocalData(LOCAL_STORAGE_KEY_REPORTS, reports);
+  }
 
   return { interview, questions, answers, report };
 }
 
 function fallbackGetReport(interviewId: string) {
   const reports = getLocalData<InterviewReport[]>(LOCAL_STORAGE_KEY_REPORTS, []);
-  const report = reports.find(r => r.interview_id === interviewId);
+  let report = reports.find(r => r.interview_id === interviewId);
   if (!report) throw new Error('Report not found');
+
+  if (!report.certificate_id) {
+    report.certificate_id = generateCertificateId(interviewId);
+    report.result_id = generateResultId(interviewId);
+    saveLocalData(LOCAL_STORAGE_KEY_REPORTS, reports);
+  }
+
   return { report };
 }
 
