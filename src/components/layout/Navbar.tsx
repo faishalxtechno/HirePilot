@@ -159,6 +159,27 @@ export const Navbar: React.FC = () => {
           <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
             {user ? (
               <>
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 mb-1 border border-slate-200/60 dark:border-slate-700/60"
+                >
+                  <div className="w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-semibold overflow-hidden shrink-0">
+                    {profile?.avatar_url ? (
+                      <img src={profile.avatar_url} alt={profile?.name || 'User'} className="w-full h-full object-cover" />
+                    ) : (
+                      profile?.name?.charAt(0).toUpperCase() || 'U'
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                      {profile?.name || user.email?.split('@')[0]}
+                    </p>
+                    <p className="text-[10px] text-slate-400 truncate">
+                      {profile?.target_role || 'Software Engineer'}
+                    </p>
+                  </div>
+                </Link>
                 <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="primary" size="md" className="w-full">
                     Go to Dashboard
@@ -169,7 +190,7 @@ export const Navbar: React.FC = () => {
                     signOut();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full py-2.5 text-xs text-rose-600 font-semibold"
+                  className="w-full py-2.5 text-xs text-rose-600 font-semibold cursor-pointer"
                 >
                   Logout
                 </button>

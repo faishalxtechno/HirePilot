@@ -171,7 +171,7 @@ export const Landing: React.FC = () => {
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight max-w-4xl mx-auto leading-[1.15] animate-fade-in-up">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight max-w-4xl mx-auto leading-[1.15] animate-fade-in-up">
             Practice Smarter.{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400">
               Interview Better.
@@ -180,7 +180,7 @@ export const Landing: React.FC = () => {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up stagger-1">
+          <p className="text-sm sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up stagger-1">
             HirePilot is designed to help students and job seekers discover opportunities, improve resumes, prepare for interviews, and manage applications with instant Gemini AI feedback.
           </p>
 
@@ -204,47 +204,47 @@ export const Landing: React.FC = () => {
           </div>
 
           {/* Hero Interactive UI Preview */}
-          <div className="pt-10 max-w-4xl mx-auto reveal-init stagger-3">
+          <div className="pt-8 sm:pt-10 max-w-4xl mx-auto reveal-init stagger-3">
             <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden text-left transition-all duration-300 hover:shadow-glow">
               {/* Window Header */}
-              <div className="bg-slate-100 dark:bg-slate-850 px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-rose-400" />
-                  <div className="w-3 h-3 rounded-full bg-amber-400" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-400" />
+              <div className="bg-slate-100 dark:bg-slate-850 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-400" />
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400" />
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400" />
                 </div>
-                <div className="text-xs font-mono text-slate-500 font-medium">
+                <div className="text-[11px] sm:text-xs font-mono text-slate-500 font-medium truncate px-1">
                   HirePilot Live Mock Session — Software Engineer
                 </div>
-                <div className="text-xs font-semibold px-2 py-0.5 rounded bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">
+                <div className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 shrink-0">
                   Question 4 of 10
                 </div>
               </div>
 
               {/* Window Content */}
-              <div className="p-6 space-y-5">
+              <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
                 {/* AI Question */}
-                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
                   <div className="flex items-center gap-2 text-xs font-bold text-brand-600 uppercase tracking-wider">
                     <Bot className="w-4 h-4" />
                     AI Interviewer
                   </div>
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                  <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white">
                     "Explain the difference between an ArrayList and a LinkedList in Java. Under what memory and runtime conditions would you choose one over the other?"
                   </p>
                 </div>
 
                 {/* Candidate Answer Sample */}
-                <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 font-mono space-y-1">
+                <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 font-mono space-y-1">
                   <span className="text-[10px] text-slate-400 uppercase font-semibold">Your Submitted Answer</span>
-                  <p>
+                  <p className="break-words">
                     ArrayList is backed by a dynamic array offering O(1) random access by index and better cache locality. LinkedList consists of doubly-linked nodes offering O(1) insertions/deletions at known positions but higher pointer overhead per element...
                   </p>
                 </div>
 
                 {/* Live Evaluation Preview */}
-                <div className="p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-900/50 space-y-3">
-                  <div className="flex items-center justify-between">
+                <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-900/50 space-y-3">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300">
                       <Sparkles className="w-3.5 h-3.5" />
                       Instant AI Evaluation: 85/100
@@ -265,25 +265,25 @@ export const Landing: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-white dark:bg-slate-900/40 border-y border-slate-200/80 dark:border-slate-800">
+      <section id="features" className="py-16 sm:py-20 bg-white dark:bg-slate-900/40 border-y border-slate-200/80 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
             <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
               Core Capabilities
             </h2>
-            <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
               Engineered for realistic interview preparation
             </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
               Everything you need to gain confidence, master technical explanations, and secure top offers.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {features.map((f, idx) => (
               <Card
                 key={f.title}
-                className={`p-6 space-y-4 reveal-init stagger-${(idx % 3) + 1}`}
+                className={`p-5 sm:p-6 space-y-4 reveal-init stagger-${(idx % 3) + 1}`}
                 hoverable
               >
                 <div className="flex items-center justify-between">
@@ -305,22 +305,22 @@ export const Landing: React.FC = () => {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <section id="how-it-works" className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
           <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
             Simple 4-Step Process
           </h2>
-          <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+          <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
             How HirePilot Works
           </h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
             From setup to complete performance report in four streamlined steps.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {steps.map((s, idx) => (
-            <Card key={s.step} className={`p-6 space-y-3 relative overflow-hidden reveal-init stagger-${idx + 1}`} hoverable>
+            <Card key={s.step} className={`p-5 sm:p-6 space-y-3 relative overflow-hidden reveal-init stagger-${idx + 1}`} hoverable>
               <div className="font-mono text-3xl font-black text-brand-600/30 dark:text-brand-400/20">
                 {s.step}
               </div>
@@ -449,7 +449,7 @@ export const Landing: React.FC = () => {
             </p>
           </div>
 
-          <Card className="p-8 sm:p-10 border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-50/70 via-white to-brand-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-slate-850 shadow-lg reveal-init">
+          <Card className="p-5 sm:p-8 md:p-10 border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-50/70 via-white to-brand-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-slate-850 shadow-lg reveal-init">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
               {/* Mission Statement */}
               <div className="md:col-span-2 space-y-4">

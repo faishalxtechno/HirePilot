@@ -157,11 +157,11 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview, userP
       )}
 
       {/* Hero Performance Banner with Dynamic Candidate Info */}
-      <Card className="p-6 sm:p-8 bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950 text-white border-slate-800 shadow-xl relative overflow-hidden">
+      <Card className="p-5 sm:p-8 bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950 text-white border-slate-800 shadow-xl relative overflow-hidden">
         <div className="absolute right-0 top-0 translate-x-8 -translate-y-8 w-72 h-72 bg-brand-500/15 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 text-center sm:text-left w-full lg:w-auto">
             {/* Candidate Profile Avatar */}
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-3 border-brand-400/40 shadow-lg bg-gradient-to-br from-brand-600 to-indigo-800 flex items-center justify-center text-white shrink-0">
               {avatarUrl ? (
@@ -171,14 +171,14 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview, userP
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 flex-1 min-w-0">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30 text-xs font-semibold">
                 <Trophy className="w-3.5 h-3.5 text-amber-400" />
                 <span>Interview Performance Report</span>
               </div>
 
               <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white break-words">
                   {candidateName}
                 </h1>
                 <p className="text-sm font-medium text-brand-300 mt-0.5">
@@ -200,9 +200,9 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview, userP
           </div>
 
           {/* Large Overall Score Gauge Box */}
-          <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shrink-0 min-w-[190px]">
+          <div className="flex flex-col items-center justify-center p-5 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shrink-0 w-full sm:w-auto min-w-[190px]">
             <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Overall Score</span>
-            <div className="font-mono text-5xl font-black text-white mt-1">
+            <div className="font-mono text-4xl sm:text-5xl font-black text-white mt-1">
               {Math.round(report.overall_score)}
               <span className="text-xl text-slate-400 font-normal">/100</span>
             </div>
@@ -224,12 +224,12 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview, userP
         </div>
 
         {/* Action Downloads Row on Banner */}
-        <div className="mt-6 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+        <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           <p className="text-xs text-slate-300 max-w-md">
             {verdict.desc}
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
             {/* Download Interview Result PDF */}
             <Button
               variant="secondary"
@@ -237,7 +237,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview, userP
               onClick={handleDownloadResultPdf}
               isLoading={isDownloadingResult}
               leftIcon={<Download className="w-4 h-4 text-brand-600" />}
-              className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-sm flex-1 sm:flex-initial"
+              className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-sm w-full sm:w-auto"
             >
               Download Interview Result
             </Button>
@@ -249,7 +249,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview, userP
               onClick={handleDownloadCertificatePdf}
               isLoading={isDownloadingCert}
               leftIcon={<Award className="w-4 h-4 text-amber-300" />}
-              className="bg-brand-600 hover:bg-brand-500 shadow-md shadow-brand-500/30 flex-1 sm:flex-initial"
+              className="bg-brand-600 hover:bg-brand-500 shadow-md shadow-brand-500/30 w-full sm:w-auto"
             >
               Download Certificate
             </Button>
@@ -349,8 +349,8 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview, userP
 
       {/* Action Footer Navigation & Verification Attribution */}
       <Card className="p-6 space-y-4 border-slate-200 dark:border-slate-800">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
             <Link to="/dashboard" className="w-full sm:w-auto">
               <Button variant="outline" size="md" className="w-full" leftIcon={<LayoutDashboard className="w-4 h-4" />}>
                 Back to Dashboard
@@ -363,7 +363,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview, userP
             </Link>
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto">
             <Link
               to={`/interview/setup?role=${encodeURIComponent(interview?.role || 'Software Developer')}&type=${interview?.interview_type || 'technical'}`}
               className="w-full sm:w-auto"

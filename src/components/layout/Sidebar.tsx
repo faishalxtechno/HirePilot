@@ -16,12 +16,14 @@ interface SidebarProps {
   monthlyRemaining?: number;
   monthlyMax?: number;
   onCloseMobile?: () => void;
+  isMobileDrawer?: boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   monthlyRemaining = 3,
   monthlyMax = 3,
   onCloseMobile,
+  isMobileDrawer = false,
 }) => {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
@@ -34,18 +36,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-64 h-full flex flex-col justify-between border-r border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-5 select-none transition-colors">
+    <aside
+      className={cn(
+        'h-full flex flex-col justify-between bg-white dark:bg-slate-900 px-4 py-5 select-none transition-colors',
+        isMobileDrawer ? 'w-full' : 'w-64 border-r border-slate-200/80 dark:border-slate-800'
+      )}
+    >
       {/* Top Brand & Navigation */}
       <div className="space-y-6">
-        {/* Brand */}
-        <Link to="/" className="px-3 flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-sm shadow-brand-500/20 group-hover:scale-105 transition-transform">
-            <Sparkles className="w-4 h-4" />
-          </div>
-          <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight">
-            Hire<span className="text-brand-600">Pilot</span>
-          </span>
-        </Link>
+        {/* Brand (only shown when not in mobile drawer where drawer has its own header) */}
+        {!isMobileDrawer && (
+          <Link to="/" className="px-3 flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-sm shadow-brand-500/20 group-hover:scale-105 transition-transform">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight">
+              Hire<span className="text-brand-600">Pilot</span>
+            </span>
+          </Link>
+        )}
 
         {/* Links */}
         <nav className="space-y-1">

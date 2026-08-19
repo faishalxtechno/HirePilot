@@ -68,8 +68,8 @@ export const HistoryPage: React.FC = () => {
             </p>
           </div>
 
-          <Link to="/interview/setup">
-            <Button variant="primary" size="md" leftIcon={<PlusCircle className="w-4 h-4" />}>
+          <Link to="/interview/setup" className="w-full sm:w-auto">
+            <Button variant="primary" size="md" className="w-full sm:w-auto" leftIcon={<PlusCircle className="w-4 h-4" />}>
               Start New Interview
             </Button>
           </Link>

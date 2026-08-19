@@ -88,12 +88,12 @@ export const Dashboard: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8 animate-fade-in pb-12">
+      <div className="space-y-6 sm:space-y-8 animate-fade-in pb-12">
         {/* Top Header & Greeting Hero */}
-        <Card className="p-6 sm:p-8 bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white border-slate-800 shadow-xl relative overflow-hidden">
+        <Card className="p-5 sm:p-8 bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white border-slate-800 shadow-xl relative overflow-hidden">
           <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-64 h-64 bg-brand-500/15 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6 relative z-10">
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30">
@@ -104,7 +104,7 @@ export const Dashboard: React.FC = () => {
                   Targeting: <strong>{targetRole}</strong>
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight break-words">
                 Welcome back, {displayName}
               </h1>
               <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
@@ -112,12 +112,12 @@ export const Dashboard: React.FC = () => {
               </p>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0">
-              <Link to="/interview/setup">
+            <div className="flex items-center gap-3 w-full sm:w-auto shrink-0 pt-1 md:pt-0">
+              <Link to="/interview/setup" className="w-full sm:w-auto">
                 <Button
                   variant="primary"
                   size="md"
-                  className="shadow-lg shadow-brand-500/30"
+                  className="w-full sm:w-auto shadow-lg shadow-brand-500/30"
                   leftIcon={<Play className="w-4 h-4 fill-white" />}
                 >
                   Start New Interview

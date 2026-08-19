@@ -10,12 +10,12 @@ import { FileText, ArrowRight, Play } from 'lucide-react';
 export const RecentInterviewsTable: React.FC<{ interviews: Interview[] }> = ({ interviews }) => {
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <CardTitle>Recent Interviews</CardTitle>
           <CardDescription>Your latest mock sessions and evaluation scores</CardDescription>
         </div>
-        <Link to="/history">
+        <Link to="/history" className="self-start sm:self-auto">
           <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
             View All
           </Button>

@@ -91,15 +91,15 @@ export const Modal: React.FC<ModalProps> = ({
       {/* Modal Dialog Card */}
       <div
         className={cn(
-          'relative w-full bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 z-10 transition-all duration-200',
+          'relative w-full max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-5 sm:p-6 z-10 transition-all duration-200 overflow-hidden',
           maxWidths[maxWidth],
           isClosing ? 'animate-modal-out' : 'animate-modal-in'
         )}
       >
-        <div className="flex items-start justify-between pb-3 gap-3">
+        <div className="flex items-start justify-between pb-3 gap-3 border-b border-slate-100 dark:border-slate-800/80 shrink-0">
           <div>
             {title && (
-              <h3 id="modal-title" className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+              <h3 id="modal-title" className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                 {title}
               </h3>
             )}
@@ -112,12 +112,12 @@ export const Modal: React.FC<ModalProps> = ({
           <button
             onClick={handleDismiss}
             aria-label="Close modal"
-            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
+            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
-        <div className="mt-4">{children}</div>
+        <div className="mt-3 overflow-y-auto flex-1 pr-0.5">{children}</div>
       </div>
     </div>
   );

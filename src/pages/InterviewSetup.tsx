@@ -172,7 +172,7 @@ export const InterviewSetup: React.FC = () => {
         )}
 
         {/* Step 1: Target Role */}
-        <Card className="p-6 space-y-4">
+        <Card className="p-5 sm:p-6 space-y-4">
           <div>
             <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
               1. Select Job Role
@@ -182,7 +182,7 @@ export const InterviewSetup: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
             {STANDARD_ROLES.map((role) => {
               const isSelected = selectedRole === role;
               return (
@@ -190,13 +190,13 @@ export const InterviewSetup: React.FC = () => {
                   key={role}
                   type="button"
                   onClick={() => setSelectedRole(role)}
-                  className={`p-3 rounded-xl border text-left text-xs font-semibold transition-all duration-200 flex items-center justify-between cursor-pointer ${
+                  className={`p-3 min-h-[44px] rounded-xl border text-left text-xs font-semibold transition-all duration-200 flex items-center justify-between cursor-pointer ${
                     isSelected
                       ? 'border-brand-600 bg-brand-50/80 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 ring-2 ring-brand-500/20 shadow-xs'
                       : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 hover:-translate-y-0.5'
                   }`}
                 >
-                  <span className="truncate">{role}</span>
+                  <span className="truncate pr-2">{role}</span>
                   {isSelected && <Check className="w-3.5 h-3.5 text-brand-600 shrink-0" />}
                 </button>
               );

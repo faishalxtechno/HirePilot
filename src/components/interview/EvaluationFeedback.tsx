@@ -37,7 +37,7 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
   );
 
   return (
-    <Card className="border-slate-200 dark:border-slate-800 shadow-md p-6 space-y-6 animate-slide-up bg-white dark:bg-slate-900">
+    <Card className="border-slate-200 dark:border-slate-800 shadow-md p-5 sm:p-6 space-y-5 sm:space-y-6 animate-slide-up bg-white dark:bg-slate-900">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800 gap-3">
         <div className="flex items-center gap-2.5">

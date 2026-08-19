@@ -52,33 +52,33 @@ export const ResumeSkillsCard: React.FC = () => {
         </div>
 
         {/* Tab switch */}
-        <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-medium">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-medium w-full sm:w-auto">
           <button
             onClick={() => setActiveTab('resume')}
-            className={`px-3 py-1 rounded-lg transition-all ${
+            className={`flex-1 sm:flex-initial px-3 py-1.5 min-h-[36px] rounded-lg transition-all text-center cursor-pointer ${
               activeTab === 'resume'
                 ? 'bg-white dark:bg-slate-900 text-brand-600 shadow-xs font-bold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             Resume Focus
           </button>
           <button
             onClick={() => setActiveTab('star')}
-            className={`px-3 py-1 rounded-lg transition-all ${
+            className={`flex-1 sm:flex-initial px-3 py-1.5 min-h-[36px] rounded-lg transition-all text-center cursor-pointer ${
               activeTab === 'star'
                 ? 'bg-white dark:bg-slate-900 text-brand-600 shadow-xs font-bold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             STAR Method
           </button>
           <button
             onClick={() => setActiveTab('technical')}
-            className={`px-3 py-1 rounded-lg transition-all ${
+            className={`flex-1 sm:flex-initial px-3 py-1.5 min-h-[36px] rounded-lg transition-all text-center cursor-pointer ${
               activeTab === 'technical'
                 ? 'bg-white dark:bg-slate-900 text-brand-600 shadow-xs font-bold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             Tech Framework
