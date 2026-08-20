@@ -10,13 +10,9 @@ import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { formatDate, getScoreBadgeBg } from '../lib/utils';
 import {
-  History as HistoryIcon,
   Search,
-  Filter,
   PlusCircle,
   FileText,
-  Play,
-  RotateCcw,
 } from 'lucide-react';
 
 export const HistoryPage: React.FC = () => {
@@ -58,18 +54,18 @@ export const HistoryPage: React.FC = () => {
     <DashboardLayout>
       <div className="space-y-8 animate-fade-in pb-12">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/[0.06]">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Interview History
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
               Review past AI evaluations, track your score progression, and inspect detailed question feedback.
             </p>
           </div>
 
           <Link to="/interview/setup" className="w-full sm:w-auto">
-            <Button variant="primary" size="md" className="w-full sm:w-auto" leftIcon={<PlusCircle className="w-4 h-4" />}>
+            <Button variant="primary" size="md" className="w-full sm:w-auto shadow-md shadow-sky-500/25" leftIcon={<PlusCircle className="w-4 h-4" />}>
               Start New Interview
             </Button>
           </Link>
@@ -138,11 +134,11 @@ export const HistoryPage: React.FC = () => {
           <CardContent className="p-0">
             {filteredInterviews.length === 0 ? (
               <div className="text-center py-16 px-4 space-y-3">
-                <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mx-auto">
+                <div className="w-12 h-12 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-slate-400 mx-auto">
                   <FileText className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  <p className="text-sm font-semibold text-white">
                     No matching interviews found
                   </p>
                   <p className="text-xs text-slate-500 mt-0.5">
@@ -153,7 +149,7 @@ export const HistoryPage: React.FC = () => {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800 uppercase tracking-wider font-semibold">
+                  <thead className="bg-white/[0.02] text-slate-400 border-b border-white/[0.06] uppercase tracking-wider font-semibold">
                     <tr>
                       <th className="px-6 py-3.5">Date</th>
                       <th className="px-6 py-3.5">Role</th>
@@ -164,13 +160,13 @@ export const HistoryPage: React.FC = () => {
                       <th className="px-6 py-3.5 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                  <tbody className="divide-y divide-white/[0.04] text-slate-300">
                     {filteredInterviews.map((item) => (
-                      <tr key={item.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
-                        <td className="px-6 py-4 text-slate-500 dark:text-slate-400 font-mono">
+                      <tr key={item.id} className="hover:bg-white/[0.04] transition-colors">
+                        <td className="px-6 py-4 text-slate-400 font-mono">
                           {formatDate(item.started_at)}
                         </td>
-                        <td className="px-6 py-4 font-bold text-slate-900 dark:text-white">
+                        <td className="px-6 py-4 font-bold text-white">
                           {item.role}
                         </td>
                         <td className="px-6 py-4 capitalize font-medium">
@@ -197,7 +193,7 @@ export const HistoryPage: React.FC = () => {
                               {item.score}%
                             </span>
                           ) : (
-                            <span className="text-slate-400 italic">—</span>
+                            <span className="text-slate-500 italic">—</span>
                           )}
                         </td>
                         <td className="px-6 py-4">

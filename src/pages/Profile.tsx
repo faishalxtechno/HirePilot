@@ -2,17 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
+import { Card, CardHeader, CardTitle, CardDescription } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { Button } from '../components/ui/Button';
-import { Badge } from '../components/ui/Badge';
 import { uploadProfilePhoto, deleteProfilePhoto } from '../lib/storage';
 import {
   User as UserIcon,
   Mail,
   Briefcase,
-  GraduationCap,
   Save,
   CheckCircle2,
   Trophy,
@@ -161,11 +159,11 @@ export const Profile: React.FC = () => {
     <DashboardLayout>
       <div className="max-w-4xl mx-auto space-y-8 animate-fade-in pb-12">
         {/* Header */}
-        <div className="space-y-1 pb-4 border-b border-slate-200/80 dark:border-slate-800">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        <div className="space-y-1 pb-4 border-b border-white/[0.06]">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             Profile & Career Preferences
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-400">
             Manage your profile picture, personal information, experience level, and target job roles.
           </p>
         </div>
@@ -173,30 +171,30 @@ export const Profile: React.FC = () => {
         {/* Lifetime Stats Overview */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <Card className="p-3.5 sm:p-4 space-y-1">
-            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider block truncate">Total Completed</span>
-            <div className="font-mono text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <BarChart className="w-4 h-4 sm:w-5 sm:h-5 text-brand-600 shrink-0" />
+            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block truncate">Total Completed</span>
+            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              <BarChart className="w-4 h-4 sm:w-5 sm:h-5 text-sky-400 shrink-0" />
               <span>{stats.total}</span>
             </div>
           </Card>
           <Card className="p-3.5 sm:p-4 space-y-1">
-            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider block truncate">Average Score</span>
-            <div className="font-mono text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 shrink-0" />
+            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block truncate">Average Score</span>
+            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 shrink-0" />
               <span>{stats.avgScore}%</span>
             </div>
           </Card>
           <Card className="p-3.5 sm:p-4 space-y-1">
-            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider block truncate">Best Score</span>
-            <div className="font-mono text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Award className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 shrink-0" />
+            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block truncate">Best Score</span>
+            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              <Award className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400 shrink-0" />
               <span>{stats.bestScore}%</span>
             </div>
           </Card>
           <Card className="p-3.5 sm:p-4 space-y-1">
-            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider block truncate">Active Streak</span>
-            <div className="font-mono text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0" />
+            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider block truncate">Active Streak</span>
+            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
               <span>{stats.streak}d</span>
             </div>
           </Card>
@@ -204,7 +202,7 @@ export const Profile: React.FC = () => {
 
         {/* Profile Photo Card */}
         <Card className="p-5 sm:p-8 space-y-6">
-          <CardHeader className="p-0 pb-2">
+          <CardHeader className="p-0 pb-2 border-b-0">
             <CardTitle>Profile Photo</CardTitle>
             <CardDescription>
               Your profile photo will be displayed on your dashboard, interview performance reports, and certificates of completion.
@@ -212,15 +210,15 @@ export const Profile: React.FC = () => {
           </CardHeader>
 
           {photoSuccess && (
-            <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 text-xs text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
               <span>{photoSuccess}</span>
             </div>
           )}
 
           {photoError && (
-            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
               <span>{photoError}</span>
             </div>
           )}
@@ -228,7 +226,7 @@ export const Profile: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 pt-2">
             {/* Avatar Preview */}
             <div className="relative group shrink-0">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-800 shadow-md bg-gradient-to-br from-brand-500 to-indigo-700 flex items-center justify-center text-white shrink-0 relative">
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-sky-400/30 shadow-md bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shrink-0 relative">
                 {profile?.avatar_url ? (
                   <img
                     src={profile.avatar_url}
@@ -240,7 +238,7 @@ export const Profile: React.FC = () => {
                 )}
 
                 {(isUploadingPhoto || isRemovingPhoto) && (
-                  <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center text-white">
+                  <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center text-white">
                     <Loader2 className="w-7 h-7 animate-spin" />
                   </div>
                 )}
@@ -251,7 +249,7 @@ export const Profile: React.FC = () => {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploadingPhoto || isRemovingPhoto}
-                className="absolute bottom-1 right-1 p-2 rounded-full bg-brand-600 hover:bg-brand-700 text-white shadow-md transition-transform hover:scale-105 cursor-pointer disabled:opacity-50"
+                className="absolute bottom-1 right-1 p-2 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white shadow-md transition-transform hover:scale-105 cursor-pointer disabled:opacity-50"
                 title="Change Photo"
               >
                 <Camera className="w-4 h-4" />
@@ -261,10 +259,10 @@ export const Profile: React.FC = () => {
             {/* Photo Action Controls */}
             <div className="flex-1 space-y-3 text-center sm:text-left w-full">
               <div>
-                <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                <h4 className="text-sm font-bold text-white">
                   {profile?.name || name || 'Candidate'}
                 </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-400 mt-0.5">
                   Allowed formats: JPEG, PNG, WebP, GIF. Maximum file size: 5 MB.
                 </p>
               </div>
@@ -285,7 +283,7 @@ export const Profile: React.FC = () => {
                   onClick={() => fileInputRef.current?.click()}
                   isLoading={isUploadingPhoto}
                   leftIcon={<UploadCloud className="w-4 h-4" />}
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto shadow-md shadow-sky-500/20"
                 >
                   {profile?.avatar_url ? 'Change Photo' : 'Upload Photo'}
                 </Button>
@@ -297,8 +295,8 @@ export const Profile: React.FC = () => {
                     size="sm"
                     onClick={handlePhotoRemove}
                     isLoading={isRemovingPhoto}
-                    leftIcon={<Trash2 className="w-4 h-4 text-rose-500" />}
-                    className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 w-full sm:w-auto"
+                    leftIcon={<Trash2 className="w-4 h-4 text-rose-400" />}
+                    className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 border-rose-500/30 w-full sm:w-auto"
                   >
                     Remove Photo
                   </Button>
@@ -310,7 +308,7 @@ export const Profile: React.FC = () => {
 
         {/* Profile Details Form */}
         <Card className="p-5 sm:p-8 space-y-6">
-          <CardHeader className="p-0 pb-4">
+          <CardHeader className="p-0 pb-4 border-b-0">
             <CardTitle>Personal Information & Career Preferences</CardTitle>
             <CardDescription>
               Your name and target role are used dynamically across interviews, reports, and completion certificates.
@@ -318,15 +316,15 @@ export const Profile: React.FC = () => {
           </CardHeader>
 
           {saveSuccess && (
-            <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 text-xs text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
               <span>Profile updated successfully!</span>
             </div>
           )}
 
           {saveError && (
-            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
               <span>{saveError}</span>
             </div>
           )}
@@ -374,14 +372,14 @@ export const Profile: React.FC = () => {
               />
             </div>
 
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+            <div className="pt-4 border-t border-white/[0.06] flex justify-end">
               <Button
                 type="submit"
                 variant="primary"
                 size="md"
                 isLoading={isSaving}
                 leftIcon={<Save className="w-4 h-4" />}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto shadow-md shadow-sky-500/20"
               >
                 Save Changes
               </Button>

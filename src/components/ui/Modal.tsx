@@ -82,7 +82,7 @@ export const Modal: React.FC<ModalProps> = ({
       {/* Backdrop */}
       <div
         className={cn(
-          'fixed inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity duration-200',
+          'fixed inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-200',
           isClosing ? 'opacity-0' : 'opacity-100 animate-fade-in'
         )}
         onClick={handleDismiss}
@@ -91,20 +91,21 @@ export const Modal: React.FC<ModalProps> = ({
       {/* Modal Dialog Card */}
       <div
         className={cn(
-          'relative w-full max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-5 sm:p-6 z-10 transition-all duration-200 overflow-hidden',
+          'relative w-full max-h-[90vh] flex flex-col rounded-2xl border border-white/[0.1] shadow-glass-lg p-5 sm:p-6 z-10 transition-all duration-200 overflow-hidden',
+          'bg-[rgba(12,20,37,0.9)] backdrop-blur-2xl',
           maxWidths[maxWidth],
           isClosing ? 'animate-modal-out' : 'animate-modal-in'
         )}
       >
-        <div className="flex items-start justify-between pb-3 gap-3 border-b border-slate-100 dark:border-slate-800/80 shrink-0">
+        <div className="flex items-start justify-between pb-3 gap-3 border-b border-white/[0.06] shrink-0">
           <div>
             {title && (
-              <h3 id="modal-title" className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+              <h3 id="modal-title" className="text-base sm:text-lg font-bold text-white tracking-tight">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 {description}
               </p>
             )}
@@ -112,7 +113,7 @@ export const Modal: React.FC<ModalProps> = ({
           <button
             onClick={handleDismiss}
             aria-label="Close modal"
-            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0 cursor-pointer"
+            className="p-2 text-slate-500 hover:text-white rounded-xl hover:bg-white/[0.06] transition-colors shrink-0 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>

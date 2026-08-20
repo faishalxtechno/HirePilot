@@ -14,13 +14,13 @@ export const Badge: React.FC<BadgeProps> = ({
   ...props
 }) => {
   const variants = {
-    default: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700',
-    brand: 'bg-brand-50 text-brand-700 dark:bg-brand-950/50 dark:text-brand-300 border-brand-200 dark:border-brand-800',
-    success: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
-    warning: 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300 border-amber-200 dark:border-amber-800',
-    danger: 'bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300 border-rose-200 dark:border-rose-800',
-    purple: 'bg-purple-50 text-purple-700 dark:bg-purple-950/50 dark:text-purple-300 border-purple-200 dark:border-purple-800',
-    outline: 'border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 bg-transparent',
+    default: 'bg-white/[0.06] text-slate-300 border-white/[0.1]',
+    brand: 'bg-sky-500/10 text-sky-300 border-sky-500/20',
+    success: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
+    warning: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
+    danger: 'bg-rose-500/10 text-rose-300 border-rose-500/20',
+    purple: 'bg-purple-500/10 text-purple-300 border-purple-500/20',
+    outline: 'border border-white/[0.12] text-slate-400 bg-transparent',
   };
 
   const sizes = {
@@ -31,7 +31,7 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 border border-transparent select-none font-medium',
+        'inline-flex items-center gap-1 border select-none font-medium',
         variants[variant],
         sizes[size],
         className

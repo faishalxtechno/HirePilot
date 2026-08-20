@@ -6,7 +6,6 @@ import { InterviewHeader } from '../components/interview/InterviewHeader';
 import { QuestionCard } from '../components/interview/QuestionCard';
 import { AnswerEditor } from '../components/interview/AnswerEditor';
 import { EvaluationFeedback } from '../components/interview/EvaluationFeedback';
-import { Skeleton } from '../components/ui/Skeleton';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
@@ -117,9 +116,9 @@ export const Interview: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 sm:p-8 flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="w-8 h-8 animate-spin text-brand-600" />
-        <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+      <div className="min-h-screen bg-[#060b18] p-4 sm:p-8 flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="w-8 h-8 animate-spin text-sky-400" />
+        <p className="text-sm font-medium text-slate-400">
           Preparing your AI mock interview room...
         </p>
       </div>
@@ -128,12 +127,12 @@ export const Interview: React.FC = () => {
 
   if (error && !interview) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 sm:p-8 flex flex-col items-center justify-center text-center space-y-4">
-        <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center mx-auto">
+      <div className="min-h-screen bg-[#060b18] p-4 sm:p-8 flex flex-col items-center justify-center text-center space-y-4">
+        <div className="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mx-auto">
           <AlertCircle className="w-6 h-6" />
         </div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Interview Not Found</h2>
-        <p className="text-xs text-slate-500 max-w-sm">{error}</p>
+        <h2 className="text-xl font-bold text-white">Interview Not Found</h2>
+        <p className="text-xs text-slate-400 max-w-sm">{error}</p>
         <Button variant="primary" size="md" onClick={() => navigate('/dashboard')}>
           Return to Dashboard
         </Button>
@@ -144,8 +143,11 @@ export const Interview: React.FC = () => {
   const isLastQuestion = (currentQuestion?.question_number || 1) >= (interview?.total_questions || 10);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen bg-[#060b18] text-white py-6 px-4 sm:px-6 lg:px-8 font-sans relative overflow-hidden">
+      {/* Background ambient lighting */}
+      <div className="glow-orb glow-orb-blue w-[500px] h-[350px] top-[10%] left-1/2 -translate-x-1/2 opacity-30" />
+
+      <div className="max-w-4xl mx-auto space-y-6 relative z-10">
         {/* Sticky/Fixed Header */}
         {interview && currentQuestion && (
           <InterviewHeader
@@ -159,8 +161,8 @@ export const Interview: React.FC = () => {
 
         {/* Global Error Notice */}
         {error && (
-          <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
             <span>{error}</span>
           </div>
         )}

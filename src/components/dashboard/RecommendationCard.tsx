@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Sparkles, ArrowRight, Target } from 'lucide-react';
+import { Sparkles, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { DashboardRecommendation } from '../../types';
 
@@ -9,17 +9,19 @@ export const RecommendationCard: React.FC<{ recommendation: DashboardRecommendat
   recommendation,
 }) => {
   return (
-    <Card className="relative overflow-hidden border-brand-200 dark:border-brand-900/60 bg-gradient-to-br from-brand-50/50 via-white to-brand-50/30 dark:from-brand-950/20 dark:via-slate-900 dark:to-slate-900/80 p-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <Card className="relative overflow-hidden border-sky-500/20 bg-gradient-to-br from-sky-500/[0.07] via-[rgba(12,20,37,0.8)] to-[rgba(12,20,37,0.9)] p-6 shadow-glass">
+      <div className="absolute right-0 top-0 translate-x-8 -translate-y-8 w-48 h-48 bg-sky-500/10 rounded-full blur-2xl pointer-events-none" />
+
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
         <div className="space-y-2 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-semibold">
+            <Sparkles className="w-3.5 h-3.5 text-sky-400" />
             AI Practice Recommendation
           </div>
-          <h4 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
+          <h4 className="text-base font-bold text-white tracking-tight">
             {recommendation.title}
           </h4>
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-xs text-slate-300 leading-relaxed">
             {recommendation.description}
           </p>
         </div>
@@ -31,7 +33,7 @@ export const RecommendationCard: React.FC<{ recommendation: DashboardRecommendat
           <Button
             variant="primary"
             size="md"
-            className="w-full shadow-md shadow-brand-500/20"
+            className="w-full shadow-md shadow-sky-500/20"
             rightIcon={<ArrowRight className="w-4 h-4" />}
           >
             Practice {recommendation.targetType.toUpperCase()}

@@ -29,17 +29,17 @@ export function formatTimeAgo(dateString?: string): string {
 }
 
 export function getScoreColor(score: number): string {
-  if (score >= 85) return 'text-emerald-600 dark:text-emerald-400';
-  if (score >= 70) return 'text-brand-600 dark:text-brand-400';
-  if (score >= 50) return 'text-amber-600 dark:text-amber-400';
-  return 'text-rose-600 dark:text-rose-400';
+  if (score >= 85) return 'text-emerald-400';
+  if (score >= 70) return 'text-sky-400';
+  if (score >= 50) return 'text-amber-400';
+  return 'text-rose-400';
 }
 
 export function getScoreBadgeBg(score: number): string {
-  if (score >= 85) return 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800';
-  if (score >= 70) return 'bg-brand-50 text-brand-700 border-brand-200 dark:bg-brand-950/40 dark:text-brand-300 dark:border-brand-800';
-  if (score >= 50) return 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800';
-  return 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800';
+  if (score >= 85) return 'bg-emerald-500/15 text-emerald-300 border-emerald-500/25';
+  if (score >= 70) return 'bg-sky-500/15 text-sky-300 border-sky-500/25';
+  if (score >= 50) return 'bg-amber-500/15 text-amber-300 border-amber-500/25';
+  return 'bg-rose-500/15 text-rose-300 border-rose-500/25';
 }
 
 export function getScoreVerdict(score: number): { label: string; desc: string; color: string } {

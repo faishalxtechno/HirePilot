@@ -10,7 +10,6 @@ import { RecentInterviewsTable } from '../components/dashboard/RecentInterviewsT
 import { ResumeSkillsCard } from '../components/dashboard/ResumeSkillsCard';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Link } from 'react-router-dom';
 import {
@@ -19,14 +18,11 @@ import {
   Award,
   Flame,
   CheckCircle2,
-  Calendar,
-  Sparkles,
   Zap,
   Code2,
   Binary,
   MessageSquare,
   History,
-  User,
   ArrowRight,
   Briefcase,
 } from 'lucide-react';
@@ -61,28 +57,28 @@ export const Dashboard: React.FC = () => {
       desc: 'System design & architecture',
       link: `/interview/setup?role=${encodeURIComponent(targetRole)}&type=technical`,
       icon: Code2,
-      color: 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60',
+      color: 'text-sky-400 bg-sky-500/10 border-sky-500/20',
     },
     {
       title: 'DSA Practice',
       desc: 'Algorithms & complexities',
       link: `/interview/setup?role=${encodeURIComponent(targetRole)}&type=dsa`,
       icon: Binary,
-      color: 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/60',
+      color: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
     },
     {
       title: 'Behavioral STAR',
       desc: 'Leadership & teamwork stories',
       link: `/interview/setup?role=${encodeURIComponent(targetRole)}&type=behavioral`,
       icon: MessageSquare,
-      color: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60',
+      color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
     },
     {
       title: 'Interview History',
       desc: 'Transcripts & evaluations',
       link: '/history',
       icon: History,
-      color: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60',
+      color: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
     },
   ];
 
@@ -90,24 +86,24 @@ export const Dashboard: React.FC = () => {
     <DashboardLayout>
       <div className="space-y-6 sm:space-y-8 animate-fade-in pb-12">
         {/* Top Header & Greeting Hero */}
-        <Card className="p-5 sm:p-8 bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white border-slate-800 shadow-xl relative overflow-hidden">
-          <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-64 h-64 bg-brand-500/15 rounded-full blur-3xl pointer-events-none" />
+        <Card className="p-5 sm:p-8 bg-gradient-to-r from-[rgba(12,20,37,0.9)] via-[rgba(17,28,50,0.85)] to-[rgba(12,20,37,0.9)] text-white border-white/[0.08] shadow-glass-lg relative overflow-hidden">
+          <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-64 h-64 bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6 relative z-10">
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30">
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/25">
                   Ready to Practice
                 </span>
                 <span className="text-xs text-slate-400 flex items-center gap-1">
                   <Briefcase className="w-3.5 h-3.5" />
-                  Targeting: <strong>{targetRole}</strong>
+                  Targeting: <strong className="text-slate-200">{targetRole}</strong>
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight break-words">
                 Welcome back, {displayName}
               </h1>
-              <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
                 Sharpen your technical explanations, practice real-world interview rounds, and level up with instant AI feedback.
               </p>
             </div>
@@ -117,7 +113,7 @@ export const Dashboard: React.FC = () => {
                 <Button
                   variant="primary"
                   size="md"
-                  className="w-full sm:w-auto shadow-lg shadow-brand-500/30"
+                  className="w-full sm:w-auto shadow-lg shadow-sky-500/25"
                   leftIcon={<Play className="w-4 h-4 fill-white" />}
                 >
                   Start New Interview
@@ -129,22 +125,22 @@ export const Dashboard: React.FC = () => {
 
         {/* Quota Banner */}
         {data?.stats && (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl bg-brand-50/70 dark:bg-brand-950/40 border border-brand-200/80 dark:border-brand-900/60 gap-3">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl bg-sky-500/[0.06] border border-sky-500/20 gap-3 backdrop-blur-md">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-brand-600 text-white flex items-center justify-center shrink-0 shadow-sm shadow-brand-500/20">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm shadow-sky-500/20">
                 <Zap className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-xs font-bold text-brand-900 dark:text-brand-200">
+                <p className="text-xs font-bold text-white">
                   {data.stats.monthlyRemaining} free interview{data.stats.monthlyRemaining === 1 ? '' : 's'} remaining this month
                 </p>
-                <p className="text-[11px] text-brand-700/80 dark:text-brand-400">
+                <p className="text-[11px] text-slate-400">
                   Standard free plan allows 3 comprehensive AI evaluations each month.
                 </p>
               </div>
             </div>
 
-            <span className="text-xs font-mono font-bold px-3 py-1 rounded-xl bg-white dark:bg-slate-900 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 shrink-0 shadow-xs">
+            <span className="text-xs font-mono font-bold px-3 py-1 rounded-xl bg-white/[0.04] text-sky-300 border border-sky-500/20 shrink-0">
               {data.stats.monthlyUsed} / {data.stats.monthlyMax} Used
             </span>
           </div>
@@ -163,28 +159,28 @@ export const Dashboard: React.FC = () => {
               title="Interviews Completed"
               value={data?.stats.interviewsCompleted ?? 0}
               subtitle="Lifetime mock sessions"
-              icon={<CheckCircle2 className="w-5 h-5 text-brand-600" />}
+              icon={<CheckCircle2 className="w-5 h-5 text-sky-400" />}
               accentColor="brand"
             />
             <StatCard
               title="Average Score"
               value={`${data?.stats.averageScore ?? 0}%`}
               subtitle="Across all interviews"
-              icon={<Trophy className="w-5 h-5 text-emerald-600" />}
+              icon={<Trophy className="w-5 h-5 text-emerald-400" />}
               accentColor="emerald"
             />
             <StatCard
               title="Best Score"
               value={`${data?.stats.bestScore ?? 0}%`}
               subtitle="Highest achieved score"
-              icon={<Award className="w-5 h-5 text-purple-600" />}
+              icon={<Award className="w-5 h-5 text-purple-400" />}
               accentColor="purple"
             />
             <StatCard
               title="Current Streak"
               value={`${data?.stats.currentStreak ?? 0} days`}
               subtitle="Consistent practice"
-              icon={<Flame className="w-5 h-5 text-amber-600 fill-amber-500/20" />}
+              icon={<Flame className="w-5 h-5 text-amber-400 fill-amber-400/20" />}
               accentColor="amber"
             />
           </div>
@@ -192,25 +188,25 @@ export const Dashboard: React.FC = () => {
 
         {/* Quick Actions Bar */}
         <div className="space-y-3">
-          <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+          <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
             Quick Actions
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {quickActions.map((act) => (
               <Link key={act.title} to={act.link}>
-                <Card className="p-4 flex items-center justify-between group hover:border-brand-300 dark:hover:border-brand-700" hoverable>
+                <Card className="p-4 flex items-center justify-between group hover:border-sky-500/30" hoverable>
                   <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${act.color}`}>
+                    <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 ${act.color}`}>
                       <act.icon className="w-4 h-4" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-brand-600 transition-colors">
+                      <h4 className="text-xs font-bold text-white group-hover:text-sky-400 transition-colors">
                         {act.title}
                       </h4>
-                      <p className="text-[11px] text-slate-400">{act.desc}</p>
+                      <p className="text-[11px] text-slate-500">{act.desc}</p>
                     </div>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-brand-600 group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-400 group-hover:translate-x-0.5 transition-all" />
                 </Card>
               </Link>
             ))}

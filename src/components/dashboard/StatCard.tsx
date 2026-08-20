@@ -23,18 +23,18 @@ export const StatCard: React.FC<StatCardProps> = ({
   accentColor = 'brand',
 }) => {
   const accentColors = {
-    brand: 'bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-400',
-    emerald: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400',
-    amber: 'bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400',
-    purple: 'bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400',
+    brand: 'bg-sky-500/10 text-sky-400 border border-sky-500/20 shadow-[0_0_12px_rgba(56,171,248,0.15)]',
+    emerald: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_12px_rgba(52,211,153,0.15)]',
+    amber: 'bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-[0_0_12px_rgba(251,191,36,0.15)]',
+    purple: 'bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-[0_0_12px_rgba(192,132,252,0.15)]',
   };
 
   return (
-    <Card className="p-5 flex flex-col justify-between" hoverable>
+    <Card className="p-5 flex flex-col justify-between glass-surface-hover" hoverable>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{title}</p>
-          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight font-mono">
+          <p className="text-xs font-semibold text-slate-400">{title}</p>
+          <h3 className="text-2xl font-bold text-white mt-1 tracking-tight font-mono">
             {value}
           </h3>
         </div>
@@ -44,13 +44,13 @@ export const StatCard: React.FC<StatCardProps> = ({
       </div>
 
       {(subtitle || trend) && (
-        <div className="mt-4 flex items-center justify-between text-xs pt-2 border-t border-slate-100 dark:border-slate-800/80">
-          {subtitle && <span className="text-slate-500 dark:text-slate-400">{subtitle}</span>}
+        <div className="mt-4 flex items-center justify-between text-xs pt-2.5 border-t border-white/[0.06]">
+          {subtitle && <span className="text-slate-500">{subtitle}</span>}
           {trend && (
             <span
               className={cn(
                 'font-semibold',
-                trend.isPositive ? 'text-emerald-600' : 'text-slate-500'
+                trend.isPositive ? 'text-emerald-400' : 'text-slate-400'
               )}
             >
               {trend.value}

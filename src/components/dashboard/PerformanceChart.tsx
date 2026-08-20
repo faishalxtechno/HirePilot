@@ -18,7 +18,7 @@ export const PerformanceChart: React.FC<{ performance: DashboardPerformance }> =
       score: performance.problemSolving,
       icon: Brain,
       description: 'Algorithmic approach, edge case handling, and tradeoffs',
-      variant: 'purple' as const,
+      variant: 'brand' as const,
     },
     {
       label: 'Communication',
@@ -44,7 +44,7 @@ export const PerformanceChart: React.FC<{ performance: DashboardPerformance }> =
             <CardTitle>Skill Breakdown</CardTitle>
             <CardDescription>Multi-dimensional analysis across all mock interviews</CardDescription>
           </div>
-          <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+          <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sky-400">
             <TrendingUp className="w-4 h-4" />
           </div>
         </div>
@@ -54,13 +54,13 @@ export const PerformanceChart: React.FC<{ performance: DashboardPerformance }> =
           <div key={m.label} className="space-y-1.5">
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
-                <m.icon className="w-4 h-4 text-slate-500 shrink-0" />
-                <span className="font-semibold text-slate-800 dark:text-slate-200">{m.label}</span>
+                <m.icon className="w-4 h-4 text-slate-400 shrink-0" />
+                <span className="font-semibold text-slate-200">{m.label}</span>
               </div>
-              <span className="font-mono font-bold text-slate-900 dark:text-white">{m.score}%</span>
+              <span className="font-mono font-bold text-white">{m.score}%</span>
             </div>
-            <Progress value={m.score} variant={m.variant === 'purple' ? 'brand' : m.variant} size="md" />
-            <p className="text-[11px] text-slate-400 dark:text-slate-500">{m.description}</p>
+            <Progress value={m.score} variant={m.variant} size="md" />
+            <p className="text-[11px] text-slate-500">{m.description}</p>
           </div>
         ))}
       </CardContent>

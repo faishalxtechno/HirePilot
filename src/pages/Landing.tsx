@@ -26,9 +26,8 @@ import {
   Mail,
   Send,
   UserCheck,
-  Shield,
-  Briefcase,
   Compass,
+  Briefcase,
   FileText,
 } from 'lucide-react';
 
@@ -155,33 +154,34 @@ export const Landing: React.FC = () => {
   ];
 
   return (
-    <div ref={containerRef} className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white selection:bg-brand-500 selection:text-white">
+    <div ref={containerRef} className="min-h-screen flex flex-col bg-[#060b18] text-white">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden">
-        {/* Subtle background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-brand-500/10 dark:bg-brand-500/15 rounded-full blur-3xl pointer-events-none" />
+      {/* ═══════════════════ HERO ═══════════════════ */}
+      <section className="relative pt-32 sm:pt-36 pb-20 md:pt-40 md:pb-28 overflow-hidden">
+        {/* Atmospheric glow orbs */}
+        <div className="glow-orb glow-orb-blue w-[600px] h-[400px] top-[10%] left-1/2 -translate-x-1/2 opacity-60" />
+        <div className="glow-orb glow-orb-cyan w-[300px] h-[300px] top-[30%] right-[10%] opacity-40" />
+        <div className="glow-orb glow-orb-indigo w-[400px] h-[300px] bottom-[10%] left-[10%] opacity-30" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-semibold shadow-xs animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-semibold animate-fade-in backdrop-blur-sm">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>AI-Powered Career & Mock Interview Platform</span>
+            <span>YOUR AI CAREER COPILOT</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight max-w-4xl mx-auto leading-[1.15] animate-fade-in-up">
-            Practice Smarter.{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400">
-              Interview Better.
-            </span>{' '}
-            Get Hired.
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black text-white tracking-tight max-w-5xl mx-auto leading-[1.1] animate-fade-in-up">
+            Land your next job with{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-blue-400 to-cyan-400">
+              an AI that works for you.
+            </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-sm sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up stagger-1">
-            HirePilot is designed to help students and job seekers discover opportunities, improve resumes, prepare for interviews, and manage applications with instant Gemini AI feedback.
+          <p className="text-sm sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed animate-fade-in-up stagger-1">
+            HirePilot helps you practice realistic interviews, refine your resume, and track your career journey — all powered by advanced AI.
           </p>
 
           {/* CTAs */}
@@ -190,33 +190,50 @@ export const Landing: React.FC = () => {
               <Button
                 variant="primary"
                 size="lg"
-                className="w-full shadow-lg shadow-brand-500/25"
+                className="w-full shadow-lg shadow-sky-500/20"
                 rightIcon={<ArrowRight className="w-4 h-4" />}
               >
-                Start Free Interview
+                Start for Free
               </Button>
             </Link>
             <a href="#how-it-works" className="w-full sm:w-auto">
               <Button variant="outline" size="lg" className="w-full" leftIcon={<Play className="w-4 h-4" />}>
-                See How It Works
+                Explore HirePilot
               </Button>
             </a>
           </div>
 
+          {/* Trust Stats Strip */}
+          <div className="pt-10 reveal-init stagger-3">
+            <div className="inline-flex flex-wrap items-center justify-center gap-4 sm:gap-0 px-6 py-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-xl">
+              {[
+                { value: '10K+', label: 'Candidates' },
+                { value: '50K+', label: 'AI Interviews' },
+                { value: '95%', label: 'Improvement Rate' },
+                { value: '4.9/5', label: 'User Rating' },
+              ].map((stat, i) => (
+                <div key={stat.label} className={`flex items-center gap-2 ${i > 0 ? 'sm:border-l sm:border-white/[0.08] sm:pl-6 sm:ml-6' : ''}`}>
+                  <span className="text-lg sm:text-xl font-display font-bold text-white">{stat.value}</span>
+                  <span className="text-xs text-slate-500 font-medium">{stat.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Hero Interactive UI Preview */}
-          <div className="pt-8 sm:pt-10 max-w-4xl mx-auto reveal-init stagger-3">
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden text-left transition-all duration-300 hover:shadow-glow">
+          <div className="pt-8 sm:pt-12 max-w-4xl mx-auto reveal-init stagger-4">
+            <div className="rounded-2xl border border-white/[0.08] bg-[rgba(12,20,37,0.6)] backdrop-blur-xl shadow-glass-lg overflow-hidden text-left transition-all duration-500 hover:border-white/[0.12] hover:shadow-glow-blue">
               {/* Window Header */}
-              <div className="bg-slate-100 dark:bg-slate-850 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
+              <div className="bg-white/[0.03] px-3 sm:px-4 py-2.5 sm:py-3 border-b border-white/[0.06] flex items-center justify-between gap-2">
                 <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-400" />
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400" />
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400" />
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-400/80" />
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400/80" />
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400/80" />
                 </div>
                 <div className="text-[11px] sm:text-xs font-mono text-slate-500 font-medium truncate px-1">
                   HirePilot Live Mock Session — Software Engineer
                 </div>
-                <div className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 shrink-0">
+                <div className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20 shrink-0">
                   Question 4 of 10
                 </div>
               </div>
@@ -224,37 +241,37 @@ export const Landing: React.FC = () => {
               {/* Window Content */}
               <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
                 {/* AI Question */}
-                <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-brand-600 uppercase tracking-wider">
+                <div className="p-3.5 sm:p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wider">
                     <Bot className="w-4 h-4" />
                     AI Interviewer
                   </div>
-                  <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white">
+                  <p className="text-xs sm:text-sm font-semibold text-white">
                     "Explain the difference between an ArrayList and a LinkedList in Java. Under what memory and runtime conditions would you choose one over the other?"
                   </p>
                 </div>
 
                 {/* Candidate Answer Sample */}
-                <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 font-mono space-y-1">
-                  <span className="text-[10px] text-slate-400 uppercase font-semibold">Your Submitted Answer</span>
+                <div className="p-3.5 sm:p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] text-xs text-slate-400 font-mono space-y-1">
+                  <span className="text-[10px] text-slate-500 uppercase font-semibold">Your Submitted Answer</span>
                   <p className="break-words">
                     ArrayList is backed by a dynamic array offering O(1) random access by index and better cache locality. LinkedList consists of doubly-linked nodes offering O(1) insertions/deletions at known positions but higher pointer overhead per element...
                   </p>
                 </div>
 
                 {/* Live Evaluation Preview */}
-                <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-900/50 space-y-3">
+                <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-500/[0.07] border border-emerald-500/20 space-y-3">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-300">
                       <Sparkles className="w-3.5 h-3.5" />
                       Instant AI Evaluation: 85/100
                     </div>
                     <div className="flex gap-2 text-[11px] font-mono">
-                      <span className="text-slate-600 dark:text-slate-300">Accuracy: <strong>9/10</strong></span>
-                      <span className="text-slate-600 dark:text-slate-300">Clarity: <strong>8/10</strong></span>
+                      <span className="text-slate-400">Accuracy: <strong className="text-white">9/10</strong></span>
+                      <span className="text-slate-400">Clarity: <strong className="text-white">8/10</strong></span>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-700 dark:text-slate-300">
+                  <p className="text-xs text-slate-400">
                     "Excellent explanation of memory cache locality and asymptotic complexities. Consider also mentioning how ArrayList amortizes resize costs (1.5x capacity growth)."
                   </p>
                 </div>
@@ -264,30 +281,30 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-16 sm:py-20 bg-white dark:bg-slate-900/40 border-y border-slate-200/80 dark:border-slate-800">
+      {/* ═══════════════════ FEATURES ═══════════════════ */}
+      <section id="features" className="py-16 sm:py-24 border-t border-white/[0.04]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-            <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+            <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
               Core Capabilities
             </h2>
-            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-              Engineered for realistic interview preparation
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
+              Everything you need to get hired.
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-xs sm:text-sm text-slate-500">
               Everything you need to gain confidence, master technical explanations, and secure top offers.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {features.map((f, idx) => (
               <Card
                 key={f.title}
-                className={`p-5 sm:p-6 space-y-4 reveal-init stagger-${(idx % 3) + 1}`}
+                className={`p-5 sm:p-6 space-y-4 reveal-init stagger-${(idx % 3) + 1} glass-surface-hover`}
                 hoverable
               >
                 <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/15">
                     <f.icon className="w-5 h-5" />
                   </div>
                   <Badge variant="outline" size="sm">
@@ -295,8 +312,8 @@ export const Landing: React.FC = () => {
                   </Badge>
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-slate-900 dark:text-white">{f.title}</h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">{f.desc}</p>
+                  <h4 className="text-base font-bold text-white">{f.title}</h4>
+                  <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{f.desc}</p>
                 </div>
               </Card>
             ))}
@@ -304,44 +321,44 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      {/* ═══════════════════ HOW IT WORKS ═══════════════════ */}
+      <section id="how-it-works" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-          <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+          <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
             Simple 4-Step Process
           </h2>
-          <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
             How HirePilot Works
           </h3>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-500">
             From setup to complete performance report in four streamlined steps.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {steps.map((s, idx) => (
             <Card key={s.step} className={`p-5 sm:p-6 space-y-3 relative overflow-hidden reveal-init stagger-${idx + 1}`} hoverable>
-              <div className="font-mono text-3xl font-black text-brand-600/30 dark:text-brand-400/20">
+              <div className="font-mono text-3xl font-black text-sky-400/15">
                 {s.step}
               </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">{s.title}</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{s.desc}</p>
+              <h4 className="text-base font-bold text-white">{s.title}</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">{s.desc}</p>
             </Card>
           ))}
         </div>
       </section>
 
-      {/* Interview Types Section */}
-      <section id="interview-types" className="py-20 bg-slate-100/60 dark:bg-slate-900/60 border-y border-slate-200/80 dark:border-slate-800">
+      {/* ═══════════════════ INTERVIEW TYPES ═══════════════════ */}
+      <section id="ai-interview" className="py-20 sm:py-24 border-t border-white/[0.04]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-            <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+            <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
               Interview Catalog
             </h2>
-            <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
               Specialized Interview Modes
             </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-slate-500">
               Select the exact interview style you want to practice for your upcoming rounds.
             </p>
           </div>
@@ -350,13 +367,13 @@ export const Landing: React.FC = () => {
             {interviewTypes.map((t, idx) => (
               <Card key={t.type} className={`p-5 flex flex-col justify-between space-y-4 reveal-init stagger-${idx + 1}`} hoverable>
                 <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-brand-600 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sky-400 flex items-center justify-center">
                     <t.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">{t.type}</h4>
-                    <p className="text-[11px] text-brand-600 dark:text-brand-400 font-medium mt-0.5">{t.role}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">{t.desc}</p>
+                    <h4 className="text-sm font-bold text-white">{t.type}</h4>
+                    <p className="text-[11px] text-sky-400 font-medium mt-0.5">{t.role}</p>
+                    <p className="text-xs text-slate-500 mt-2 leading-relaxed">{t.desc}</p>
                   </div>
                 </div>
 
@@ -371,22 +388,22 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* Pricing / Free Tier Limits Section */}
-      <section id="pricing" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      {/* ═══════════════════ PRICING ═══════════════════ */}
+      <section id="pricing" className="py-20 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-          <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+          <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
             Pricing & Quota
           </h2>
-          <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
             Free forever for early career candidates
           </h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-slate-500">
             Transparent usage limits designed to keep the platform free for students and job seekers.
           </p>
         </div>
 
         <div className="max-w-lg mx-auto reveal-init">
-          <Card className="p-8 border-2 border-brand-500/80 dark:border-brand-500 shadow-xl space-y-6 relative" hoverable>
+          <Card className="p-8 border-sky-500/30 shadow-glow space-y-6 relative" hoverable>
             <div className="absolute -top-3 right-6">
               <Badge variant="brand" size="md">
                 Standard Free Tier
@@ -394,39 +411,39 @@ export const Landing: React.FC = () => {
             </div>
 
             <div>
-              <h4 className="text-2xl font-bold text-slate-900 dark:text-white">Community Pilot</h4>
+              <h4 className="text-2xl font-bold text-white">Community Pilot</h4>
               <p className="text-xs text-slate-500 mt-1">Full access to all AI interview roles and analytics</p>
               <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-black text-slate-900 dark:text-white font-mono">$0</span>
+                <span className="text-4xl font-black text-white font-mono">$0</span>
                 <span className="text-xs text-slate-500">/ forever</span>
               </div>
             </div>
 
-            <ul className="space-y-3 text-xs text-slate-700 dark:text-slate-300">
+            <ul className="space-y-3 text-xs text-slate-400">
               <li className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span><strong>3 Free Full Interviews</strong> per user every calendar month</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span><strong className="text-slate-300">3 Free Full Interviews</strong> per user every calendar month</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span><strong>Up to 15 Adaptive Questions</strong> per interview session</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span><strong className="text-slate-300">Up to 15 Adaptive Questions</strong> per interview session</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span><strong>Instant Multi-Criteria Scoring</strong> (Relevance, Accuracy, Clarity)</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span><strong className="text-slate-300">Instant Multi-Criteria Scoring</strong> (Relevance, Accuracy, Clarity)</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span><strong>Comprehensive Final Performance Reports</strong> & AI Recommendations</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span><strong className="text-slate-300">Comprehensive Final Performance Reports</strong> & AI Recommendations</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span><strong>Lifetime Interview History</strong> & Progress Tracking</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span><strong className="text-slate-300">Lifetime Interview History</strong> & Progress Tracking</span>
               </li>
             </ul>
 
             <Link to="/signup" className="block pt-2">
-              <Button variant="primary" size="lg" className="w-full shadow-md shadow-brand-500/20">
+              <Button variant="primary" size="lg" className="w-full shadow-md shadow-sky-500/20">
                 Get Started Free
               </Button>
             </Link>
@@ -434,71 +451,71 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* ABOUT / FOUNDER SECTION */}
-      <section id="about" className="py-20 bg-white dark:bg-slate-900/50 border-t border-slate-200/80 dark:border-slate-800">
+      {/* ═══════════════════ ABOUT / FOUNDER ═══════════════════ */}
+      <section id="about" className="py-20 sm:py-24 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-            <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+            <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
               About The Platform
             </h2>
-            <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
               Empowering Job Seekers & Students
             </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-slate-500">
               Built to level the playing field with intelligent mock preparation.
             </p>
           </div>
 
-          <Card className="p-5 sm:p-8 md:p-10 border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-50/70 via-white to-brand-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-slate-850 shadow-lg reveal-init">
+          <Card className="p-5 sm:p-8 md:p-10 reveal-init">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
               {/* Mission Statement */}
               <div className="md:col-span-2 space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200/80 dark:border-brand-900/60 text-brand-700 dark:text-brand-300 text-xs font-semibold">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-semibold">
                   <Compass className="w-3.5 h-3.5" />
                   <span>Our Mission</span>
                 </div>
-                <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+                <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-normal">
                   HirePilot is an AI-powered job search and career assistance platform designed to help students and job seekers discover opportunities, improve their resumes, prepare for interviews, and manage their applications.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  <div className="p-3.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 flex items-center gap-3">
-                    <Briefcase className="w-4 h-4 text-brand-600 shrink-0" />
-                    <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Opportunity Discovery</span>
+                  <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center gap-3">
+                    <Briefcase className="w-4 h-4 text-sky-400 shrink-0" />
+                    <span className="text-xs font-medium text-slate-300">Opportunity Discovery</span>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 flex items-center gap-3">
-                    <FileText className="w-4 h-4 text-indigo-600 shrink-0" />
-                    <span className="text-xs font-medium text-slate-700 dark:text-slate-200">Resume & Answer Refinement</span>
+                  <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center gap-3">
+                    <FileText className="w-4 h-4 text-purple-400 shrink-0" />
+                    <span className="text-xs font-medium text-slate-300">Resume & Answer Refinement</span>
                   </div>
                 </div>
               </div>
 
               {/* Founder Profile Card */}
-              <div className="p-6 sm:p-7 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 shadow-sm text-center space-y-4 hover:shadow-md transition-shadow">
+              <div className="p-6 sm:p-7 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-center space-y-4 hover:border-white/[0.12] transition-colors">
                 <div className="relative mx-auto w-24 h-24 sm:w-28 sm:h-28">
-                  <div className="w-full h-full rounded-full p-[3px] bg-gradient-to-tr from-brand-600 via-indigo-500 to-purple-600 shadow-lg shadow-brand-500/20">
+                  <div className="w-full h-full rounded-full p-[3px] bg-gradient-to-tr from-sky-500 via-blue-500 to-purple-600 shadow-lg shadow-sky-500/20">
                     <img
                       src="/faishal-founder.png"
                       alt="Faishal Naushad - Founder of HirePilot"
-                      className="w-full h-full rounded-full object-cover object-center bg-slate-100 dark:bg-slate-700"
+                      className="w-full h-full rounded-full object-cover object-center bg-[#0c1425]"
                       loading="eager"
                     />
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 border border-brand-200/60 dark:border-brand-900/60">
+                  <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-sky-500/10 text-sky-400 border border-sky-500/20">
                     Founder
                   </span>
-                  <h4 className="text-lg font-extrabold text-slate-900 dark:text-white mt-0.5">
+                  <h4 className="text-lg font-extrabold text-white mt-0.5">
                     Faishal Naushad
                   </h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                  <p className="text-xs text-slate-500 font-medium">
                     Founder of HirePilot
                   </p>
                 </div>
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-700">
+                <div className="pt-2 border-t border-white/[0.06]">
                   <a
                     href="mailto:connectwithfaishal@gmail.com"
-                    className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline break-all"
+                    className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-sky-400 hover:text-sky-300 hover:underline break-all"
                   >
                     <Mail className="w-3.5 h-3.5 shrink-0" />
                     <span>connectwithfaishal@gmail.com</span>
@@ -510,37 +527,37 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* CONTACT SECTION */}
-      <section id="contact" className="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      {/* ═══════════════════ CONTACT ═══════════════════ */}
+      <section id="contact" className="py-20 sm:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-          <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+          <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
             Get In Touch
           </h2>
-          <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
             Official Contact
           </h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-slate-500">
             Reach out directly for platform inquiries, support, partnerships, or developer feedback.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-init">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 reveal-init">
           {/* Direct Email Card */}
           <Card className="p-6 space-y-4 md:col-span-2" hoverable>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/15">
                 <Mail className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white">Email the Founder</h4>
+                <h4 className="text-base font-bold text-white">Email the Founder</h4>
                 <p className="text-xs text-slate-500">Direct channel for all inquiries and support</p>
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <span className="text-[11px] text-slate-400 uppercase font-semibold">Official Contact Email</span>
-                <p className="text-sm font-bold text-slate-900 dark:text-white font-mono mt-0.5">
+                <span className="text-[11px] text-slate-500 uppercase font-semibold">Official Contact Email</span>
+                <p className="text-sm font-bold text-white font-mono mt-0.5">
                   connectwithfaishal@gmail.com
                 </p>
               </div>
@@ -554,7 +571,7 @@ export const Landing: React.FC = () => {
               </a>
             </div>
 
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-500 leading-relaxed">
               Whether you have feedback on AI interview question quality, need help navigating the dashboard, or want to suggest new features for job preparation, your emails go straight to the developer.
             </p>
           </Card>
@@ -562,21 +579,21 @@ export const Landing: React.FC = () => {
           {/* Quick Info Card */}
           <Card className="p-6 space-y-4 flex flex-col justify-between" hoverable>
             <div className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] text-slate-400 flex items-center justify-center">
                 <UserCheck className="w-5 h-5" />
               </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">Platform Leadership</h4>
-              <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
-                <p><strong>Founder:</strong> Faishal Naushad</p>
-                <p><strong>Platform:</strong> HirePilot AI Mock Interviews</p>
-                <p><strong>Support:</strong> 100% Free Community Tier</p>
+              <h4 className="text-base font-bold text-white">Platform Leadership</h4>
+              <div className="space-y-1 text-xs text-slate-500">
+                <p><strong className="text-slate-300">Founder:</strong> Faishal Naushad</p>
+                <p><strong className="text-slate-300">Platform:</strong> HirePilot AI Mock Interviews</p>
+                <p><strong className="text-slate-300">Support:</strong> 100% Free Community Tier</p>
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
+            <div className="pt-3 border-t border-white/[0.06]">
               <a
                 href="mailto:connectwithfaishal@gmail.com"
-                className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline inline-flex items-center gap-1"
+                className="text-xs font-semibold text-sky-400 hover:text-sky-300 hover:underline inline-flex items-center gap-1"
               >
                 <span>Write to Faishal Naushad</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -586,14 +603,14 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section id="faq" className="py-20 bg-slate-50 dark:bg-slate-900/40 border-t border-slate-200/80 dark:border-slate-800">
+      {/* ═══════════════════ FAQ ═══════════════════ */}
+      <section id="faq" className="py-20 sm:py-24 border-t border-white/[0.04]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="text-center space-y-3 reveal-init">
-            <h2 className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+            <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
               Got Questions?
             </h2>
-            <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
               Frequently Asked Questions
             </h3>
           </div>
@@ -606,17 +623,17 @@ export const Landing: React.FC = () => {
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
               >
                 <div className="p-5 flex items-center justify-between gap-4">
-                  <span className="text-sm font-semibold text-slate-900 dark:text-white">
+                  <span className="text-sm font-semibold text-white">
                     {faq.q}
                   </span>
                   <ChevronDown
-                    className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
-                      openFaq === idx ? 'rotate-180 text-brand-600' : ''
+                    className={`w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 ${
+                      openFaq === idx ? 'rotate-180 text-sky-400' : ''
                     }`}
                   />
                 </div>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 pt-0 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3 animate-fade-in">
+                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-white/[0.06] pt-3 animate-fade-in">
                     {faq.a}
                   </div>
                 )}
@@ -626,18 +643,19 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* CTA Strip */}
-      <section className="py-16 bg-gradient-to-r from-brand-600 to-indigo-700 text-white text-center">
-        <div className="max-w-4xl mx-auto px-4 space-y-6 reveal-init">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            Ready to ace your next technical or HR interview?
+      {/* ═══════════════════ CTA STRIP ═══════════════════ */}
+      <section className="py-16 sm:py-20 border-t border-white/[0.04] relative overflow-hidden">
+        <div className="glow-orb glow-orb-blue w-[500px] h-[300px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-50" />
+        <div className="max-w-4xl mx-auto px-4 space-y-6 reveal-init text-center relative z-10">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
+            Ready to ace your next interview?
           </h2>
-          <p className="text-sm text-brand-100 max-w-xl mx-auto">
+          <p className="text-sm text-slate-400 max-w-xl mx-auto">
             Join candidates using HirePilot to identify weaknesses, refine explanations, and get hired faster.
           </p>
           <div>
             <Link to="/signup">
-              <Button variant="secondary" size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl">
+              <Button variant="primary" size="lg" className="shadow-lg shadow-sky-500/20">
                 Create Free Account
               </Button>
             </Link>

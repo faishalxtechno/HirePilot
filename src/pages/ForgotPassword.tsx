@@ -34,33 +34,37 @@ export const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12">
-      <div className="w-full max-w-md space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#060b18] px-4 py-12 relative overflow-hidden">
+      {/* Atmospheric glow orbs */}
+      <div className="glow-orb glow-orb-blue w-[500px] h-[350px] top-[15%] left-1/2 -translate-x-1/2 opacity-40" />
+      <div className="glow-orb glow-orb-cyan w-[300px] h-[250px] bottom-[10%] right-[15%] opacity-30" />
+
+      <div className="w-full max-w-md space-y-6 relative z-10">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <Link to="/" className="inline-flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-sm shadow-brand-500/20">
+          <Link to="/" className="inline-flex items-center gap-2.5 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
               <Sparkles className="w-5 h-5" />
             </div>
-            <span className="font-bold text-2xl text-slate-900 dark:text-white tracking-tight">
-              Hire<span className="text-brand-600">Pilot</span>
+            <span className="font-bold text-2xl text-white tracking-tight">
+              Hire<span className="text-sky-400">Pilot</span>
             </span>
           </Link>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Reset your password</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <h2 className="text-xl font-bold text-white">Reset your password</h2>
+          <p className="text-xs text-slate-400">
             Enter your email and we'll send you recovery instructions
           </p>
         </div>
 
-        <Card className="p-6 sm:p-8 space-y-5 shadow-xl border-slate-200 dark:border-slate-800">
+        <Card className="p-6 sm:p-8 space-y-5 shadow-glass-lg border-white/[0.08] bg-[rgba(12,20,37,0.7)] backdrop-blur-2xl">
           {isSent ? (
             <div className="text-center space-y-4 py-4">
-              <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Password reset link sent</h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                If an account exists for <strong>{email}</strong>, you will receive an email with instructions to reset your password.
+              <h3 className="text-lg font-bold text-white">Password reset link sent</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                If an account exists for <strong className="text-slate-200">{email}</strong>, you will receive an email with instructions to reset your password.
               </p>
               <Link to="/login" className="block pt-2">
                 <Button variant="primary" size="md" className="w-full">
@@ -71,8 +75,8 @@ export const ForgotPassword: React.FC = () => {
           ) : (
             <>
               {error && (
-                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
                   <span>{error}</span>
                 </div>
               )}
@@ -93,7 +97,7 @@ export const ForgotPassword: React.FC = () => {
                   variant="primary"
                   size="md"
                   isLoading={isLoading}
-                  className="w-full"
+                  className="w-full shadow-md shadow-sky-500/20"
                 >
                   Send Reset Link
                 </Button>
@@ -103,8 +107,8 @@ export const ForgotPassword: React.FC = () => {
         </Card>
 
         {/* Back Link */}
-        <p className="text-center text-xs text-slate-500">
-          <Link to="/login" className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 dark:text-slate-400 font-medium">
+        <p className="text-center text-xs text-slate-400">
+          <Link to="/login" className="inline-flex items-center gap-1.5 text-slate-400 hover:text-white font-medium transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to login
           </Link>

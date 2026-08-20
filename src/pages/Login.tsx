@@ -52,28 +52,32 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12">
-      <div className="w-full max-w-md space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#060b18] px-4 py-12 relative overflow-hidden">
+      {/* Atmospheric glow orbs */}
+      <div className="glow-orb glow-orb-blue w-[500px] h-[350px] top-[15%] left-1/2 -translate-x-1/2 opacity-40" />
+      <div className="glow-orb glow-orb-cyan w-[300px] h-[250px] bottom-[10%] right-[15%] opacity-30" />
+
+      <div className="w-full max-w-md space-y-6 relative z-10">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <Link to="/" className="inline-flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-sm shadow-brand-500/20">
+          <Link to="/" className="inline-flex items-center gap-2.5 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
               <Sparkles className="w-5 h-5" />
             </div>
-            <span className="font-bold text-2xl text-slate-900 dark:text-white tracking-tight">
-              Hire<span className="text-brand-600">Pilot</span>
+            <span className="font-bold text-2xl text-white tracking-tight">
+              Hire<span className="text-sky-400">Pilot</span>
             </span>
           </Link>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <h2 className="text-xl font-bold text-white">Welcome back</h2>
+          <p className="text-xs text-slate-400">
             Sign in to continue your interview practice sessions
           </p>
         </div>
 
-        <Card className="p-6 sm:p-8 space-y-5 shadow-xl border-slate-200 dark:border-slate-800">
+        <Card className="p-6 sm:p-8 space-y-5 shadow-glass-lg border-white/[0.08] bg-[rgba(12,20,37,0.7)] backdrop-blur-2xl">
           {error && (
-            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
               <span>{error}</span>
             </div>
           )}
@@ -85,7 +89,7 @@ export const Login: React.FC = () => {
             size="md"
             onClick={handleGoogleLogin}
             disabled={isLoading}
-            className="w-full"
+            className="w-full border-white/[0.1] hover:border-white/[0.2] hover:bg-white/[0.06] text-white"
             leftIcon={
               <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                 <path
@@ -111,8 +115,8 @@ export const Login: React.FC = () => {
           </Button>
 
           <div className="relative flex items-center justify-center">
-            <div className="border-t border-slate-200 dark:border-slate-800 w-full" />
-            <span className="bg-white dark:bg-slate-900 px-3 text-[11px] uppercase tracking-wider text-slate-400 font-semibold absolute">
+            <div className="border-t border-white/[0.08] w-full" />
+            <span className="bg-[#0c1425] px-3 text-[11px] uppercase tracking-wider text-slate-500 font-semibold absolute">
               Or with email
             </span>
           </div>
@@ -131,12 +135,12 @@ export const Login: React.FC = () => {
 
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <label className="block text-xs font-semibold text-slate-300">
                   Password
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-xs text-brand-600 hover:text-brand-700 font-medium"
+                  className="text-xs text-sky-400 hover:text-sky-300 font-medium transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -156,7 +160,7 @@ export const Login: React.FC = () => {
               variant="primary"
               size="md"
               isLoading={isLoading}
-              className="w-full shadow-sm shadow-brand-500/20"
+              className="w-full shadow-md shadow-sky-500/20"
               rightIcon={<ArrowRight className="w-4 h-4" />}
             >
               Sign In
@@ -165,9 +169,9 @@ export const Login: React.FC = () => {
         </Card>
 
         {/* Footer Link */}
-        <p className="text-center text-xs text-slate-500">
+        <p className="text-center text-xs text-slate-400">
           Don't have an account?{' '}
-          <Link to="/signup" className="text-brand-600 hover:text-brand-700 font-semibold">
+          <Link to="/signup" className="text-sky-400 hover:text-sky-300 font-semibold transition-colors">
             Create a free account
           </Link>
         </p>
