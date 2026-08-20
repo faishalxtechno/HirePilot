@@ -36,28 +36,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Check saved guest or real session
   useEffect(() => {
     const savedGuest = localStorage.getItem('hirepilot_guest_user');
 
     if (isSupabaseConfigured) {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          fetchUserProfile(session.user.id, session.user.email);
+      // Listen to auth state changes (handles initial session, login, logout, token refresh)
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+
+        if (currentSession?.user) {
+          await fetchUserProfile(
+            currentSession.user.id,
+            currentSession.user.email,
+            currentSession.user.user_metadata
+          );
         } else if (savedGuest) {
           setProfile(JSON.parse(savedGuest));
           setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
-        }
-        setLoading(false);
-      });
-
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          fetchUserProfile(session.user.id, session.user.email);
         } else {
           setProfile(null);
         }
@@ -68,12 +64,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         subscription.unsubscribe();
       };
     } else {
-      // Local fallback mode
+      // Local fallback mode when Supabase credentials are not configured
       if (savedGuest) {
         setProfile(JSON.parse(savedGuest));
         setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
       } else {
-        // Default demo session for immediate friction-free testing
         localStorage.setItem('hirepilot_guest_user', JSON.stringify(DEMO_USER_PROFILE));
         setProfile(DEMO_USER_PROFILE);
         setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
@@ -82,28 +77,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const fetchUserProfile = async (userId: string, email?: string) => {
+  const fetchUserProfile = async (userId: string, email?: string, userMetadata?: any) => {
     try {
+      // Use .maybeSingle() instead of .single() to avoid 406 Not Acceptable (PGRST116) when 0 rows match
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
+
+      if (error) {
+        console.warn('Notice fetching profile from Supabase:', error.message);
+      }
 
       if (data) {
         setProfile(data);
       } else {
-        // Fallback default profile if trigger hasn't fired yet
-        setProfile({
+        // Fallback default profile if trigger hasn't fired or row does not exist yet
+        const defaultProfile: UserProfile = {
           id: userId,
-          name: email?.split('@')[0] || 'Candidate',
+          name: userMetadata?.full_name || userMetadata?.name || email?.split('@')[0] || 'Candidate',
           email: email || '',
           target_role: 'Software Engineer',
           experience_level: 'Fresher',
-        });
+        };
+        setProfile(defaultProfile);
+
+        // Auto-provision profile row in Supabase so future requests find the record
+        try {
+          await supabase
+            .from('profiles')
+            .upsert(defaultProfile, { onConflict: 'id' });
+        } catch (upsertErr) {
+          // Non-blocking if table is restricted
+          console.warn('Notice auto-provisioning profile row:', upsertErr);
+        }
       }
     } catch (err) {
-      console.error('Error fetching user profile:', err);
+      console.error('Error in fetchUserProfile:', err);
+      setProfile({
+        id: userId,
+        name: userMetadata?.full_name || userMetadata?.name || email?.split('@')[0] || 'Candidate',
+        email: email || '',
+        target_role: 'Software Engineer',
+        experience_level: 'Fresher',
+      });
     }
   };
 
@@ -189,8 +207,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (isSupabaseConfigured && user) {
       const { error } = await supabase
         .from('profiles')
-        .update(updates)
-        .eq('id', user.id);
+        .upsert(
+          {
+            id: user.id,
+            email: user.email,
+            ...updates,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'id' }
+        );
       return { error: error ? new Error(error.message) : null };
     } else {
       localStorage.setItem('hirepilot_guest_user', JSON.stringify(updated));
