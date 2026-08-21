@@ -14,6 +14,8 @@ import { Interview } from './pages/Interview';
 import { InterviewResult } from './pages/InterviewResult';
 import { HistoryPage } from './pages/History';
 import { Profile } from './pages/Profile';
+import { ResumePage } from './pages/Resume';
+import { JobsPage } from './pages/Jobs';
 
 export const App: React.FC = () => {
   return (
@@ -64,6 +66,22 @@ export const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <HistoryPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resume"
+            element={
+              <ProtectedRoute>
+                <ResumePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/jobs"
+            element={
+              <ProtectedRoute>
+                <JobsPage />
               </ProtectedRoute>
             }
           />

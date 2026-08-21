@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HirePilot - Splash Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#363941",
+                        "surface-variant": "#32353c",
+                        "inverse-primary": "#005ac2",
+                        "background": "#10131a",
+                        "surface-container-high": "#272a31",
+                        "surface": "#10131a",
+                        "primary": "#adc6ff",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-primary-fixed": "#001a42",
+                        "on-tertiary-fixed": "#311400",
+                        "outline": "#8c909f",
+                        "on-background": "#e1e2ec",
+                        "surface-dim": "#10131a",
+                        "secondary": "#4cd7f6",
+                        "secondary-container": "#03b5d3",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "on-primary-container": "#00285d",
+                        "primary-fixed-dim": "#adc6ff",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-secondary-container": "#00424e",
+                        "error-container": "#93000a",
+                        "outline-variant": "#424754",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "on-primary": "#002e6a",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "inverse-on-surface": "#2e3038",
+                        "surface-container": "#1d2027",
+                        "on-secondary": "#003640",
+                        "inverse-surface": "#e1e2ec",
+                        "on-tertiary-container": "#461f00",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container-highest": "#32353c",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "surface-container-low": "#191b23",
+                        "primary-container": "#4d8eff",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#ffb786",
+                        "on-error": "#690005",
+                        "on-surface": "#e1e2ec",
+                        "on-secondary-fixed": "#001f26",
+                        "on-tertiary": "#502400",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-container": "#df7412",
+                        "secondary-fixed": "#acedff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap-sm": "8px",
+                        "unit": "4px",
+                        "stack-gap-lg": "24px",
+                        "stack-gap-md": "16px",
+                        "safe-area-bottom": "34px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glow-text {
+            text-shadow: 0 0 20px rgba(173, 198, 255, 0.4);
+        }
+        
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.9);
+                opacity: 0.5;
+            }
+            70% {
+                transform: scale(1.1);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+        }
+
+        .ambient-glow {
+            position: absolute;
+            width: 150vw;
+            height: 150vh;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(77, 142, 255, 0.08) 0%, rgba(16, 19, 26, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background h-screen w-screen overflow-hidden flex flex-col items-center justify-center relative">
+<!-- Ambient Atmospheric Glow -->
+<div class="ambient-glow"></div>
+<!-- Main Content Container -->
+<div class="relative z-10 flex flex-col items-center justify-center space-y-stack-gap-lg">
+<!-- Logo Icon with Pulse -->
+<div class="relative flex items-center justify-center">
+<!-- Pulsing Rings -->
+<div class="absolute inset-0 rounded-full border border-primary/30 pulse-ring w-24 h-24 sm:w-32 sm:h-32 m-auto"></div>
+<div class="absolute inset-0 rounded-full border border-primary/20 pulse-ring w-32 h-32 sm:w-40 sm:h-40 m-auto" style="animation-delay: 0.5s;"></div>
+<!-- Glass Icon Container -->
+<div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] z-20">
+<span class="material-symbols-outlined text-primary text-4xl sm:text-5xl" style="font-variation-settings: 'FILL' 1;">
+                    rocket_launch
+                </span>
+</div>
+</div>
+<!-- Typography -->
+<div class="text-center space-y-stack-gap-sm">
+<h1 class="font-display-lg text-display-lg bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary glow-text">
+                HirePilot
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant opacity-80 uppercase tracking-widest text-sm">
+                Your AI Career Copilot
+            </p>
+</div>
+<!-- Loading Indicator -->
+<div class="mt-12 flex space-x-2 items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-primary/50 animate-bounce" style="animation-delay: 0s;"></div>
+<div class="w-2 h-2 rounded-full bg-primary/50 animate-bounce" style="animation-delay: 0.2s;"></div>
+<div class="w-2 h-2 rounded-full bg-primary/50 animate-bounce" style="animation-delay: 0.4s;"></div>
+</div>
+</div>
+<!-- Script to simulate splash screen loading and redirect (commented out for design purposes) -->
+<script>
+        // setTimeout(() => {
+        //     window.location.href = 'home.html';
+        // }, 3000);
+    </script>
+</body></html>

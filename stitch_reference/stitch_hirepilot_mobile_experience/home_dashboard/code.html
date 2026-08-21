@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HirePilot - Home Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#363941",
+                        "surface-variant": "#32353c",
+                        "inverse-primary": "#005ac2",
+                        "background": "#10131a",
+                        "surface-container-high": "#272a31",
+                        "surface": "#10131a",
+                        "primary": "#adc6ff",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-primary-fixed": "#001a42",
+                        "on-tertiary-fixed": "#311400",
+                        "outline": "#8c909f",
+                        "on-background": "#e1e2ec",
+                        "surface-dim": "#10131a",
+                        "secondary": "#4cd7f6",
+                        "secondary-container": "#03b5d3",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "on-primary-container": "#00285d",
+                        "primary-fixed-dim": "#adc6ff",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-secondary-container": "#00424e",
+                        "error-container": "#93000a",
+                        "outline-variant": "#424754",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "on-primary": "#002e6a",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "inverse-on-surface": "#2e3038",
+                        "surface-container": "#1d2027",
+                        "on-secondary": "#003640",
+                        "inverse-surface": "#e1e2ec",
+                        "on-tertiary-container": "#461f00",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container-highest": "#32353c",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "surface-container-low": "#191b23",
+                        "primary-container": "#4d8eff",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#ffb786",
+                        "on-error": "#690005",
+                        "on-surface": "#e1e2ec",
+                        "on-secondary-fixed": "#001f26",
+                        "on-tertiary": "#502400",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-container": "#df7412",
+                        "secondary-fixed": "#acedff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap-sm": "8px",
+                        "unit": "4px",
+                        "stack-gap-lg": "24px",
+                        "stack-gap-md": "16px",
+                        "safe-area-bottom": "34px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #020617; /* Base Deep Navy */
+            color: #e1e2ec; /* on-background */
+        }
+        /* Atmospheric Light Leaks */
+        .light-leak-top {
+            position: fixed;
+            top: -20%;
+            left: -10%;
+            width: 70vw;
+            height: 70vw;
+            background: radial-gradient(circle, rgba(173, 198, 255, 0.15) 0%, rgba(2, 6, 23, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .light-leak-bottom {
+            position: fixed;
+            bottom: -20%;
+            right: -10%;
+            width: 80vw;
+            height: 80vw;
+            background: radial-gradient(circle, rgba(76, 215, 246, 0.1) 0%, rgba(2, 6, 23, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-panel-elevated {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        /* Circular Progress */
+        .progress-ring {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+
+        /* Hide scrollbar for horizontal scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative pb-[100px] md:pb-0 pt-[80px]">
+<!-- Atmosphere -->
+<div class="light-leak-top"></div>
+<div class="light-leak-bottom"></div>
+<!-- TopAppBar (Web & Mobile) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-container-padding py-stack-gap-sm bg-surface/30 dark:bg-surface/30 backdrop-blur-xl shadow-2xl transition-colors hover:bg-white/5">
+<div class="font-display-lg text-display-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+            HirePilot
+        </div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full glass-panel">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-white/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A close-up portrait of a professional individual in a futuristic, sleek environment. Soft electric blue rim lighting highlights their features against a deep navy background. The mood is confident and sophisticated, fitting a high-tech AI platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL2_-GNuWk1TSqMNRTGXaCYiGSk5T-XI-C_PtBYoBrD3jxVOPQA25t2sySwtvLJ6AlV3Y4N8e-GB4fflNntYg6dP1_-5xwsgmUtKmKWO6NLNvAoKevGi1O3bp2K8X1oIogk-eMC_f662ReS-0_WJfohAYNgaS2fii8FSqb0vp1A6yX8pMmOn_hVHAd_oSQPhnXNpnjbMdKrB-XbzQtMq29hq9CqTtj7dJz65fRKNJxX0mETfISMpYC"/>
+</div>
+</div>
+</header>
+<!-- SideNav (Web Only - Simulated structure for desktop context) -->
+<nav class="hidden md:flex flex-col fixed left-0 top-[80px] bottom-0 w-[240px] px-container-padding py-stack-gap-lg border-r border-white/10 glass-panel z-40">
+<div class="flex flex-col gap-unit">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary bg-white/5 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">home</span> Home
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-outline hover:text-primary transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">mic_none</span> Interview
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-outline hover:text-primary transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">description</span> Resume
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-outline hover:text-primary transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">work_outline</span> Jobs
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-outline hover:text-primary transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">person_outline</span> Profile
+            </a>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="md:ml-[240px] px-container-padding max-w-5xl mx-auto space-y-stack-gap-lg animate-[fadeIn_0.5s_ease-out]">
+<!-- Welcome Header -->
+<section class="space-y-unit mt-stack-gap-md">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">
+                Good morning, Faishal <span class="inline-block animate-[wave_2s_infinite]">👋</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Ready to get hired?</p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-gap-md">
+<!-- Career Score (Hero Card) -->
+<div class="glass-panel rounded-xl p-stack-gap-lg md:col-span-8 relative overflow-hidden group">
+<!-- Subtle background glow -->
+<div class="absolute -right-20 -bottom-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-500"></div>
+<div class="flex flex-col sm:flex-row items-center justify-between gap-stack-gap-lg relative z-10">
+<div class="space-y-4 text-center sm:text-left">
+<h2 class="font-title-md text-title-md text-on-surface tracking-wider">YOUR CAREER SCORE</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[250px]">You're making great progress. Keep practicing to reach top tier.</p>
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-6 py-3 rounded-lg hover:bg-primary-container transition-colors shadow-[0_0_15px_rgba(173,198,255,0.3)] hover:shadow-[0_0_25px_rgba(173,198,255,0.5)]">
+                            VIEW DETAILS
+                        </button>
+</div>
+<!-- Circular Progress Visual -->
+<div class="relative w-40 h-40 flex-shrink-0">
+<svg class="w-full h-full progress-ring" viewbox="0 0 120 120">
+<!-- Background Circle -->
+<circle cx="60" cy="60" fill="none" r="54" stroke="rgba(255,255,255,0.1)" stroke-width="8"></circle>
+<!-- Progress Circle (87%) -->
+<circle class="progress-ring-circle" cx="60" cy="60" fill="none" r="54" stroke="#adc6ff" stroke-dasharray="339.292" stroke-dashoffset="44.108" stroke-linecap="round" stroke-width="8"></circle> <!-- 339.292 * (1 - 0.87) -->
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-primary drop-shadow-[0_0_8px_rgba(173,198,255,0.5)]">87</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ 100</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Upcoming Interview Card -->
+<div class="glass-panel-elevated rounded-xl p-stack-gap-md md:col-span-4 flex flex-col justify-between border-t-2 border-t-secondary relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-6xl">event</span>
+</div>
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="font-label-caps text-label-caps">UPCOMING</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface mb-1">Machine Learning Engineer</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Tomorrow 10:30 AM</p>
+</div>
+<button class="mt-stack-gap-md w-full glass-panel text-on-surface font-label-caps text-label-caps py-3 rounded-lg hover:bg-white/10 transition-colors border border-white/20">
+                    PREPARE NOW
+                </button>
+</div>
+<!-- Quick Actions (Horizontal Scroll) -->
+<div class="md:col-span-12 space-y-unit mt-4">
+<h3 class="font-title-md text-title-md text-on-surface px-1">Quick Actions</h3>
+<div class="flex overflow-x-auto gap-stack-gap-md pb-4 no-scrollbar snap-x">
+<!-- Action 1 -->
+<div class="snap-start shrink-0 w-[240px] glass-panel rounded-xl p-stack-gap-md hover:bg-white/10 transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">mic_none</span>
+</div>
+<h4 class="font-body-lg text-body-lg text-on-surface mb-1">AI Interview</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Practice now</p>
+</div>
+<!-- Action 2 -->
+<div class="snap-start shrink-0 w-[240px] glass-panel rounded-xl p-stack-gap-md hover:bg-white/10 transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4 text-secondary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">description</span>
+</div>
+<h4 class="font-body-lg text-body-lg text-on-surface mb-1">Resume</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Improve score</p>
+</div>
+<!-- Action 3 -->
+<div class="snap-start shrink-0 w-[240px] glass-panel rounded-xl p-stack-gap-md hover:bg-white/10 transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-tertiary/10 flex items-center justify-center mb-4 text-tertiary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">work_outline</span>
+</div>
+<h4 class="font-body-lg text-body-lg text-on-surface mb-1">Find Jobs</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Explore matches</p>
+</div>
+</div>
+</div>
+<!-- Recommended Jobs & Recent Activity Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-gap-md md:col-span-12">
+<!-- Recommended Jobs -->
+<div class="space-y-stack-gap-sm">
+<div class="flex justify-between items-center px-1">
+<h3 class="font-title-md text-title-md text-on-surface">Recommended</h3>
+<button class="text-primary font-label-caps text-label-caps hover:text-primary-container">VIEW ALL</button>
+</div>
+<div class="glass-panel rounded-xl p-stack-gap-md space-y-4">
+<!-- Job 1 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-bright flex items-center justify-center">
+<span class="material-symbols-outlined text-outline">robot_2</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg text-on-surface group-hover:text-primary transition-colors">AI/ML Engineer</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">TechNova Inc.</p>
+</div>
+</div>
+<div class="text-right">
+<span class="inline-block px-2 py-1 rounded bg-secondary/20 text-secondary font-label-caps text-[10px]">95% MATCH</span>
+</div>
+</div>
+<div class="h-px w-full bg-white/10"></div>
+<!-- Job 2 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-bright flex items-center justify-center">
+<span class="material-symbols-outlined text-outline">code</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg text-on-surface group-hover:text-primary transition-colors">Software Engineer</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Global Systems</p>
+</div>
+</div>
+<div class="text-right">
+<span class="inline-block px-2 py-1 rounded bg-secondary/10 text-secondary font-label-caps text-[10px]">91% MATCH</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity -->
+<div class="space-y-stack-gap-sm">
+<h3 class="font-title-md text-title-md text-on-surface px-1">Recent Activity</h3>
+<div class="glass-panel rounded-xl p-stack-gap-md h-full">
+<div class="relative pl-6 border-l border-white/10 space-y-6 before:content-[''] before:absolute before:top-2 before:bottom-2 before:-left-px before:w-[2px] before:bg-gradient-to-b before:from-primary/50 before:to-transparent">
+<!-- Activity 1 -->
+<div class="relative">
+<div class="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-[#020617]"></div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-1">2 hours ago</p>
+<h4 class="font-body-lg text-body-lg text-on-surface">Interview completed</h4>
+<p class="font-body-sm text-body-sm text-outline mt-1">Mock behavioral interview scored 85/100.</p>
+</div>
+<!-- Activity 2 -->
+<div class="relative">
+<div class="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-surface-bright ring-4 ring-[#020617]"></div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-1">Yesterday</p>
+<h4 class="font-body-lg text-body-lg text-on-surface">Resume updated</h4>
+<p class="font-body-sm text-body-sm text-outline mt-1">Added new ML project. ATS score improved to 92%.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-4 left-4 right-4 rounded-xl bg-surface-container/20 dark:bg-surface-container/20 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] z-50 px-container-padding pb-safe-area-bottom pt-4 flex justify-around items-center">
+<!-- Active Tab: Home -->
+<a class="flex flex-col items-center justify-center text-primary filter drop-shadow-[0_0_8px_rgba(173,198,255,0.8)] scale-110 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">mic_none</span>
+<span class="font-label-caps text-label-caps">Interview</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">description</span>
+<span class="font-label-caps text-label-caps">Resume</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">work_outline</span>
+<span class="font-label-caps text-label-caps">Jobs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">person_outline</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+<style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes wave {
+            0% { transform: rotate(0.0deg) }
+            10% { transform: rotate(14.0deg) }
+            20% { transform: rotate(-8.0deg) }
+            30% { transform: rotate(14.0deg) }
+            40% { transform: rotate(-4.0deg) }
+            50% { transform: rotate(10.0deg) }
+            60% { transform: rotate(0.0deg) }
+            100% { transform: rotate(0.0deg) }
+        }
+    </style>
+<!-- Initialize Circle Progress Animation -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const circle = document.querySelector('.progress-ring-circle');
+            if(circle) {
+                // Force a reflow before setting final offset for animation
+                circle.style.strokeDashoffset = '339.292'; // Start empty
+                setTimeout(() => {
+                    circle.style.strokeDashoffset = '44.108'; // Animate to 87%
+                }, 100);
+            }
+        });
+    </script>
+</body></html>

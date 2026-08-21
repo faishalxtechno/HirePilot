@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HirePilot - Career Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#363941",
+                      "surface-variant": "#32353c",
+                      "inverse-primary": "#005ac2",
+                      "background": "#10131a",
+                      "surface-container-high": "#272a31",
+                      "surface": "#10131a",
+                      "primary": "#adc6ff",
+                      "surface-container-lowest": "#0b0e15",
+                      "on-primary-fixed": "#001a42",
+                      "on-tertiary-fixed": "#311400",
+                      "outline": "#8c909f",
+                      "on-background": "#e1e2ec",
+                      "surface-dim": "#10131a",
+                      "secondary": "#4cd7f6",
+                      "secondary-container": "#03b5d3",
+                      "tertiary-fixed-dim": "#ffb786",
+                      "on-primary-container": "#00285d",
+                      "primary-fixed-dim": "#adc6ff",
+                      "tertiary-fixed": "#ffdcc6",
+                      "on-secondary-container": "#00424e",
+                      "error-container": "#93000a",
+                      "outline-variant": "#424754",
+                      "error": "#ffb4ab",
+                      "surface-tint": "#adc6ff",
+                      "on-secondary-fixed-variant": "#004e5c",
+                      "on-primary": "#002e6a",
+                      "secondary-fixed-dim": "#4cd7f6",
+                      "inverse-on-surface": "#2e3038",
+                      "surface-container": "#1d2027",
+                      "on-secondary": "#003640",
+                      "inverse-surface": "#e1e2ec",
+                      "on-tertiary-container": "#461f00",
+                      "on-primary-fixed-variant": "#004395",
+                      "surface-container-highest": "#32353c",
+                      "on-tertiary-fixed-variant": "#723600",
+                      "surface-container-low": "#191b23",
+                      "primary-container": "#4d8eff",
+                      "on-surface-variant": "#c2c6d6",
+                      "on-error-container": "#ffdad6",
+                      "tertiary": "#ffb786",
+                      "on-error": "#690005",
+                      "on-surface": "#e1e2ec",
+                      "on-secondary-fixed": "#001f26",
+                      "on-tertiary": "#502400",
+                      "primary-fixed": "#d8e2ff",
+                      "tertiary-container": "#df7412",
+                      "secondary-fixed": "#acedff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-gap-sm": "8px",
+                      "unit": "4px",
+                      "stack-gap-lg": "24px",
+                      "stack-gap-md": "16px",
+                      "safe-area-bottom": "34px",
+                      "container-padding": "20px"
+              },
+              "fontFamily": {
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "title-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        /* Ambient Light Leaks */
+        .ambient-light-1 {
+            position: fixed;
+            top: -20%;
+            left: -10%;
+            width: 70vw;
+            height: 70vw;
+            background: radial-gradient(circle, rgba(173, 198, 255, 0.08) 0%, rgba(16, 19, 26, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .ambient-light-2 {
+            position: fixed;
+            bottom: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(76, 215, 246, 0.05) 0%, rgba(16, 19, 26, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Glass Panel Level 2 */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Minimal Chart Grid Lines */
+        .chart-grid {
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Simple SVG Line Chart Path Animation */
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        .animated-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s ease-out forwards;
+        }
+        
+        /* Hide scrollbar for clean UI */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen font-body-lg flex flex-col antialiased selection:bg-primary selection:text-on-primary">
+<!-- Ambient Background Elements -->
+<div class="ambient-light-1"></div>
+<div class="ambient-light-2"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-container-padding py-stack-gap-sm bg-surface/30 dark:bg-surface/30 backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-300">
+<!-- Leading Avatar -->
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-white/20 hover:border-primary/50 transition-colors cursor-pointer">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A futuristic, hyper-realistic avatar portrait of a professional inside a sleek, dark-glass cockpit. The lighting is moody with subtle electric blue rim light highlighting the subject's features against a dark, minimalist tech background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxuXvmUzbXaJ68EYqBTycEz4Xg-gKqZXzCtrdiax4ptFTqNSHp-4PBxkj1YTaRouvqdq8zgf3mjbpQba8BP-w6_ua2b2KCtfRz7arMnEwbjEGK4lNhcLKIREyXPGw8DvClKsFPhc1XWmU8-iw4-2IUPSnOSz5vqh5mtmSSaT4-YoOOsJJeL4j280I3f6LNAYuKheykcWNq9fu22RWtVRiG10fJ1AhMQUHoSHgLlAyH3FZ-PXgx0H5z"/>
+</div>
+</div>
+<!-- Headline -->
+<div class="absolute left-1/2 -translate-x-1/2">
+<h1 class="font-display-lg text-display-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary hidden md:block">HirePilot</h1>
+<!-- Mobile compact version -->
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary md:hidden">HirePilot</h1>
+</div>
+<!-- Trailing Icon -->
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-primary dark:text-primary hover:bg-white/5 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<!-- Add top padding to account for fixed header, bottom padding for mobile nav -->
+<main class="flex-1 px-container-padding pt-24 pb-32 md:pb-8 w-full max-w-5xl mx-auto flex flex-col gap-stack-lg relative z-10">
+<!-- Page Header -->
+<div class="flex flex-col gap-unit">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">Career Analytics</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Insights into your job search journey.</p>
+</div>
+<!-- KPI Bento Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-stack-md">
+<!-- Career Score -->
+<div class="glass-panel rounded-xl p-stack-md flex flex-col justify-between h-32 relative overflow-hidden group hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-body-sm text-body-sm text-on-surface-variant uppercase tracking-wider font-semibold">Score</span>
+<span class="material-symbols-outlined text-primary text-[20px] opacity-70 group-hover:opacity-100 transition-opacity">speed</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-primary flex items-baseline gap-1">
+                        87<span class="font-body-sm text-body-sm text-on-surface-variant">/100</span>
+</div>
+</div>
+<!-- Decorative subtle glow -->
+<div class="absolute -bottom-4 -right-4 w-16 h-16 bg-primary/20 rounded-full blur-xl pointer-events-none"></div>
+</div>
+<!-- Applications -->
+<div class="glass-panel rounded-xl p-stack-md flex flex-col justify-between h-32 hover:border-secondary/30 transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-body-sm text-body-sm text-on-surface-variant uppercase tracking-wider font-semibold">Apps</span>
+<span class="material-symbols-outlined text-secondary text-[20px] opacity-70">send</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface">18</div>
+</div>
+</div>
+<!-- Interviews -->
+<div class="glass-panel rounded-xl p-stack-md flex flex-col justify-between h-32 hover:border-tertiary/30 transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-body-sm text-body-sm text-on-surface-variant uppercase tracking-wider font-semibold">Interviews</span>
+<span class="material-symbols-outlined text-tertiary text-[20px] opacity-70">forum</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface">7</div>
+</div>
+</div>
+<!-- Response Rate -->
+<div class="glass-panel rounded-xl p-stack-md flex flex-col justify-between h-32 hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-body-sm text-body-sm text-on-surface-variant uppercase tracking-wider font-semibold">Response</span>
+<span class="material-symbols-outlined text-primary text-[20px] opacity-70">query_stats</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface flex items-baseline gap-1">
+                        39<span class="font-title-md text-title-md text-on-surface">%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Charts Area -->
+<div class="flex flex-col md:flex-row gap-stack-lg w-full mt-stack-md">
+<!-- Application Activity Chart -->
+<div class="glass-panel rounded-xl p-stack-md flex-1 flex flex-col gap-stack-md min-h-[300px]">
+<div class="flex justify-between items-center border-b border-white/10 pb-stack-sm">
+<h3 class="font-title-md text-title-md text-on-surface">Application Activity</h3>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<!-- Chart Container (Visual representation) -->
+<div class="flex-1 w-full relative chart-grid rounded-lg overflow-hidden flex items-end">
+<!-- Y Axis Labels -->
+<div class="absolute left-0 top-0 bottom-6 w-8 flex flex-col justify-between text-[10px] text-on-surface-variant/50 z-10 pl-1 py-2">
+<span>10</span>
+<span>5</span>
+<span>0</span>
+</div>
+<!-- SVG Line Chart Mockup -->
+<div class="absolute inset-0 pl-8 pb-6 pr-2 pt-4">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 100 100">
+<!-- Gradient for area under line -->
+<defs>
+<lineargradient id="area-gradient-1" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#4cd7f6" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#4cd7f6" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Area fill -->
+<path class="opacity-70" d="M0,80 L20,60 L40,70 L60,30 L80,50 L100,10 L100,100 L0,100 Z" fill="url(#area-gradient-1)"></path>
+<!-- Line -->
+<path class="animated-line" d="M0,80 L20,60 L40,70 L60,30 L80,50 L100,10" fill="none" stroke="#4cd7f6" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<!-- Data points -->
+<circle cx="60" cy="30" fill="#10131a" r="3" stroke="#4cd7f6" stroke-width="2" vector-effect="non-scaling-stroke"></circle>
+<circle cx="100" cy="10" fill="#10131a" r="3" stroke="#4cd7f6" stroke-width="2" vector-effect="non-scaling-stroke"></circle>
+</svg>
+</div>
+<!-- X Axis Labels -->
+<div class="absolute bottom-0 left-8 right-2 h-6 flex justify-between items-center text-[10px] text-on-surface-variant/50 px-1 border-t border-white/5">
+<span>Mon</span>
+<span>Wed</span>
+<span>Fri</span>
+<span>Sun</span>
+</div>
+</div>
+</div>
+<!-- Interview Performance Chart -->
+<div class="glass-panel rounded-xl p-stack-md flex-1 flex flex-col gap-stack-md min-h-[300px]">
+<div class="flex justify-between items-center border-b border-white/10 pb-stack-sm">
+<h3 class="font-title-md text-title-md text-on-surface">Interview Performance</h3>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-[12px] text-on-surface-variant">Tech</span>
+<span class="w-2 h-2 rounded-full bg-secondary ml-2"></span>
+<span class="text-[12px] text-on-surface-variant">Culture</span>
+</div>
+</div>
+<!-- Bar Chart Mockup -->
+<div class="flex-1 w-full relative flex items-end justify-around pb-8 pt-4 px-2">
+<!-- Week 1 -->
+<div class="w-1/5 flex flex-col justify-end items-center gap-1 h-full relative group">
+<div class="w-full flex justify-center items-end gap-1 h-full">
+<div class="w-3 bg-primary/80 rounded-t-sm h-[40%] group-hover:bg-primary transition-colors"></div>
+<div class="w-3 bg-secondary/80 rounded-t-sm h-[60%] group-hover:bg-secondary transition-colors"></div>
+</div>
+<span class="absolute -bottom-6 text-[10px] text-on-surface-variant/70">W1</span>
+</div>
+<!-- Week 2 -->
+<div class="w-1/5 flex flex-col justify-end items-center gap-1 h-full relative group">
+<div class="w-full flex justify-center items-end gap-1 h-full">
+<div class="w-3 bg-primary/80 rounded-t-sm h-[70%] group-hover:bg-primary transition-colors"></div>
+<div class="w-3 bg-secondary/80 rounded-t-sm h-[50%] group-hover:bg-secondary transition-colors"></div>
+</div>
+<span class="absolute -bottom-6 text-[10px] text-on-surface-variant/70">W2</span>
+</div>
+<!-- Week 3 -->
+<div class="w-1/5 flex flex-col justify-end items-center gap-1 h-full relative group">
+<div class="w-full flex justify-center items-end gap-1 h-full">
+<div class="w-3 bg-primary/80 rounded-t-sm h-[30%] group-hover:bg-primary transition-colors"></div>
+<div class="w-3 bg-secondary/80 rounded-t-sm h-[80%] group-hover:bg-secondary transition-colors"></div>
+</div>
+<span class="absolute -bottom-6 text-[10px] text-on-surface-variant/70">W3</span>
+</div>
+<!-- Week 4 -->
+<div class="w-1/5 flex flex-col justify-end items-center gap-1 h-full relative group">
+<div class="w-full flex justify-center items-end gap-1 h-full">
+<div class="w-3 bg-primary/80 rounded-t-sm h-[90%] group-hover:bg-primary transition-colors"></div>
+<div class="w-3 bg-secondary/80 rounded-t-sm h-[70%] group-hover:bg-secondary transition-colors"></div>
+</div>
+<span class="absolute -bottom-6 text-[10px] text-on-surface-variant/70">W4</span>
+</div>
+<!-- Base line -->
+<div class="absolute bottom-6 left-0 right-0 h-px bg-white/10"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<!-- The intent of this page is "Profile" as it relates to user analytics/dashboard, though not an exact match, Profile is the closest semantic fit for user data -->
+<nav class="fixed bottom-0 left-0 w-full z-50 px-container-padding pb-safe-area-bottom flex justify-around items-center bg-surface-container/20 dark:bg-surface-container/20 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] fixed bottom-4 left-4 right-4 rounded-xl md:hidden w-[calc(100%-32px)] mx-auto">
+<!-- Home (Inactive) -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors py-stack-sm w-16" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<!-- Interview (Inactive) -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors py-stack-sm w-16" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1">mic_none</span>
+<span class="font-label-caps text-label-caps">Interview</span>
+</a>
+<!-- Resume (Inactive) -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors py-stack-sm w-16" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1">description</span>
+<span class="font-label-caps text-label-caps">Resume</span>
+</a>
+<!-- Jobs (Inactive) -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors py-stack-sm w-16" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1">work_outline</span>
+<span class="font-label-caps text-label-caps">Jobs</span>
+</a>
+<!-- Profile (Active - Semantic Match for Analytics) -->
+<a class="flex flex-col items-center justify-center text-primary filter drop-shadow-[0_0_8px_rgba(173,198,255,0.8)] scale-110 duration-200 ease-out py-stack-sm w-16" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" style="font-variation-settings: 'FILL' 1;">person_outline</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+<!-- SideNav placeholder for desktop if it existed, but utilizing TopApp bar based on instructions -->
+</body></html>

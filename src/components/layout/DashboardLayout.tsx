@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
+import { MobileBottomNav } from './MobileBottomNav';
 import { Menu, X, Sparkles, AlertCircle } from 'lucide-react';
 import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
@@ -93,9 +94,9 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative">
         {/* Mobile Header Bar */}
-        <header className="lg:hidden flex items-center justify-between px-3.5 sm:px-4 h-14 bg-[rgba(6,11,24,0.8)] border-b border-white/[0.06] backdrop-blur-xl shrink-0 z-30">
+        <header className="lg:hidden flex items-center justify-between px-3.5 sm:px-4 h-14 bg-[rgba(6,11,24,0.85)] border-b border-white/[0.06] backdrop-blur-xl shrink-0 z-30">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setMobileSidebarOpen(true)}
@@ -105,7 +106,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               <Menu className="w-5 h-5" />
             </button>
             <Link to="/dashboard" className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-sm">
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-sm shadow-sky-500/20">
                 <Sparkles className="w-3.5 h-3.5" />
               </div>
               <span className="font-bold text-sm text-white">
@@ -121,7 +122,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
 
             <Link
               to="/profile"
-              className="w-7 h-7 rounded-full bg-gradient-to-br from-sky-400/80 to-blue-600/80 flex items-center justify-center text-xs font-bold text-white overflow-hidden border border-sky-400/20"
+              className="w-7 h-7 rounded-full bg-gradient-to-br from-sky-400/80 to-blue-600/80 flex items-center justify-center text-xs font-bold text-white overflow-hidden border border-sky-400/30 shadow-sm"
               title="Profile"
             >
               {profile?.avatar_url ? (
@@ -143,10 +144,13 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
           </div>
         )}
 
-        {/* Scrollable Page Body */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden px-3.5 sm:px-6 lg:px-8 py-5 sm:py-6 md:py-8 max-w-7xl w-full mx-auto">
+        {/* Scrollable Page Body with bottom padding for Mobile Bottom Navigation */}
+        <main className="flex-1 overflow-y-auto overflow-x-hidden px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8 pb-24 lg:pb-8 max-w-7xl w-full mx-auto">
           {children}
         </main>
+
+        {/* Fixed Mobile Bottom Navigation */}
+        <MobileBottomNav />
       </div>
     </div>
   );

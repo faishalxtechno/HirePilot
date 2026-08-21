@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HirePilot - AI Interview</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-bright": "#363941",
+                        "surface-variant": "#32353c",
+                        "inverse-primary": "#005ac2",
+                        "background": "#10131a",
+                        "surface-container-high": "#272a31",
+                        "surface": "#10131a",
+                        "primary": "#adc6ff",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-primary-fixed": "#001a42",
+                        "on-tertiary-fixed": "#311400",
+                        "outline": "#8c909f",
+                        "on-background": "#e1e2ec",
+                        "surface-dim": "#10131a",
+                        "secondary": "#4cd7f6",
+                        "secondary-container": "#03b5d3",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "on-primary-container": "#00285d",
+                        "primary-fixed-dim": "#adc6ff",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-secondary-container": "#00424e",
+                        "error-container": "#93000a",
+                        "outline-variant": "#424754",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "on-primary": "#002e6a",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "inverse-on-surface": "#2e3038",
+                        "surface-container": "#1d2027",
+                        "on-secondary": "#003640",
+                        "inverse-surface": "#e1e2ec",
+                        "on-tertiary-container": "#461f00",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container-highest": "#32353c",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "surface-container-low": "#191b23",
+                        "primary-container": "#4d8eff",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#ffb786",
+                        "on-error": "#690005",
+                        "on-surface": "#e1e2ec",
+                        "on-secondary-fixed": "#001f26",
+                        "on-tertiary": "#502400",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-container": "#df7412",
+                        "secondary-fixed": "#acedff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "stack-gap-sm": "8px",
+                        "unit": "4px",
+                        "stack-gap-lg": "24px",
+                        "stack-gap-md": "16px",
+                        "safe-area-bottom": "34px",
+                        "container-padding": "20px"
+                    },
+                    fontFamily: {
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    fontSize: {
+                        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }],
+                        "headline-lg-mobile": ["28px", { lineHeight: "34px", fontWeight: "600" }],
+                        "title-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "display-lg": ["40px", { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen relative overflow-x-hidden pb-safe-area-bottom font-body-lg text-body-lg">
+<!-- Atmospheric Light Leaks -->
+<div class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-primary/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+<div class="fixed bottom-[10%] right-[-10%] w-[60vw] h-[60vw] bg-secondary/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
+<main class="relative z-10 md:hidden pt-stack-gap-lg pb-[100px]">
+<!-- Header Section -->
+<header class="px-container-padding mb-stack-gap-lg">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">AI Interview</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-unit">Practice until you're confident.</p>
+</header>
+<!-- Primary Glass Card: AI Interview Coach -->
+<section class="px-container-padding mb-stack-gap-lg">
+<div class="relative bg-white/[0.05] backdrop-blur-xl border border-white/10 rounded-xl p-6 overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+<!-- Inner Glow -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-unit">
+<span class="material-symbols-outlined text-primary">psychology</span>
+<h2 class="font-label-caps text-label-caps text-primary uppercase tracking-wider">AI Interview Coach</h2>
+</div>
+<p class="font-title-md text-title-md text-on-surface mb-stack-gap-md">Realistic interviews. Instant AI feedback.</p>
+<button class="w-full bg-primary text-on-primary-fixed font-title-md text-title-md py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined">play_arrow</span>
+                        Start Interview
+                    </button>
+</div>
+</div>
+</section>
+<!-- Difficulty Segmented Control -->
+<section class="px-container-padding mb-stack-gap-lg">
+<div class="flex bg-white/5 backdrop-blur-md rounded-full p-1 border border-white/10">
+<button class="flex-1 py-2 font-body-sm text-body-sm text-on-surface-variant rounded-full hover:text-on-surface transition-colors">Easy</button>
+<button class="flex-1 py-2 font-body-sm text-body-sm bg-primary/20 text-primary border border-primary/30 rounded-full shadow-[0_0_12px_rgba(173,198,255,0.2)]">Medium</button>
+<button class="flex-1 py-2 font-body-sm text-body-sm text-on-surface-variant rounded-full hover:text-on-surface transition-colors">Hard</button>
+</div>
+</section>
+<!-- Interview Categories (Bento Grid) -->
+<section class="px-container-padding mb-stack-gap-lg">
+<h3 class="font-title-md text-title-md text-on-surface mb-stack-gap-md">Categories</h3>
+<div class="grid grid-cols-2 gap-stack-gap-sm">
+<!-- Technical -->
+<button class="bg-white/[0.03] hover:bg-white/[0.08] transition-colors border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-2 aspect-square">
+<span class="material-symbols-outlined text-secondary text-3xl">code_blocks</span>
+<span class="font-body-sm text-body-sm text-on-surface">Technical</span>
+</button>
+<!-- Behavioral -->
+<button class="bg-white/[0.03] hover:bg-white/[0.08] transition-colors border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-2 aspect-square">
+<span class="material-symbols-outlined text-tertiary text-3xl">forum</span>
+<span class="font-body-sm text-body-sm text-on-surface">Behavioral</span>
+</button>
+<!-- HR -->
+<button class="bg-white/[0.03] hover:bg-white/[0.08] transition-colors border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-2 aspect-[2/1] col-span-2">
+<span class="material-symbols-outlined text-primary text-2xl">groups</span>
+<span class="font-body-sm text-body-sm text-on-surface">HR / Cultural Fit</span>
+</button>
+<!-- System Design -->
+<button class="bg-white/[0.03] hover:bg-white/[0.08] transition-colors border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-2 aspect-square">
+<span class="material-symbols-outlined text-primary text-3xl">architecture</span>
+<span class="font-body-sm text-body-sm text-on-surface">System Design</span>
+</button>
+<!-- Mixed -->
+<button class="bg-white/[0.03] hover:bg-white/[0.08] transition-colors border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center gap-2 aspect-square">
+<span class="material-symbols-outlined text-secondary-container text-3xl">shuffle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Mixed</span>
+</button>
+</div>
+</section>
+<!-- Recent Interviews -->
+<section class="px-container-padding mb-stack-gap-lg">
+<h3 class="font-title-md text-title-md text-on-surface mb-stack-gap-sm">Recent Interviews</h3>
+<div class="bg-white/[0.02] border border-white/5 rounded-xl overflow-hidden backdrop-blur-md">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-4 border-b border-white/5 hover:bg-white/[0.05] transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary text-sm">terminal</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Software Engineer</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Technical • 2 days ago</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-title-md text-title-md text-primary">87</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/100</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between p-4 border-b border-white/5 hover:bg-white/[0.05] transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary text-sm">chat_bubble</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Product Manager</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Behavioral • 1 week ago</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-title-md text-title-md text-tertiary">92</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/100</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between p-4 hover:bg-white/[0.05] transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center border border-white/10">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">code</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Frontend Dev</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Coding • 2 weeks ago</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-title-md text-title-md text-on-surface-variant">74</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/100</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Shared Component) -->
+<nav class="md:hidden bg-surface-container/20 dark:bg-surface-container/20 backdrop-blur-2xl fixed bottom-4 left-4 right-4 rounded-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] z-50 px-container-padding pb-safe-area-bottom flex justify-around items-center h-16">
+<!-- Home (Inactive) -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors w-16" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<!-- Interview (Active) -->
+<a class="flex flex-col items-center justify-center text-primary filter drop-shadow-[0_0_8px_rgba(173,198,255,0.8)] scale-110 duration-200 ease-out w-16" href="#">
+<span class="material-symbols-outlined icon-fill mb-1">mic_none</span>
+<span class="font-label-caps text-label-caps">Interview</span>
+</a>
+<!-- Resume (Inactive) -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors w-16" href="#">
+<span class="material-symbols-outlined mb-1">description</span>
+<span class="font-label-caps text-label-caps">Resume</span>
+</a>
+<!-- Jobs (Inactive) -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors w-16" href="#">
+<span class="material-symbols-outlined mb-1">work_outline</span>
+<span class="font-label-caps text-label-caps">Jobs</span>
+</a>
+<!-- Profile (Inactive) -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors w-16" href="#">
+<span class="material-symbols-outlined mb-1">person_outline</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HirePilot - Job Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#363941",
+                        "surface-variant": "#32353c",
+                        "inverse-primary": "#005ac2",
+                        "background": "#10131a",
+                        "surface-container-high": "#272a31",
+                        "surface": "#10131a",
+                        "primary": "#adc6ff",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-primary-fixed": "#001a42",
+                        "on-tertiary-fixed": "#311400",
+                        "outline": "#8c909f",
+                        "on-background": "#e1e2ec",
+                        "surface-dim": "#10131a",
+                        "secondary": "#4cd7f6",
+                        "secondary-container": "#03b5d3",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "on-primary-container": "#00285d",
+                        "primary-fixed-dim": "#adc6ff",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-secondary-container": "#00424e",
+                        "error-container": "#93000a",
+                        "outline-variant": "#424754",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "on-primary": "#002e6a",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "inverse-on-surface": "#2e3038",
+                        "surface-container": "#1d2027",
+                        "on-secondary": "#003640",
+                        "inverse-surface": "#e1e2ec",
+                        "on-tertiary-container": "#461f00",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container-highest": "#32353c",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "surface-container-low": "#191b23",
+                        "primary-container": "#4d8eff",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#ffb786",
+                        "on-error": "#690005",
+                        "on-surface": "#e1e2ec",
+                        "on-secondary-fixed": "#001f26",
+                        "on-tertiary": "#502400",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-container": "#df7412",
+                        "secondary-fixed": "#acedff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap-sm": "8px",
+                        "unit": "4px",
+                        "stack-gap-lg": "24px",
+                        "stack-gap-md": "16px",
+                        "safe-area-bottom": "34px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #020617; } /* Deep Navy */
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.05); /* slightly lighter than #ffffff0f for contrast */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .light-leak-top-right {
+            position: absolute;
+            top: -20%;
+            right: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(173,198,255,0.1) 0%, rgba(2,6,23,0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .light-leak-bottom-left {
+            position: absolute;
+            bottom: -20%;
+            left: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(76,215,246,0.1) 0%, rgba(2,6,23,0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Thin progressive disclosure lines */
+        .glass-divider {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="text-on-background font-body-lg text-body-lg min-h-screen relative overflow-x-hidden pt-24 pb-32">
+<!-- Light Leaks Background -->
+<div class="light-leak-top-right"></div>
+<div class="light-leak-bottom-left"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-container-padding py-stack-gap-sm bg-surface/30 dark:bg-surface/30 backdrop-blur-xl shadow-2xl">
+<button class="text-on-surface-variant hover:bg-white/5 transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="font-display-lg text-display-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">HirePilot</div>
+<button class="text-on-surface-variant hover:bg-white/5 transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="px-container-padding max-w-4xl mx-auto space-y-stack-gap-lg">
+<!-- Job Header Glass Card -->
+<section class="glass-card rounded-xl p-stack-gap-lg shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] relative overflow-hidden">
+<div class="flex flex-col md:flex-row gap-stack-gap-lg items-start">
+<!-- Company Logo Placeholder -->
+<div class="w-24 h-24 rounded-lg overflow-hidden shrink-0 border border-white/10 bg-surface-container-low flex items-center justify-center">
+<img alt="Company Logo" class="w-full h-full object-cover" data-alt="A minimalist, futuristic company logo featuring abstract geometric shapes in electric blue and silver, set against a deep navy background. The style is sleek, modern, and aligned with a high-tech AI design language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4YiLnZ3xqSSNT088ws4VXjL4rVYLDc-ufdA3FYUDqLr9fIamQqoEfSQLCekUOkxysq79iOzisO8yHi2fYHgwuwc_nqPLKCoEo2J46cR_Kzrja0avBfJqfgeoeS7FY3hfJhaqCLfPBllhsT1_E6SW_aDmWL95hjZe6bS5KBhIbMmXZcdjFzrXJA5hYyXgpmMoObps_INRe5_9jGnABcPuRqrs-uverfNx07Nw0eB0Z9ReKHwuQXJOA"/>
+</div>
+<div class="flex-1 space-y-unit">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface font-bold">Senior Front-End Engineer</h1>
+<div class="flex flex-wrap gap-stack-gap-sm text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-unit"><span class="material-symbols-outlined text-[16px]">business</span> TechNova Solutions</span>
+<span class="flex items-center gap-unit"><span class="material-symbols-outlined text-[16px]">location_on</span> San Francisco, CA (Hybrid)</span>
+</div>
+</div>
+<!-- Match Badge -->
+<div class="shrink-0 flex items-center gap-unit bg-primary/20 text-primary border border-primary/30 px-3 py-1.5 rounded-full font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+                    95% Match
+                </div>
+</div>
+<!-- Key Info Pills -->
+<div class="mt-stack-gap-lg flex flex-wrap gap-stack-gap-sm">
+<div class="glass-card px-3 py-1.5 rounded-md font-body-sm text-body-sm text-on-surface-variant flex items-center gap-unit">
+<span class="material-symbols-outlined text-[16px]">payments</span> $160k - $210k
+                </div>
+<div class="glass-card px-3 py-1.5 rounded-md font-body-sm text-body-sm text-on-surface-variant flex items-center gap-unit">
+<span class="material-symbols-outlined text-[16px]">work</span> Full-Time
+                </div>
+<div class="glass-card px-3 py-1.5 rounded-md font-body-sm text-body-sm text-on-surface-variant flex items-center gap-unit">
+<span class="material-symbols-outlined text-[16px]">schedule</span> Posted 2 days ago
+                </div>
+</div>
+</section>
+<!-- Bento Grid Layout for Details -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-gap-lg">
+<!-- Main Content Column -->
+<div class="md:col-span-2 space-y-stack-gap-lg">
+<!-- About the Role -->
+<section class="glass-card rounded-xl p-stack-gap-lg">
+<h2 class="font-title-md text-title-md text-on-surface mb-stack-gap-md flex items-center gap-unit">
+<span class="material-symbols-outlined text-primary">info</span> About the role
+                    </h2>
+<p class="text-on-surface-variant font-body-sm text-body-sm leading-relaxed">
+                        We are looking for an exceptional Senior Front-End Engineer to lead the development of our next-generation AI interfaces. You will be responsible for building highly responsive, visually stunning applications that bridge the gap between complex machine learning models and intuitive user experiences. The ideal candidate has a deep passion for UI architecture, performance optimization, and crafting pixel-perfect interactions.
+                    </p>
+</section>
+<!-- Responsibilities -->
+<section class="glass-card rounded-xl p-stack-gap-lg">
+<h2 class="font-title-md text-title-md text-on-surface mb-stack-gap-md flex items-center gap-unit">
+<span class="material-symbols-outlined text-primary">task_alt</span> Responsibilities
+                    </h2>
+<ul class="space-y-stack-gap-sm text-on-surface-variant font-body-sm text-body-sm">
+<li class="glass-divider pb-stack-gap-sm flex items-start gap-stack-gap-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary mt-0.5">arrow_right</span>
+<span>Architect and develop scalable front-end applications using modern frameworks (React, Vue, or Angular).</span>
+</li>
+<li class="glass-divider pb-stack-gap-sm flex items-start gap-stack-gap-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary mt-0.5">arrow_right</span>
+<span>Collaborate closely with product designers to implement 'Dark Liquid Glass' design systems and complex animations.</span>
+</li>
+<li class="glass-divider pb-stack-gap-sm flex items-start gap-stack-gap-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary mt-0.5">arrow_right</span>
+<span>Optimize application performance for high-end mobile and web platforms, ensuring smooth rendering and interaction.</span>
+</li>
+<li class="flex items-start gap-stack-gap-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary mt-0.5">arrow_right</span>
+<span>Mentor junior engineers and establish best practices for code quality and UI architecture.</span>
+</li>
+</ul>
+</section>
+<!-- Requirements -->
+<section class="glass-card rounded-xl p-stack-gap-lg">
+<h2 class="font-title-md text-title-md text-on-surface mb-stack-gap-md flex items-center gap-unit">
+<span class="material-symbols-outlined text-primary">fact_check</span> Requirements
+                    </h2>
+<ul class="space-y-stack-gap-sm text-on-surface-variant font-body-sm text-body-sm list-disc pl-5">
+<li>5+ years of professional experience in front-end development.</li>
+<li>Deep expertise in modern JavaScript (ES6+), HTML5, and CSS3/TailwindCSS.</li>
+<li>Strong understanding of web performance, accessibility, and responsive design.</li>
+<li>Experience with WebGL or Three.js for interactive visualizations is a strong plus.</li>
+</ul>
+</section>
+</div>
+<!-- Sidebar Column -->
+<div class="space-y-stack-gap-lg">
+<!-- Skills -->
+<section class="glass-card rounded-xl p-stack-gap-lg">
+<h2 class="font-title-md text-title-md text-on-surface mb-stack-gap-md flex items-center gap-unit">
+<span class="material-symbols-outlined text-primary">code</span> Skills
+                    </h2>
+<div class="flex flex-wrap gap-unit">
+<span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full font-body-sm text-body-sm border border-white/5">React</span>
+<span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full font-body-sm text-body-sm border border-white/5">TypeScript</span>
+<span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full font-body-sm text-body-sm border border-white/5">Tailwind CSS</span>
+<span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full font-body-sm text-body-sm border border-white/5">WebGL</span>
+<span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full font-body-sm text-body-sm border border-white/5">UI/UX</span>
+<span class="bg-surface-container-high text-on-surface px-3 py-1 rounded-full font-body-sm text-body-sm border border-white/5">Framer Motion</span>
+</div>
+</section>
+<!-- Salary Insights -->
+<section class="glass-card rounded-xl p-stack-gap-lg">
+<h2 class="font-title-md text-title-md text-on-surface mb-stack-gap-md flex items-center gap-unit">
+<span class="material-symbols-outlined text-primary">monitoring</span> Salary Insights
+                    </h2>
+<div class="space-y-stack-gap-sm">
+<div class="flex justify-between items-end">
+<span class="text-on-surface-variant font-body-sm text-body-sm">Base Range</span>
+<span class="text-on-surface font-title-md text-title-md">$160k - $210k</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full" style="width: 75%"></div>
+</div>
+<p class="text-outline font-label-caps text-label-caps text-center mt-2">Top 15% for this market</p>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Fixed Action Bar -->
+<div class="fixed bottom-0 left-0 w-full z-40 bg-surface/80 backdrop-blur-2xl border-t border-white/10 px-container-padding py-stack-gap-md pb-safe-area-bottom flex gap-stack-gap-md justify-center shadow-[0_-8px_32px_0_rgba(0,0,0,0.5)]">
+<button class="glass-card hover:bg-white/10 text-on-surface font-title-md text-title-md py-3 px-6 rounded-xl flex items-center gap-unit transition-all">
+<span class="material-symbols-outlined">bookmark_border</span>
+            Save Job
+        </button>
+<button class="bg-primary hover:bg-primary/90 text-on-primary-fixed font-title-md text-title-md py-3 px-8 rounded-xl flex-1 max-w-sm flex items-center justify-center gap-unit transition-all shadow-[0_0_15px_rgba(173,198,255,0.4)]">
+            Apply Now
+            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- Bottom NavBar suppressed as this is a Task-Focused sub-page with a Back action context -->
+</body></html>

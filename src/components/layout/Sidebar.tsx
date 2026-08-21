@@ -10,6 +10,8 @@ import {
   LogOut,
   Sparkles,
   Zap,
+  FileText,
+  Briefcase,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -31,6 +33,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Start Interview', path: '/interview/setup', icon: PlayCircle },
+    { label: 'AI Resume Analyzer', path: '/resume', icon: FileText },
+    { label: 'Jobs & Applications', path: '/jobs', icon: Briefcase },
     { label: 'Interview History', path: '/history', icon: History },
     { label: 'Profile', path: '/profile', icon: User },
   ];
@@ -69,8 +73,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 cn(
                   'relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-sky-500/10 text-sky-300 font-semibold border border-sky-500/15 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-sky-400 before:rounded-r-full'
-                    : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300'
+                    ? 'bg-sky-500/10 text-sky-300 font-semibold border border-sky-500/15 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-sky-400 before:rounded-r-full shadow-sm'
+                    : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200'
                 )
               }
             >
@@ -108,7 +112,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* User Profile Card */}
         <div className="flex items-center justify-between px-2 pt-1">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-sky-400/80 to-blue-600/80 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-sky-400/80 to-blue-600/80 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden border border-sky-400/20">
               {profile?.avatar_url ? (
                 <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover" />
               ) : (

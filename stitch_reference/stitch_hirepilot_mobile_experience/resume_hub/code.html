@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HirePilot - Resume Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#363941",
+                        "surface-variant": "#32353c",
+                        "inverse-primary": "#005ac2",
+                        "background": "#10131a",
+                        "surface-container-high": "#272a31",
+                        "surface": "#10131a",
+                        "primary": "#adc6ff",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-primary-fixed": "#001a42",
+                        "on-tertiary-fixed": "#311400",
+                        "outline": "#8c909f",
+                        "on-background": "#e1e2ec",
+                        "surface-dim": "#10131a",
+                        "secondary": "#4cd7f6",
+                        "secondary-container": "#03b5d3",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "on-primary-container": "#00285d",
+                        "primary-fixed-dim": "#adc6ff",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-secondary-container": "#00424e",
+                        "error-container": "#93000a",
+                        "outline-variant": "#424754",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "on-primary": "#002e6a",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "inverse-on-surface": "#2e3038",
+                        "surface-container": "#1d2027",
+                        "on-secondary": "#003640",
+                        "inverse-surface": "#e1e2ec",
+                        "on-tertiary-container": "#461f00",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container-highest": "#32353c",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "surface-container-low": "#191b23",
+                        "primary-container": "#4d8eff",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#ffb786",
+                        "on-error": "#690005",
+                        "on-surface": "#e1e2ec",
+                        "on-secondary-fixed": "#001f26",
+                        "on-tertiary": "#502400",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-container": "#df7412",
+                        "secondary-fixed": "#acedff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap-sm": "8px",
+                        "unit": "4px",
+                        "stack-gap-lg": "24px",
+                        "stack-gap-md": "16px",
+                        "safe-area-bottom": "34px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .light-leak {
+            background: radial-gradient(circle at top right, rgba(173, 198, 255, 0.15), transparent 60%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen relative overflow-x-hidden font-body-lg">
+<div class="fixed inset-0 pointer-events-none light-leak z-0"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-container-padding py-stack-gap-sm bg-surface/30 dark:bg-surface/30 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container border border-white/10">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A futuristic AI avatar profile picture. Dark deep navy background with glowing cyan and electric blue synthetic light lines shaping a stylized human profile. High-end glassmorphism aesthetic, premium highly detailed 3D render." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIqv_BxBb1XBRE44L_Aj11cuRjOIDqjMH6QzFRv6brU8iXizQz8GssjXl_KDELLX-vlrWA-XShbzfzK-bhNfUbH-NGFoe0SEYvOD79vbpA8nLVT4UD8ZpXToelP1ZUvrBmwvB3TlljhIJnsvT5Juj9MiGRv7mrLJCg7z8DE5zGnMNNYLL9eAVOLifyEZzIBxgAriYd_YZr5c0x-DuvHleedItLEWsPu8UcRlK5b_eBD52Tla_ADBpO"/>
+</div>
+</div>
+<h1 class="font-display-lg text-display-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">HirePilot</h1>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-primary dark:text-primary hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="relative z-10 pt-24 pb-32 px-container-padding max-w-4xl mx-auto flex flex-col gap-stack-gap-lg">
+<header class="mb-2">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Resume</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-1">Manage and optimize your professional profile.</p>
+</header>
+<!-- Large Score Card -->
+<section class="glass-card rounded-xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none"></div>
+<h3 class="font-title-md text-title-md text-on-surface-variant mb-2 z-10">RESUME SCORE</h3>
+<div class="font-display-lg text-[64px] leading-[72px] font-bold text-primary mb-1 z-10 filter drop-shadow-[0_0_12px_rgba(173,198,255,0.4)]">
+                92 <span class="text-3xl text-outline-variant font-normal">/ 100</span>
+</div>
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/20 text-secondary border border-secondary/30 mt-2 z-10">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span class="font-label-caps text-label-caps">Excellent</span>
+</div>
+</section>
+<!-- Metrics Bento Grid -->
+<div class="grid grid-cols-2 gap-4">
+<!-- ATS Compatibility -->
+<div class="glass-card rounded-xl p-4 flex flex-col justify-between h-32">
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-outline">fact_check</span>
+<span class="font-body-sm text-body-sm font-semibold uppercase tracking-wider">ATS Match</span>
+</div>
+<div>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary">96%</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[96%]"></div>
+</div>
+</div>
+</div>
+<!-- Content Quality -->
+<div class="glass-card rounded-xl p-4 flex flex-col justify-between h-32">
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-outline">edit_document</span>
+<span class="font-body-sm text-body-sm font-semibold uppercase tracking-wider">Content</span>
+</div>
+<div>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary">91%</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[91%]"></div>
+</div>
+</div>
+</div>
+<!-- Skills Match -->
+<div class="glass-card rounded-xl p-4 flex flex-col justify-between h-32">
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-outline">bolt</span>
+<span class="font-body-sm text-body-sm font-semibold uppercase tracking-wider">Skills</span>
+</div>
+<div>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary">94%</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[94%]"></div>
+</div>
+</div>
+</div>
+<!-- Formatting -->
+<div class="glass-card rounded-xl p-4 flex flex-col justify-between h-32">
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-outline">format_paint</span>
+<span class="font-body-sm text-body-sm font-semibold uppercase tracking-wider">Format</span>
+</div>
+<div>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-secondary">88%</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-secondary h-full rounded-full w-[88%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-4 mt-4">
+<button class="w-full py-4 px-6 rounded-xl bg-inverse-primary text-white font-title-md text-title-md flex justify-center items-center gap-2 shadow-[0_0_20px_rgba(0,90,194,0.4)] hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+                Analyze Resume
+            </button>
+<button class="w-full py-4 px-6 rounded-xl glass-card text-on-surface font-title-md text-title-md flex justify-center items-center gap-2 hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">auto_fix_high</span>
+                Improve Resume
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 px-container-padding pb-safe-area-bottom flex justify-around items-center bg-surface-container/20 dark:bg-surface-container/20 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] md:hidden rounded-t-xl sm:rounded-xl sm:bottom-4 sm:left-4 sm:right-4 sm:w-auto h-[88px] sm:h-auto sm:py-3">
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 w-16 h-full transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 w-16 h-full transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">mic_none</span>
+<span class="font-label-caps text-label-caps">Interview</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary filter drop-shadow-[0_0_8px_rgba(173,198,255,0.8)] scale-110 duration-200 ease-out w-16 h-full" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-label-caps text-label-caps">Resume</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 w-16 h-full transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">work_outline</span>
+<span class="font-label-caps text-label-caps">Jobs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 w-16 h-full transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">person_outline</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+</body></html>

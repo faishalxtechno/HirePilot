@@ -1,0 +1,34 @@
+{
+  "cli": {
+    "version": ">= 12.0.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://akhtoqxwjixqoddecqty.supabase.co",
+        "EXPO_PUBLIC_API_URL": "https://hirepilot-api.hirepilotapp.workers.dev/api"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://akhtoqxwjixqoddecqty.supabase.co",
+        "EXPO_PUBLIC_API_URL": "https://hirepilot-api.hirepilotapp.workers.dev/api"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HirePilot - Sign Up</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#363941",
+                        "surface-variant": "#32353c",
+                        "inverse-primary": "#005ac2",
+                        "background": "#10131a",
+                        "surface-container-high": "#272a31",
+                        "surface": "#10131a",
+                        "primary": "#adc6ff",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-primary-fixed": "#001a42",
+                        "on-tertiary-fixed": "#311400",
+                        "outline": "#8c909f",
+                        "on-background": "#e1e2ec",
+                        "surface-dim": "#10131a",
+                        "secondary": "#4cd7f6",
+                        "secondary-container": "#03b5d3",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "on-primary-container": "#00285d",
+                        "primary-fixed-dim": "#adc6ff",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-secondary-container": "#00424e",
+                        "error-container": "#93000a",
+                        "outline-variant": "#424754",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "on-primary": "#002e6a",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "inverse-on-surface": "#2e3038",
+                        "surface-container": "#1d2027",
+                        "on-secondary": "#003640",
+                        "inverse-surface": "#e1e2ec",
+                        "on-tertiary-container": "#461f00",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container-highest": "#32353c",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "surface-container-low": "#191b23",
+                        "primary-container": "#4d8eff",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#ffb786",
+                        "on-error": "#690005",
+                        "on-surface": "#e1e2ec",
+                        "on-secondary-fixed": "#001f26",
+                        "on-tertiary": "#502400",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-container": "#df7412",
+                        "secondary-fixed": "#acedff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap-sm": "8px",
+                        "unit": "4px",
+                        "stack-gap-lg": "24px",
+                        "stack-gap-md": "16px",
+                        "safe-area-bottom": "34px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #020617; /* Deep Navy base for Dark Liquid Glass */
+            color: #e1e2ec;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e1e2ec;
+            transition: all 0.3s ease;
+        }
+
+        .input-glass:focus {
+            outline: none;
+            border-color: #4cd7f6; /* Electric blue accent */
+            box-shadow: 0 0 12px rgba(76, 215, 246, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .input-glass::placeholder {
+            color: #8c909f;
+        }
+
+        .btn-primary-glow {
+            background-color: #005ac2; /* primary electric blue */
+            box-shadow: 0 4px 14px 0 rgba(0, 90, 194, 0.39);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-glow:hover {
+            background-color: #4d8eff;
+            box-shadow: 0 6px 20px rgba(77, 142, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .bg-light-leak {
+            background: radial-gradient(circle at top right, rgba(76, 215, 246, 0.15), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(0, 90, 194, 0.15), transparent 40%);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-light-leak flex flex-col items-center justify-center p-container-padding relative overflow-hidden">
+<!-- Atmospheric background elements -->
+<div class="absolute inset-0 z-0 pointer-events-none">
+<div class="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary/10 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[100px] rounded-full"></div>
+</div>
+<!-- Main Content Canvas (No Nav Shell for transactional screens) -->
+<main class="w-full max-w-md z-10 relative">
+<!-- Header -->
+<div class="text-center mb-stack-gap-lg">
+<h1 class="font-display-lg text-display-lg text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary mb-unit">HirePilot</h1>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Create your HirePilot account</p>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-stack-gap-sm">Your AI co-pilot for elite career guidance.</p>
+</div>
+<!-- Glassmorphism Form Card -->
+<div class="glass-card rounded-[24px] p-6 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]">
+<form action="#" class="space-y-stack-gap-md" method="POST">
+<!-- Full Name -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-unit uppercase" for="fullName">Full Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-outline text-[20px]" data-weight="fill">person</span>
+<input class="w-full input-glass rounded-xl py-3 pl-10 pr-4 font-body-lg text-body-lg" id="fullName" name="fullName" placeholder="Jane Doe" required="" type="text"/>
+</div>
+</div>
+<!-- Email -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-unit uppercase" for="email">Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-outline text-[20px]">mail</span>
+<input class="w-full input-glass rounded-xl py-3 pl-10 pr-4 font-body-lg text-body-lg" id="email" name="email" placeholder="jane@example.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-unit uppercase" for="password">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-outline text-[20px]">lock</span>
+<input class="w-full input-glass rounded-xl py-3 pl-10 pr-10 font-body-lg text-body-lg" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-outline hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Confirm Password -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-unit uppercase" for="confirmPassword">Confirm Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-outline text-[20px]">lock</span>
+<input class="w-full input-glass rounded-xl py-3 pl-10 pr-4 font-body-lg text-body-lg" id="confirmPassword" name="confirmPassword" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full btn-primary-glow text-white font-title-md text-title-md rounded-xl py-3 mt-stack-gap-md flex items-center justify-center gap-2" type="submit">
+                    Create account
+                    <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</form>
+<div class="mt-stack-gap-lg flex items-center justify-center space-x-4">
+<div class="h-px bg-white/10 flex-1"></div>
+<span class="font-body-sm text-body-sm text-outline-variant">OR</span>
+<div class="h-px bg-white/10 flex-1"></div>
+</div>
+<!-- Social Login -->
+<button class="w-full btn-glass rounded-xl py-3 mt-stack-gap-md flex items-center justify-center gap-3">
+<img alt="Google" class="w-5 h-5 object-contain" data-alt="A small, stylized, bright white Google logo icon tailored for a dark liquid glass UI environment, sharp vectors, minimalist tech aesthetic, transparent background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK8lLPGZM9Aj5p_sTKmno0KpA4RYjqhzqDjpfss_8bzPz17_B9G9BAPUjSirxz1iVu6BBU2lpw8jhG0jSF1woiG3b2hYY5ubMnDzInCJD23PRg8fksP9jQ4aFL9jPqu2TXoD_62JUFhBPwe0T3sg_gHi5oFQfDIxBK1y88vPCcYsaeDNSbIhpOrA4NCRr55nMzwjg25Nr-Iwd56P7OTejBFW9aee7E9ZjgpMfyVBMHB0rotvnkOtL3"/>
+<span class="font-title-md text-title-md text-on-surface">Continue with Google</span>
+</button>
+<p class="font-body-sm text-body-sm text-center text-outline mt-stack-gap-lg">
+                Already have an account? <a class="text-primary hover:text-secondary transition-colors underline decoration-primary/30 underline-offset-4" href="#">Log in</a>
+</p>
+</div>
+<!-- Terms Footer -->
+<div class="mt-stack-gap-lg text-center px-4">
+<p class="font-body-sm text-body-sm text-outline-variant leading-relaxed">
+                By creating an account, you agree to our 
+                <a class="text-on-surface hover:text-primary transition-colors underline decoration-white/20 underline-offset-2" href="#">Terms of Service</a> 
+                and 
+                <a class="text-on-surface hover:text-primary transition-colors underline decoration-white/20 underline-offset-2" href="#">Privacy Policy</a>.
+            </p>
+</div>
+</main>
+</body></html>

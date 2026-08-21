@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HirePilot - Resume Analysis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#363941",
+                      "surface-variant": "#32353c",
+                      "inverse-primary": "#005ac2",
+                      "background": "#10131a",
+                      "surface-container-high": "#272a31",
+                      "surface": "#10131a",
+                      "primary": "#adc6ff",
+                      "surface-container-lowest": "#0b0e15",
+                      "on-primary-fixed": "#001a42",
+                      "on-tertiary-fixed": "#311400",
+                      "outline": "#8c909f",
+                      "on-background": "#e1e2ec",
+                      "surface-dim": "#10131a",
+                      "secondary": "#4cd7f6",
+                      "secondary-container": "#03b5d3",
+                      "tertiary-fixed-dim": "#ffb786",
+                      "on-primary-container": "#00285d",
+                      "primary-fixed-dim": "#adc6ff",
+                      "tertiary-fixed": "#ffdcc6",
+                      "on-secondary-container": "#00424e",
+                      "error-container": "#93000a",
+                      "outline-variant": "#424754",
+                      "error": "#ffb4ab",
+                      "surface-tint": "#adc6ff",
+                      "on-secondary-fixed-variant": "#004e5c",
+                      "on-primary": "#002e6a",
+                      "secondary-fixed-dim": "#4cd7f6",
+                      "inverse-on-surface": "#2e3038",
+                      "surface-container": "#1d2027",
+                      "on-secondary": "#003640",
+                      "inverse-surface": "#e1e2ec",
+                      "on-tertiary-container": "#461f00",
+                      "on-primary-fixed-variant": "#004395",
+                      "surface-container-highest": "#32353c",
+                      "on-tertiary-fixed-variant": "#723600",
+                      "surface-container-low": "#191b23",
+                      "primary-container": "#4d8eff",
+                      "on-surface-variant": "#c2c6d6",
+                      "on-error-container": "#ffdad6",
+                      "tertiary": "#ffb786",
+                      "on-error": "#690005",
+                      "on-surface": "#e1e2ec",
+                      "on-secondary-fixed": "#001f26",
+                      "on-tertiary": "#502400",
+                      "primary-fixed": "#d8e2ff",
+                      "tertiary-container": "#df7412",
+                      "secondary-fixed": "#acedff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-gap-sm": "8px",
+                      "unit": "4px",
+                      "stack-gap-lg": "24px",
+                      "stack-gap-md": "16px",
+                      "safe-area-bottom": "34px",
+                      "container-padding": "20px"
+              },
+              "fontFamily": {
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "title-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #020617; /* Deep Navy level 1 base */
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Light Leaks */
+        .ambient-glow-1 {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(173,198,255,0.1) 0%, rgba(2,6,23,0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .ambient-glow-2 {
+            position: fixed;
+            bottom: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(76,215,246,0.05) 0%, rgba(2,6,23,0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-progress-bg {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Circular Progress styling for hero score */
+        .circular-chart {
+            display: block;
+            margin: 0 auto;
+            max-width: 80%;
+            max-height: 250px;
+        }
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 2.5;
+        }
+        .circle {
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            animation: progress 1s ease-out forwards;
+        }
+        @keyframes progress {
+            0% {
+                stroke-dasharray: 0 100;
+            }
+        }
+        
+        /* Subtle pulse for AI text */
+        @keyframes pulse-ai {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; text-shadow: 0 0 8px rgba(173,198,255,0.5); }
+        }
+        .ai-pulse-text {
+            animation: pulse-ai 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-on-surface antialiased relative">
+<!-- Atmospheric Background Layers -->
+<div class="ambient-glow-1"></div>
+<div class="ambient-glow-2"></div>
+<!-- TopAppBar (From JSON) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-container-padding py-stack-gap-sm bg-surface/30 dark:bg-surface/30 backdrop-blur-xl border-b border-white/10 shadow-2xl transition-all duration-300">
+<div class="flex items-center gap-stack-gap-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-white/10">
+<img alt="User Profile" class="object-cover w-full h-full" data-alt="A highly detailed avatar portrait of a professional individual in a futuristic yet minimalist corporate setting. The lighting is soft and high-key, illuminating clear features with subtle rim lighting. The aesthetic is modern, crisp, and high-tech, complementing a dark liquid glass UI style with sophisticated navy and electric blue tones. The mood is confident and elite." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaRzzFIndqXSDGFPOG-LvpOH5zjhPkvSIsJ5vDz2VoX40bn2n7ZjpuUMNI_U-uzP3EFm0wdbFdB9lOr1ErRRNYSKtgbW3-fcfDL6nFKZKvW8e8_hNE1GQPU6MoIdI2ZX0fOg2QNxrzCgbwgSg5Gqb0gUpO3Vnpq5eepYDHisFr4fqCfP4NJI896bOwfoKRTh9XAYfMzw6O3zaRW1gFrSkBH5JtOgvDCSjG8V7rOKjaNVXzW9EvrVXn"/>
+</div>
+<h1 class="font-display-lg text-display-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary hidden md:block">HirePilot</h1>
+</div>
+<h1 class="font-display-lg text-[24px] font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary md:hidden tracking-tight">HirePilot</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-white/5 transition-colors active:scale-95 duration-150 relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="relative z-10 pt-[88px] pb-[100px] md:pb-stack-gap-lg px-container-padding max-w-4xl mx-auto flex flex-col gap-stack-gap-lg">
+<!-- Page Intent Header -->
+<div class="flex items-center justify-between mb-stack-gap-sm">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+                AI RESUME ANALYSIS
+            </h2>
+</div>
+<!-- Hero Score Area -->
+<section class="glass-card rounded-xl p-stack-gap-lg flex flex-col items-center justify-center text-center relative overflow-hidden">
+<!-- Subtle background grid/pattern for high-tech feel inside the card -->
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+<div class="relative w-48 h-48 mb-stack-gap-md">
+<svg class="circular-chart text-primary w-full h-full" viewbox="0 0 36 36">
+<path class="circle-bg" d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+<path class="circle drop-shadow-[0_0_8px_rgba(173,198,255,0.6)]" d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831" stroke="currentColor" stroke-dasharray="92, 100"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-on-surface">92</span>
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">Overall Score</span>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-primary ai-pulse-text max-w-lg">
+                "Your resume is highly competitive. Focusing on quantifiable metrics in your recent experience will push it to the top 1%."
+            </p>
+</section>
+<!-- Analysis Sections -->
+<div class="flex flex-col gap-stack-gap-md">
+<!-- Section 1: ATS -->
+<article class="glass-card rounded-xl p-stack-gap-md flex flex-col gap-stack-gap-md transition-all hover:bg-white/10 group cursor-pointer border-l-4 border-l-secondary">
+<header class="flex justify-between items-center w-full">
+<div class="flex items-center gap-stack-gap-sm">
+<span class="material-symbols-outlined text-secondary">document_scanner</span>
+<h3 class="font-title-md text-title-md text-on-surface">ATS Compatibility</h3>
+</div>
+<span class="font-title-md text-title-md text-secondary">98%</span>
+</header>
+<div class="w-full h-2 glass-progress-bg rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[98%] shadow-[0_0_10px_rgba(76,215,246,0.5)]"></div>
+</div>
+<div class="bg-surface-container/30 rounded-lg p-stack-gap-sm border border-white/5 flex gap-stack-gap-sm items-start">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">tips_and_updates</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Excellent keyword match for target roles. Consider updating standard font mapping to ensure older ATS systems parse name headers perfectly.
+                    </p>
+</div>
+</article>
+<!-- Section 2: Experience -->
+<article class="glass-card rounded-xl p-stack-gap-md flex flex-col gap-stack-gap-md transition-all hover:bg-white/10 group cursor-pointer border-l-4 border-l-tertiary">
+<header class="flex justify-between items-center w-full">
+<div class="flex items-center gap-stack-gap-sm">
+<span class="material-symbols-outlined text-tertiary">work_history</span>
+<h3 class="font-title-md text-title-md text-on-surface">Experience Impact</h3>
+</div>
+<span class="font-title-md text-title-md text-tertiary">85%</span>
+</header>
+<div class="w-full h-2 glass-progress-bg rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[85%] shadow-[0_0_10px_rgba(255,183,134,0.5)]"></div>
+</div>
+<div class="bg-surface-container/30 rounded-lg p-stack-gap-sm border border-white/5 flex gap-stack-gap-sm items-start">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">tips_and_updates</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Strong progression shown. <span class="text-on-surface font-semibold">Recommendation:</span> Convert verbs to active voice in 'Senior Analyst' role and quantify the revenue impact of your Q3 initiative.
+                    </p>
+</div>
+</article>
+<!-- Section 3: Projects -->
+<article class="glass-card rounded-xl p-stack-gap-md flex flex-col gap-stack-gap-md transition-all hover:bg-white/10 group cursor-pointer border-l-4 border-l-primary">
+<header class="flex justify-between items-center w-full">
+<div class="flex items-center gap-stack-gap-sm">
+<span class="material-symbols-outlined text-primary">code_blocks</span>
+<h3 class="font-title-md text-title-md text-on-surface">Projects &amp; Portfolio</h3>
+</div>
+<span class="font-title-md text-title-md text-primary">88%</span>
+</header>
+<div class="w-full h-2 glass-progress-bg rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[88%] shadow-[0_0_10px_rgba(173,198,255,0.5)]"></div>
+</div>
+<div class="bg-surface-container/30 rounded-lg p-stack-gap-sm border border-white/5 flex gap-stack-gap-sm items-start">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">tips_and_updates</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Good technical depth. Add measurable outcomes to your project descriptions (e.g., "reduced latency by 40%").
+                    </p>
+</div>
+</article>
+<!-- Section 4: Skills -->
+<article class="glass-card rounded-xl p-stack-gap-md flex flex-col gap-stack-gap-md transition-all hover:bg-white/10 group cursor-pointer border-l-4 border-l-primary-fixed-dim">
+<header class="flex justify-between items-center w-full">
+<div class="flex items-center gap-stack-gap-sm">
+<span class="material-symbols-outlined text-primary-fixed-dim">psychology</span>
+<h3 class="font-title-md text-title-md text-on-surface">Skills Verification</h3>
+</div>
+<span class="font-title-md text-title-md text-primary-fixed-dim">95%</span>
+</header>
+<div class="w-full h-2 glass-progress-bg rounded-full overflow-hidden">
+<div class="h-full bg-primary-fixed-dim w-[95%] shadow-[0_0_10px_rgba(173,198,255,0.5)]"></div>
+</div>
+<div class="bg-surface-container/30 rounded-lg p-stack-gap-sm border border-white/5 flex gap-stack-gap-sm items-start">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">tips_and_updates</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Excellent alignment with market demand. Consider breaking down "Cloud Computing" into specific AWS/GCP services to bypass stricter ATS filters.
+                    </p>
+</div>
+</article>
+</div>
+<!-- Action Area -->
+<div class="mt-stack-gap-sm flex flex-col sm:flex-row gap-stack-gap-md justify-center">
+<button class="bg-primary text-on-primary font-title-md text-title-md py-3 px-6 rounded-lg shadow-[0_0_15px_rgba(173,198,255,0.4)] hover:bg-primary-container transition-colors w-full sm:w-auto flex justify-center items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_fix_high</span>
+                Auto-Fix Resume
+            </button>
+<button class="glass-card text-on-surface font-title-md text-title-md py-3 px-6 rounded-lg hover:bg-white/10 transition-colors w-full sm:w-auto flex justify-center items-center gap-2">
+<span class="material-symbols-outlined">download</span>
+                Export PDF
+            </button>
+</div>
+</main>
+<!-- BottomNavBar (From JSON) - Mobile Only -->
+<nav class="fixed bottom-0 left-0 w-full z-50 px-container-padding pb-safe-area-bottom flex justify-around items-center bg-surface-container/20 dark:bg-surface-container/20 backdrop-blur-2xl border-t-0 md:hidden pt-4 rounded-t-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-active:scale-110 duration-200 ease-out">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<!-- Interview -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-active:scale-110 duration-200 ease-out">mic_none</span>
+<span class="font-label-caps text-label-caps">Interview</span>
+</a>
+<!-- Resume (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-primary filter drop-shadow-[0_0_8px_rgba(173,198,255,0.8)] scale-110 duration-200 ease-out group relative" href="#">
+<div class="absolute -top-1 w-8 h-1 bg-primary rounded-full mb-1 opacity-50"></div>
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-label-caps text-label-caps">Resume</span>
+</a>
+<!-- Jobs -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-active:scale-110 duration-200 ease-out">work_outline</span>
+<span class="font-label-caps text-label-caps">Jobs</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary/80 transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-active:scale-110 duration-200 ease-out">person_outline</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+<!-- Desktop Side Navigation (Implicit from Responsive Pivot rules) -->
+<nav class="hidden md:flex fixed top-[88px] left-0 w-64 h-[calc(100vh-88px)] glass-card flex-col gap-stack-gap-md p-container-padding z-40 border-r border-white/10">
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary hover:bg-white/5 p-3 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-title-md text-title-md">Home</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary hover:bg-white/5 p-3 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">mic_none</span>
+<span class="font-title-md text-title-md">Interview</span>
+</a>
+<a class="flex items-center gap-4 text-primary bg-primary/10 p-3 rounded-lg transition-all shadow-[inset_2px_0_0_0_#adc6ff]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-title-md text-title-md">Resume</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary hover:bg-white/5 p-3 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">work_outline</span>
+<span class="font-title-md text-title-md">Jobs</span>
+</a>
+<div class="mt-auto">
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary hover:bg-white/5 p-3 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">person_outline</span>
+<span class="font-title-md text-title-md">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>
