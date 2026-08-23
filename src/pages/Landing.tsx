@@ -5,12 +5,12 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 const HERO_VIDEO_URL = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4";
 
 const NAV_LINKS = [
-  { label: 'Home', id: 'home' },
-  { label: 'Product', id: 'product' },
-  { label: 'How It Works', id: 'how-it-works' },
-  { label: 'Founder', id: 'founder' },
-  { label: 'Pricing', id: 'pricing' },
-  { label: 'Contact', id: 'contact' }
+  { label: 'Home', id: 'home', isExternal: false },
+  { label: 'Product', id: 'product', isExternal: false },
+  { label: 'How It Works', id: 'how-it-works', isExternal: false },
+  { label: 'Founder', id: 'founder', isExternal: false },
+  { label: 'Pricing', id: 'pricing', isExternal: false },
+  { label: 'Contact', id: 'contact', path: '/contact', isExternal: true }
 ];
 
 const scrollToSection = (id: string) => {
@@ -62,10 +62,14 @@ function Header({ activeSection }: { activeSection: string }) {
     };
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent, id: string) => {
+  const handleNavClick = (e: React.MouseEvent, link: typeof NAV_LINKS[0]) => {
+    if (link.isExternal) {
+      // Allow default navigation to the external link
+      return;
+    }
     e.preventDefault();
     setIsMobileMenuOpen(false);
-    scrollToSection(id);
+    scrollToSection(link.id);
   };
 
   return (
@@ -74,8 +78,8 @@ function Header({ activeSection }: { activeSection: string }) {
         <div className="max-w-[800px] mx-auto px-6 py-6 flex items-center justify-between">
           <div 
             role="button" tabIndex={0}
-            onClick={(e) => handleNavClick(e, 'home')}
-            onKeyDown={(e) => e.key === 'Enter' && handleNavClick(e as any, 'home')}
+            onClick={(e) => handleNavClick(e, NAV_LINKS[0])}
+            onKeyDown={(e) => e.key === 'Enter' && handleNavClick(e as any, NAV_LINKS[0])}
             className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_4px_14px_rgba(0,0,0,0.16)] hover:scale-105 transition-transform cursor-pointer shrink-0"
           >
             <Triangle className="w-5 h-5 md:w-6 md:h-6 text-black fill-black" />
@@ -83,21 +87,31 @@ function Header({ activeSection }: { activeSection: string }) {
 
           <nav className="hidden md:flex items-center gap-6 bg-brand-dark/80 backdrop-blur-md px-6 py-3 rounded-full border border-white/10">
             {NAV_LINKS.map(link => (
-              <a 
-                key={link.id} 
-                href={`#${link.id}`} 
-                onClick={(e) => handleNavClick(e, link.id)} 
-                className={`text-sm font-medium transition-colors relative group ${activeSection === link.id ? 'text-white' : 'text-white/50 hover:text-white/75'}`}
-              >
-                {link.label}
-                {activeSection === link.id && (
-                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex gap-[2px]">
-                    <div className="w-[3px] h-[3px] rounded-full bg-white/80"></div>
-                    <div className="w-[3px] h-[3px] rounded-full bg-white/80"></div>
-                    <div className="w-[3px] h-[3px] rounded-full bg-white/80"></div>
-                  </div>
-                )}
-              </a>
+              link.isExternal ? (
+                <Link 
+                  key={link.id} 
+                  to={link.path!} 
+                  className={`text-sm font-medium transition-colors relative group text-white/50 hover:text-white/75`}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a 
+                  key={link.id} 
+                  href={`#${link.id}`} 
+                  onClick={(e) => handleNavClick(e, link)} 
+                  className={`text-sm font-medium transition-colors relative group ${activeSection === link.id ? 'text-white' : 'text-white/50 hover:text-white/75'}`}
+                >
+                  {link.label}
+                  {activeSection === link.id && (
+                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex gap-[2px]">
+                      <div className="w-[3px] h-[3px] rounded-full bg-white/80"></div>
+                      <div className="w-[3px] h-[3px] rounded-full bg-white/80"></div>
+                      <div className="w-[3px] h-[3px] rounded-full bg-white/80"></div>
+                    </div>
+                  )}
+                </a>
+              )
             ))}
           </nav>
 
@@ -123,9 +137,15 @@ function Header({ activeSection }: { activeSection: string }) {
       <div className={`md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-md transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} onClick={(e) => e.target === e.currentTarget && setIsMobileMenuOpen(false)}>
         <div className={`absolute bottom-0 left-0 right-0 bg-[#121212] rounded-t-3xl p-8 flex flex-col gap-6 transition-transform duration-300 delay-100 ${isMobileMenuOpen ? 'translate-y-0' : 'translate-y-full'}`}>
           {NAV_LINKS.map(link => (
-            <a key={link.id} href={`#${link.id}`} className={`text-xl font-medium ${activeSection === link.id ? 'text-white' : 'text-white/60'}`} onClick={(e) => handleNavClick(e, link.id)}>
-              {link.label}
-            </a>
+            link.isExternal ? (
+              <Link key={link.id} to={link.path!} className={`text-xl font-medium text-white/60 hover:text-white transition-colors`} onClick={() => setIsMobileMenuOpen(false)}>
+                {link.label}
+              </Link>
+            ) : (
+              <a key={link.id} href={`#${link.id}`} className={`text-xl font-medium ${activeSection === link.id ? 'text-white' : 'text-white/60'}`} onClick={(e) => handleNavClick(e, link)}>
+                {link.label}
+              </a>
+            )
           ))}
           <button className="mt-4 w-full py-4 bg-white text-black font-semibold rounded-full hover:bg-white/90" onClick={() => { setIsMobileMenuOpen(false); navigate('/signup'); }}>
             Get Started
@@ -259,11 +279,18 @@ function Founder() {
 function Pricing() {
   const navigate = useNavigate();
 
+  const PRICING_CONFIG = {
+    free: { basePrice: 0, gstRate: 0, gstAmount: 0, total: 0 },
+    pro: { basePrice: 249, gstRate: 18, gstAmount: 44.82, total: 293.82 },
+    career: { basePrice: 599, gstRate: 18, gstAmount: 107.82, total: 706.82 }
+  };
+
   const plans = [
     {
       id: "free",
       name: "Free",
-      priceDisplay: "₹0",
+      priceDisplay: `₹${PRICING_CONFIG.free.total}`,
+      priceDetails: null,
       interviews: "3 interviews",
       description: "Start exploring HirePilot",
       cta: "Start Free",
@@ -276,7 +303,8 @@ function Pricing() {
     {
       id: "pro",
       name: "Pro",
-      priceDisplay: "₹249",
+      priceDisplay: `₹${PRICING_CONFIG.pro.total}`,
+      priceDetails: `Includes 18% GST\nBase price ₹${PRICING_CONFIG.pro.basePrice} + ₹${PRICING_CONFIG.pro.gstAmount} GST`,
       interviews: "15 interviews",
       description: "For active job seekers",
       cta: "Choose Pro",
@@ -289,12 +317,13 @@ function Pricing() {
       ]
     },
     {
-      id: "unlimited",
-      name: "Unlimited",
-      priceDisplay: "₹599",
+      id: "career",
+      name: "Career",
+      priceDisplay: `₹${PRICING_CONFIG.career.total}`,
+      priceDetails: `Includes 18% GST\nBase price ₹${PRICING_CONFIG.career.basePrice} + ₹${PRICING_CONFIG.career.gstAmount} GST`,
       interviews: "Unlimited interviews",
       description: "For serious job seekers",
-      cta: "Go Unlimited",
+      cta: "Choose Career",
       features: [
         'Unlimited Interviews',
         'All Pro Features',
@@ -319,12 +348,17 @@ function Pricing() {
                   Most Popular
                 </div>
               )}
-              <div className="mb-8">
+              <div className="mb-6">
                 <h4 className="text-2xl font-display text-white mb-2">{plan.name}</h4>
                 <p className="text-brand-muted text-sm min-h-[40px]">{plan.description}</p>
-                <div className="mt-6 flex items-baseline gap-2">
-                  <span className="text-4xl font-display text-white">{plan.priceDisplay}</span>
-                  <span className="text-brand-muted text-sm">/ month</span>
+                <div className="mt-6 flex flex-col gap-1">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-display text-white">{plan.priceDisplay}</span>
+                    <span className="text-brand-muted text-sm">/ month</span>
+                  </div>
+                  {plan.priceDetails && (
+                    <p className="text-brand-muted text-xs whitespace-pre-line mt-1">{plan.priceDetails}</p>
+                  )}
                 </div>
                 <div className="mt-2 text-brand-secondary text-sm font-semibold">
                   {plan.interviews}
@@ -352,79 +386,44 @@ function Pricing() {
   );
 }
 
-function Contact() {
-  const [status, setStatus] = useState<'idle'|'success'>('idle');
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus('success');
-    setTimeout(() => setStatus('idle'), 5000);
-  };
-  return (
-    <section id="contact" className="relative z-10 w-full py-24 md:py-32 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/5 scroll-mt-20">
-      <div className="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
-        <div className="space-y-6">
-          <p className="text-[11px] font-bold tracking-[0.2em] text-brand-muted uppercase">Get In Touch</p>
-          <h2 className="text-white font-display text-4xl md:text-5xl leading-tight tracking-tight">Contact HirePilot</h2>
-          <p className="text-[#C8C8C8] text-lg leading-relaxed max-w-sm">Reach out directly for platform inquiries, support, partnerships, or developer feedback.</p>
-          <div className="pt-6 border-t border-white/10">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center"><Mail className="w-5 h-5 text-white" /></div>
-              <div>
-                <p className="text-xs text-brand-muted uppercase tracking-wider mb-1">Official Contact Email</p>
-                <p className="text-white font-medium">connectwithfaishal@gmail.com</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="bg-[#121212] p-8 rounded-3xl border border-white/10">
-          {status === 'success' ? (
-            <div className="h-full flex flex-col items-center justify-center py-12 text-center space-y-4 animate-fade-in">
-              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center"><CheckCircle2 className="w-8 h-8 text-white" /></div>
-              <h4 className="text-xl font-bold text-white">Message Sent</h4>
-              <p className="text-brand-muted">We'll get back to you as soon as possible.</p>
-            </div>
-          ) : (
-            <form onSubmit={onSubmit} className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs text-brand-muted uppercase tracking-wider ml-1">Name</label>
-                <input required type="text" className="w-full bg-[#1a1a1c] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors" placeholder="John Doe" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs text-brand-muted uppercase tracking-wider ml-1">Email</label>
-                <input required type="email" className="w-full bg-[#1a1a1c] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors" placeholder="john@example.com" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs text-brand-muted uppercase tracking-wider ml-1">Message</label>
-                <textarea required rows={4} className="w-full bg-[#1a1a1c] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors resize-none" placeholder="How can we help you?" />
-              </div>
-              <button type="submit" className="w-full py-4 rounded-xl bg-white text-black font-semibold hover:bg-white/90 transition-colors flex items-center justify-center gap-2 mt-2">
-                <Send className="w-4 h-4" /> Send Message
-              </button>
-            </form>
-          )}
-        </div>
-      </div>
-    </section>
-  );
-}
+
 
 function Footer() {
   return (
-    <footer className="relative z-10 w-full py-16 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/10">
-      <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shrink-0">
-            <Triangle className="w-5 h-5 text-black fill-black" />
+    <footer className="relative z-10 w-full py-16 px-6 bg-[#121212] border-t border-white/10">
+      <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row gap-12 md:justify-between">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shrink-0">
+              <Triangle className="w-5 h-5 text-black fill-black" />
+            </div>
+            <span className="font-display text-white text-2xl">HirePilot</span>
           </div>
-          <span className="font-display text-white text-xl">HirePilot</span>
+          <p className="text-brand-muted text-sm">Your AI-powered career copilot.</p>
         </div>
-        <nav className="flex flex-wrap items-center gap-x-8 gap-y-4 md:justify-end">
-          {NAV_LINKS.map(link => (
-            <a key={link.id} href={`#${link.id}`} onClick={(e) => { e.preventDefault(); scrollToSection(link.id); }} className="text-sm font-medium text-white/50 hover:text-white transition-colors">
-              {link.label}
-            </a>
-          ))}
-        </nav>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-24">
+          <div className="flex flex-col gap-4">
+            <h5 className="text-white font-bold mb-1">Navigation</h5>
+            {NAV_LINKS.filter(l => !l.isExternal).map(link => (
+              <a key={link.id} href={`#${link.id}`} onClick={(e) => { e.preventDefault(); scrollToSection(link.id); }} className="text-sm text-brand-muted hover:text-white transition-colors">
+                {link.label}
+              </a>
+            ))}
+            <Link to="/contact" className="text-sm text-brand-muted hover:text-white transition-colors">Contact</Link>
+          </div>
+          
+          <div className="flex flex-col gap-4">
+            <h5 className="text-white font-bold mb-1">Legal</h5>
+            <Link to="/privacy" className="text-sm text-brand-muted hover:text-white transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="text-sm text-brand-muted hover:text-white transition-colors">Terms & Conditions</Link>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <h5 className="text-white font-bold mb-1">Contact</h5>
+            <Link to="/contact" className="text-sm text-brand-muted hover:text-white transition-colors">Contact HirePilot</Link>
+          </div>
+        </div>
       </div>
     </footer>
   );
@@ -432,7 +431,7 @@ function Footer() {
 
 export const Landing: React.FC = () => {
   const { hash } = useLocation();
-  const activeSection = useActiveSection(['home', 'product', 'how-it-works', 'founder', 'pricing', 'contact']);
+  const activeSection = useActiveSection(['home', 'product', 'how-it-works', 'founder', 'pricing']);
 
   useEffect(() => {
     if (hash) {
@@ -453,7 +452,6 @@ export const Landing: React.FC = () => {
         <HowItWorks />
         <Founder />
         <Pricing />
-        <Contact />
         <Footer />
       </div>
     </main>

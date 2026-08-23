@@ -17,6 +17,9 @@ import { HistoryPage } from './pages/History';
 import { Profile } from './pages/Profile';
 import { ResumePage } from './pages/Resume';
 import { JobsPage } from './pages/Jobs';
+import { Privacy } from './pages/Privacy';
+import { Terms } from './pages/Terms';
+import { Contact } from './pages/Contact';
 
 export const App: React.FC = () => {
   return (
@@ -29,6 +32,9 @@ export const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/contact" element={<Contact />} />
 
           {/* Protected Routes */}
           <Route
