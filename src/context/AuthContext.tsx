@@ -39,8 +39,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const savedGuest = localStorage.getItem('hirepilot_guest_user');
 
+    const initializeAuth = async () => {
+      if (!isSupabaseConfigured) {
+        if (savedGuest) {
+          setProfile(JSON.parse(savedGuest));
+          setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
+        } else {
+          localStorage.setItem('hirepilot_guest_user', JSON.stringify(DEMO_USER_PROFILE));
+          setProfile(DEMO_USER_PROFILE);
+          setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
+        }
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        
+        setSession(initialSession);
+        setUser(initialSession?.user ?? null);
+
+        if (initialSession?.user) {
+          await fetchUserProfile(
+            initialSession.user.id,
+            initialSession.user.email,
+            initialSession.user.user_metadata
+          );
+        } else if (savedGuest) {
+          setProfile(JSON.parse(savedGuest));
+          setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
+        } else {
+          setProfile(null);
+        }
+      } catch (error) {
+        console.error('Error getting initial session:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
+
     if (isSupabaseConfigured) {
-      // Listen to auth state changes (handles initial session, login, logout, token refresh)
+      // Listen to auth state changes (handles login, logout, token refresh)
       const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
@@ -63,17 +104,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return () => {
         subscription.unsubscribe();
       };
-    } else {
-      // Local fallback mode when Supabase credentials are not configured
-      if (savedGuest) {
-        setProfile(JSON.parse(savedGuest));
-        setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
-      } else {
-        localStorage.setItem('hirepilot_guest_user', JSON.stringify(DEMO_USER_PROFILE));
-        setProfile(DEMO_USER_PROFILE);
-        setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
-      }
-      setLoading(false);
     }
   }, []);
 
