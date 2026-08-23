@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Triangle, Sparkles, Briefcase, Target, X, Bot, Zap, Brain, BarChart3, History, CheckCircle2, Send, Mail } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useScrollReveal } from '../lib/useScrollReveal';
@@ -159,18 +159,76 @@ function Header({ activeSection }: { activeSection: string }) {
 
 function Hero() {
   const navigate = useNavigate();
+  const [activeTrust, setActiveTrust] = useState<string | null>(null);
+  const trustRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (trustRef.current && !trustRef.current.contains(event.target as Node)) {
+        setActiveTrust(null);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setActiveTrust(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
+
+  const TRUST_INFO: Record<string, { title: string, desc: string }> = {
+    Microsoft: {
+      title: 'Microsoft',
+      desc: 'Enterprise-ready AI workflows designed to work with modern Microsoft environments.'
+    },
+    Amazon: {
+      title: 'Amazon',
+      desc: 'Scalable AI workflows built for production teams and enterprise applications.'
+    },
+    Google: {
+      title: 'Google',
+      desc: 'Flexible AI workflows designed for modern cloud and AI-powered applications.'
+    }
+  };
+
   return (
     <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-12 z-10 w-full relative">
       <div className="max-w-[900px] mx-auto flex flex-col items-center">
         <div className="flex flex-col items-center gap-4 mb-8 animate-fade-up stagger-1">
-          <div className="flex -space-x-3">
-            {[Sparkles, Briefcase, Target].map((Icon, i) => (
-              <div key={i} className="w-10 h-10 rounded-full bg-brand-dark border border-white/40 flex items-center justify-center relative overflow-hidden z-[1]">
-                <div className="absolute inset-[2px] rounded-full bg-white flex items-center justify-center">
+          <div className="flex -space-x-3 relative" ref={trustRef}>
+            {[
+              { Icon: Sparkles, label: 'Microsoft' },
+              { Icon: Briefcase, label: 'Amazon' },
+              { Icon: Target, label: 'Google' }
+            ].map(({ Icon, label }, i) => (
+              <button 
+                key={i} 
+                type="button"
+                onClick={() => setActiveTrust(activeTrust === label ? null : label)}
+                aria-label={`${label} enterprise information`}
+                aria-expanded={activeTrust === label}
+                className={`trust-avatar w-10 h-10 rounded-full bg-brand-dark border border-white/40 flex items-center justify-center relative ${activeTrust === label ? 'active' : ''}`}
+              >
+                <div className="absolute inset-[2px] rounded-full bg-white flex items-center justify-center pointer-events-none">
                   <Icon className="w-4 h-4 text-black" />
                 </div>
-              </div>
+              </button>
             ))}
+            
+            {activeTrust && (
+              <div className="absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 w-[240px] bg-[rgba(20,20,20,0.96)] border border-white/[0.18] rounded-[18px] p-4 shadow-[0_20px_50px_rgba(0,0,0,0.45)] backdrop-blur-[14px] z-[100] animate-trust-popup max-w-[calc(100vw-32px)] text-left">
+                <h4 className="text-white text-[14px] font-semibold mb-1">{TRUST_INFO[activeTrust].title}</h4>
+                <p className="text-white/65 text-[12px] leading-[1.5]">{TRUST_INFO[activeTrust].desc}</p>
+              </div>
+            )}
           </div>
           <p className="text-sm text-brand-muted font-medium">Trusted by ambitious job seekers</p>
         </div>
