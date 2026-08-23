@@ -11,6 +11,8 @@ import { ResumePreview } from '../components/resume/ResumePreview';
 import { TemplateSelector } from '../components/resume/TemplateSelector';
 import { exportResumeToPDF } from '../lib/pdfExport';
 import { resumeService } from '../lib/resumeService';
+import { useToast } from '../context/ToastContext';
+import { Modal } from '../components/ui/Modal';
 
 export const ResumePage: React.FC = () => {
   const { profile } = useAuth();
@@ -28,6 +30,11 @@ export const ResumePage: React.FC = () => {
   const [mobileView, setMobileView] = useState<'editor' | 'preview'>('editor');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast, success, error, info } = useToast();
+  
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [resumeToDelete, setResumeToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (profile?.id) {
@@ -53,11 +60,17 @@ export const ResumePage: React.FC = () => {
     setActiveResume(resume);
   };
 
-  const handleDelete = async (id: string, e: React.MouseEvent) => {
+  const handleDeleteClick = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm('Are you sure you want to delete this resume?')) {
-      await resumeBuilderService.deleteResume(id);
+    setResumeToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+    if (resumeToDelete) {
+      await resumeBuilderService.deleteResume(resumeToDelete);
       await loadResumes();
+      setResumeToDelete(null);
+      success('Resume deleted successfully');
     }
   };
 
@@ -68,6 +81,7 @@ export const ResumePage: React.FC = () => {
     await resumeBuilderService.saveResume(activeResume);
     setIsSaving(false);
     setSaveStatus('Saved');
+    success('Resume saved successfully');
     setTimeout(() => setSaveStatus(''), 2000);
     // Reload dashboard list in background
     if (profile?.id) {
@@ -82,19 +96,30 @@ export const ResumePage: React.FC = () => {
       ? `HirePilot-Resume-${activeResume.personalInfo.fullName.replace(/\s+/g, '-')}.pdf`
       : 'HirePilot-Resume.pdf';
     exportResumeToPDF('resume-preview-content', filename);
+    success('Resume downloaded successfully');
   };
 
   // Legacy analysis upload (just to fulfill requirement of keeping existing upload)
-  const handleLegacyUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLegacyUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setUploadedFile(file);
+    info('Resume uploaded successfully.');
     e.target.value = '';
-    alert(`File ${file.name} uploaded for analysis. (Check ATS Analyzer section if implemented)`);
+  };
+
+  const handleAnalyzeUpload = async () => {
+    if (!uploadedFile) return;
+    setIsAnalyzing(true);
     try {
-      await resumeService.analyzeResume(file, profile?.target_role || 'Software Engineer');
-      // In a real app, we might redirect to the ATS tab or show results
+      await resumeService.analyzeResume(uploadedFile, profile?.target_role || 'Software Engineer');
+      success('Analysis complete! Check the ATS Analyzer section.');
+      setUploadedFile(null); // Clear after analysis
     } catch (err) {
       console.error(err);
+      error('Unable to process resume. Please try again.');
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
@@ -138,6 +163,28 @@ export const ResumePage: React.FC = () => {
             </div>
           </div>
 
+          {uploadedFile && (
+            <Card className="p-6 bg-[#1a1a1c] border-white/10 animate-fade-in flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-brand-primary/20 flex items-center justify-center">
+                  <FileText className="w-6 h-6 text-brand-primary" />
+                </div>
+                <div>
+                  <h3 className="text-white font-medium">Resume uploaded</h3>
+                  <p className="text-sm text-brand-muted">{uploadedFile.name} • PDF • Ready for analysis</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Button variant="outline" size="sm" onClick={() => setUploadedFile(null)}>
+                  Remove
+                </Button>
+                <Button variant="primary" size="sm" isLoading={isAnalyzing} onClick={handleAnalyzeUpload}>
+                  Analyze Resume
+                </Button>
+              </div>
+            </Card>
+          )}
+
           {isLoading ? (
             <div className="text-center py-20 text-brand-muted">Loading your resumes...</div>
           ) : resumes.length === 0 ? (
@@ -159,7 +206,7 @@ export const ResumePage: React.FC = () => {
                     <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-white">
                       <FileText className="w-5 h-5" />
                     </div>
-                    <button onClick={(e) => handleDelete(resume.id, e)} className="text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={(e) => handleDeleteClick(resume.id, e)} className="text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
@@ -176,6 +223,16 @@ export const ResumePage: React.FC = () => {
           )}
 
         </div>
+
+        <Modal isOpen={!!resumeToDelete} onClose={() => setResumeToDelete(null)} title="Delete Resume">
+          <div className="space-y-4">
+            <p className="text-brand-muted">Are you sure you want to delete this resume? This action cannot be undone.</p>
+            <div className="flex justify-end gap-3 pt-4">
+              <Button variant="outline" onClick={() => setResumeToDelete(null)}>Cancel</Button>
+              <Button variant="primary" onClick={confirmDelete} className="bg-red-500 hover:bg-red-600 text-white">Delete</Button>
+            </div>
+          </div>
+        </Modal>
       </DashboardLayout>
     );
   }
@@ -185,7 +242,7 @@ export const ResumePage: React.FC = () => {
   // -------------------------------------------------------------------------
   return (
     <DashboardLayout>
-      <div className="h-[calc(100vh-64px)] flex flex-col -mt-6 -mx-4 sm:-mx-8">
+      <div className="min-h-[calc(100vh-64px)] flex flex-col -mt-6 -mx-4 sm:-mx-8 relative">
         
         {/* Builder Toolbar */}
         <div className="h-16 border-b border-white/10 bg-[#0a0a0b] flex items-center justify-between px-4 sm:px-6 shrink-0">
@@ -225,11 +282,11 @@ export const ResumePage: React.FC = () => {
         </div>
 
         {/* Builder Workspace */}
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex flex-col lg:flex-row min-h-0">
           
           {/* Left Panel: Editor */}
-          <div className={`w-full lg:w-[45%] xl:w-[40%] flex-col bg-[#0a0a0b] border-r border-white/10 overflow-hidden ${mobileView === 'editor' ? 'flex' : 'hidden lg:flex'}`}>
-            <div className="p-4 sm:p-6 h-full overflow-y-auto">
+          <div className={`w-full lg:w-[45%] xl:w-[40%] flex-col bg-[#0a0a0b] border-r border-white/10 ${mobileView === 'editor' ? 'flex' : 'hidden lg:flex'}`}>
+            <div className="p-4 sm:p-6 h-full">
               <ResumeEditor resume={activeResume} setResume={setActiveResume as React.Dispatch<React.SetStateAction<ResumeData>>} />
             </div>
           </div>
