@@ -3,211 +3,66 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    /* ── Background System ── */
-    --hp-bg-primary: #060b18;
-    --hp-bg-secondary: #0c1425;
-    --hp-bg-tertiary: #111c32;
-
-    /* ── Glass System ── */
-    --hp-glass-bg: rgba(255, 255, 255, 0.05);
-    --hp-glass-bg-hover: rgba(255, 255, 255, 0.08);
-    --hp-glass-bg-strong: rgba(255, 255, 255, 0.08);
-    --hp-glass-border: rgba(255, 255, 255, 0.08);
-    --hp-glass-border-hover: rgba(255, 255, 255, 0.14);
-    --hp-glass-border-active: rgba(56, 171, 248, 0.35);
-
-    /* ── Accent System ── */
-    --hp-accent-primary: #38abf8;
-    --hp-accent-secondary: #22d3ee;
-    --hp-accent-glow: rgba(56, 171, 248, 0.2);
-
-    /* ── Text System ── */
-    --hp-text-primary: rgba(255, 255, 255, 0.95);
-    --hp-text-secondary: rgba(148, 163, 194, 1);
-    --hp-text-muted: rgba(100, 116, 149, 1);
-
-    /* ── Font ── */
-    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-display: 'Inter Tight', 'Inter', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-
-    /* ── Motion ── */
-    --hp-ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  html {
-    scroll-behavior: smooth;
-    color-scheme: dark;
-  }
-
   body {
-    font-family: var(--font-sans);
-    background-color: var(--hp-bg-primary);
-    color: var(--hp-text-primary);
+    @apply bg-brand-background text-brand-primary font-inter;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 }
 
-@layer components {
-  /* ── Glass Surface System ── */
-  .glass-surface {
-    background: var(--hp-glass-bg);
-    border: 1px solid var(--hp-glass-border);
-    backdrop-filter: blur(24px) saturate(120%);
-    -webkit-backdrop-filter: blur(24px) saturate(120%);
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  .glass-surface-strong {
-    background: var(--hp-glass-bg-strong);
-    border: 1px solid var(--hp-glass-border);
-    backdrop-filter: blur(32px) saturate(130%);
-    -webkit-backdrop-filter: blur(32px) saturate(130%);
-  }
+html {
+  scroll-behavior: smooth;
+}
 
-  .glass-surface-hover {
-    transition: all 0.3s var(--hp-ease-premium);
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
-  .glass-surface-hover:hover {
-    background: var(--hp-glass-bg-hover);
-    border-color: var(--hp-glass-border-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.35);
-  }
-
-  /* ── Glass Sheen Effect ── */
-  .glass-sheen {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .glass-sheen::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.03),
-      transparent
-    );
-    animation: shimmer 4s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  /* ── Atmospheric Background ── */
-  .bg-atmosphere {
-    background: var(--hp-bg-primary);
-    position: relative;
-  }
-
-  .bg-atmosphere::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(56, 171, 248, 0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 40% at 80% 20%, rgba(34, 211, 238, 0.04) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 30% at 20% 80%, rgba(99, 102, 241, 0.03) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ── Noise Grain Overlay ── */
-  .noise-overlay::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    opacity: 0.015;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    pointer-events: none;
-    z-index: 9999;
-  }
-
-  /* ── Accent Glow Orbs ── */
-  .glow-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-  }
-
-  .glow-orb-blue {
-    background: rgba(56, 171, 248, 0.12);
-  }
-
-  .glow-orb-cyan {
-    background: rgba(34, 211, 238, 0.08);
-  }
-
-  .glow-orb-indigo {
-    background: rgba(99, 102, 241, 0.06);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* ── Scroll Reveal Animations ── */
-.reveal-init {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s var(--hp-ease-premium), transform 0.6s var(--hp-ease-premium);
-  will-change: opacity, transform;
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.reveal-visible {
-  opacity: 1;
-  transform: translateY(0);
+.animate-fade-up {
+  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Staggered transition delays */
-.stagger-1 { transition-delay: 60ms; }
-.stagger-2 { transition-delay: 120ms; }
-.stagger-3 { transition-delay: 180ms; }
-.stagger-4 { transition-delay: 240ms; }
-.stagger-5 { transition-delay: 300ms; }
-.stagger-6 { transition-delay: 360ms; }
-
-/* ── Custom Modern Scrollbars ── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+.animate-slideDown {
+  animation: slideDown 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
+.stagger-1 { animation-delay: 100ms; }
+.stagger-2 { animation-delay: 200ms; }
+.stagger-3 { animation-delay: 300ms; }
+.stagger-4 { animation-delay: 400ms; }
+.stagger-5 { animation-delay: 500ms; }
+.stagger-6 { animation-delay: 600ms; }
+.stagger-7 { animation-delay: 700ms; }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* ── Respect prefers-reduced-motion ── */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  ::before,
-  ::after {
+  * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-
-  .reveal-init {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .glass-sheen::after {
-    animation: none !important;
   }
 }

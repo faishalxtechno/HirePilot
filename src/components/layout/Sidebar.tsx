@@ -8,7 +8,7 @@ import {
   History,
   User,
   LogOut,
-  Sparkles,
+  Triangle,
   Zap,
   FileText,
   Briefcase,
@@ -33,37 +33,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Start Interview', path: '/interview/setup', icon: PlayCircle },
-    { label: 'AI Resume Analyzer', path: '/resume', icon: FileText },
-    { label: 'Jobs & Applications', path: '/jobs', icon: Briefcase },
-    { label: 'Interview History', path: '/history', icon: History },
+    { label: 'Resume Analyzer', path: '/resume', icon: FileText },
+    { label: 'Jobs', path: '/jobs', icon: Briefcase },
+    { label: 'History', path: '/history', icon: History },
     { label: 'Profile', path: '/profile', icon: User },
   ];
 
   return (
     <aside
       className={cn(
-        'h-full flex flex-col justify-between px-4 py-5 select-none transition-colors',
+        'h-full flex flex-col justify-between px-4 py-6 select-none transition-colors',
         isMobileDrawer
-          ? 'w-full bg-[rgba(12,20,37,0.98)]'
-          : 'w-64 border-r border-white/[0.06] bg-[rgba(6,11,24,0.6)] backdrop-blur-xl'
+          ? 'w-full bg-[#121212]'
+          : 'w-64 border-r border-white/10 bg-black'
       )}
     >
       {/* Top Brand & Navigation */}
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Brand (only shown when not in mobile drawer) */}
         {!isMobileDrawer && (
-          <Link to="/" className="px-3 flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
-              <Sparkles className="w-4 h-4" />
+          <Link to="/" className="px-3 flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+              <Triangle className="w-5 h-5 text-black fill-black" />
             </div>
-            <span className="font-bold text-lg text-white tracking-tight">
-              Hire<span className="text-sky-400">Pilot</span>
+            <span className="font-medium text-xl text-white tracking-tight">
+              HirePilot
             </span>
           </Link>
         )}
 
         {/* Links */}
-        <nav className="space-y-1">
+        <nav className="space-y-1.5">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
@@ -71,10 +71,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={onCloseMobile}
               className={({ isActive }) =>
                 cn(
-                  'relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
+                  'relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300',
                   isActive
-                    ? 'bg-sky-500/10 text-sky-300 font-semibold border border-sky-500/15 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-sky-400 before:rounded-r-full shadow-sm'
-                    : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200'
+                    ? 'bg-white/10 text-white'
+                    : 'text-brand-secondary hover:bg-white/5 hover:text-white'
                 )
               }
             >
@@ -86,33 +86,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Bottom Profile, Quota & Logout */}
-      <div className="space-y-4 pt-4 border-t border-white/[0.06]">
+      <div className="space-y-5 pt-5 border-t border-white/10">
         {/* Monthly Quota Indicator */}
-        <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-2">
+        <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-semibold text-slate-400 flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+            <span className="font-medium text-brand-secondary flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5 text-white" />
               Monthly Quota
             </span>
-            <span className="font-mono text-[11px] font-bold text-sky-400">
+            <span className="font-mono text-xs font-medium text-white">
               {monthlyRemaining} / {monthlyMax}
             </span>
           </div>
-          <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+          <div className="w-full h-1.5 bg-black rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-sky-500 to-blue-500 rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(56,171,248,0.3)]"
+              className="h-full bg-white rounded-full transition-all duration-500"
               style={{ width: `${Math.min(100, Math.max(0, (monthlyRemaining / monthlyMax) * 100))}%` }}
             />
           </div>
-          <p className="text-[11px] text-slate-500">
-            {monthlyRemaining === 0 ? 'Monthly limit reached' : `${monthlyRemaining} free mock sessions left this month`}
+          <p className="text-xs text-brand-muted">
+            {monthlyRemaining === 0 ? 'Monthly limit reached' : `${monthlyRemaining} free mock sessions left`}
           </p>
         </div>
 
         {/* User Profile Card */}
-        <div className="flex items-center justify-between px-2 pt-1">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-sky-400/80 to-blue-600/80 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden border border-sky-400/20">
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-xs font-bold text-black shrink-0 overflow-hidden border border-white/10">
               {profile?.avatar_url ? (
                 <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover" />
               ) : (
@@ -120,10 +120,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-semibold text-white truncate">
+              <p className="text-sm font-medium text-white truncate">
                 {profile?.name || 'Candidate'}
               </p>
-              <p className="text-[10px] text-slate-500 truncate">
+              <p className="text-[11px] text-brand-secondary truncate">
                 {profile?.target_role || 'Software Engineer'}
               </p>
             </div>
@@ -134,7 +134,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               navigate('/');
             }}
             title="Logout"
-            className="p-1.5 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-rose-500/10 transition-colors shrink-0"
+            className="p-2 text-brand-muted hover:text-white rounded-full hover:bg-white/5 transition-colors shrink-0 cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>

@@ -57,18 +57,18 @@ export const HistoryPage: React.FC = () => {
     <DashboardLayout>
       <div className="space-y-6 sm:space-y-8 animate-fade-in pb-12">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/[0.06]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/10">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
               Interview History
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-brand-muted mt-1">
               Review past AI evaluations, track your score progression, and inspect detailed question feedback.
             </p>
           </div>
 
           <Link to="/interview/setup" className="w-full sm:w-auto">
-            <Button variant="primary" size="md" className="w-full sm:w-auto shadow-md shadow-sky-500/25" leftIcon={<PlusCircle className="w-4 h-4" />}>
+            <Button variant="primary" size="md" className="w-full sm:w-auto" leftIcon={<PlusCircle className="w-4 h-4" />}>
               Start New Interview
             </Button>
           </Link>
@@ -130,19 +130,19 @@ export const HistoryPage: React.FC = () => {
         <div className="block sm:hidden space-y-3">
           {filteredInterviews.length === 0 ? (
             <Card className="p-8 text-center space-y-3">
-              <FileText className="w-8 h-8 text-slate-600 mx-auto" />
-              <p className="text-sm font-semibold text-white">No matching interviews found</p>
-              <p className="text-xs text-slate-500">Try adjusting your filters or start a new session.</p>
+              <FileText className="w-8 h-8 text-brand-muted/50 mx-auto" />
+              <p className="text-sm font-bold text-white">No matching interviews found</p>
+              <p className="text-xs text-brand-muted">Try adjusting your filters or start a new session.</p>
             </Card>
           ) : (
             filteredInterviews.map((item) => {
               const score = item.score ?? item.interview_reports?.[0]?.overall_score;
               return (
-                <Card key={item.id} className="p-4 space-y-3 border-white/[0.08]">
+                <Card key={item.id} className="p-4 space-y-3">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h3 className="text-sm font-bold text-white">{item.role}</h3>
-                      <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                      <p className="text-[11px] text-brand-muted font-mono mt-0.5">
                         {formatDate(item.started_at)}
                       </p>
                     </div>
@@ -155,7 +155,7 @@ export const HistoryPage: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 pt-1 border-t border-white/[0.04]">
+                  <div className="flex items-center gap-2 pt-1 border-t border-white/10">
                     <Badge variant="brand" size="sm" className="capitalize text-[10px]">
                       {item.interview_type}
                     </Badge>
@@ -174,7 +174,7 @@ export const HistoryPage: React.FC = () => {
                     </Badge>
                   </div>
 
-                  <div className="pt-2 border-t border-white/[0.06] flex justify-end">
+                  <div className="pt-2 border-t border-white/10 flex justify-end">
                     {item.status === 'completed' ? (
                       <Link to={`/interview/${item.id}/result`} className="w-full">
                         <Button variant="outline" size="sm" className="w-full text-xs" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
@@ -210,14 +210,14 @@ export const HistoryPage: React.FC = () => {
           <CardContent className="p-0">
             {filteredInterviews.length === 0 ? (
               <div className="text-center py-16 px-4 space-y-3">
-                <div className="w-12 h-12 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-slate-400 mx-auto">
+                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-brand-muted mx-auto">
                   <FileText className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">
+                  <p className="text-sm font-bold text-white">
                     No matching interviews found
                   </p>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-brand-muted mt-0.5">
                     Try adjusting your filters or launch a new mock interview session.
                   </p>
                 </div>
@@ -225,7 +225,7 @@ export const HistoryPage: React.FC = () => {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-white/[0.02] text-slate-400 border-b border-white/[0.06] uppercase tracking-wider font-semibold">
+                  <thead className="bg-white/5 text-brand-muted border-b border-white/10 uppercase tracking-wider font-semibold">
                     <tr>
                       <th className="px-6 py-3.5">Date</th>
                       <th className="px-6 py-3.5">Role</th>
@@ -236,10 +236,10 @@ export const HistoryPage: React.FC = () => {
                       <th className="px-6 py-3.5 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.04] text-slate-300">
+                  <tbody className="divide-y divide-white/10 text-brand-muted">
                     {filteredInterviews.map((item) => (
-                      <tr key={item.id} className="hover:bg-white/[0.04] transition-colors">
-                        <td className="px-6 py-4 text-slate-400 font-mono">
+                      <tr key={item.id} className="hover:bg-white/5 transition-colors">
+                        <td className="px-6 py-4 text-brand-muted font-mono">
                           {formatDate(item.started_at)}
                         </td>
                         <td className="px-6 py-4 font-bold text-white">
@@ -269,7 +269,7 @@ export const HistoryPage: React.FC = () => {
                               {item.score}%
                             </span>
                           ) : (
-                            <span className="text-slate-500 italic">—</span>
+                            <span className="text-brand-muted italic">—</span>
                           )}
                         </td>
                         <td className="px-6 py-4">

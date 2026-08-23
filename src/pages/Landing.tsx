@@ -1,669 +1,461 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Navbar } from '../components/layout/Navbar';
-import { Footer } from '../components/layout/Footer';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
-import { useScrollAnimationGroup } from '../lib/useScrollAnimation';
-import {
-  Sparkles,
-  ArrowRight,
-  Bot,
-  Zap,
-  Brain,
-  BarChart3,
-  History,
-  Target,
-  CheckCircle2,
-  Code2,
-  Users,
-  MessageSquare,
-  Binary,
-  Layers,
-  ChevronDown,
-  Play,
-  Mail,
-  Send,
-  UserCheck,
-  Compass,
-  Briefcase,
-  FileText,
-} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Triangle, Sparkles, Briefcase, Target, X, Bot, Zap, Brain, BarChart3, History, CheckCircle2, Send, Mail } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-export const Landing: React.FC = () => {
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const containerRef = useScrollAnimationGroup<HTMLDivElement>({ threshold: 0.08 });
+const HERO_VIDEO_URL = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4";
 
+const NAV_LINKS = [
+  { label: 'Home', id: 'home' },
+  { label: 'Product', id: 'product' },
+  { label: 'How It Works', id: 'how-it-works' },
+  { label: 'Founder', id: 'founder' },
+  { label: 'Pricing', id: 'pricing' },
+  { label: 'Contact', id: 'contact' }
+];
+
+const scrollToSection = (id: string) => {
+  const element = document.getElementById(id);
+  if (!element) return;
+  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  window.history.pushState(null, '', `#${id}`);
+};
+
+function useActiveSection(sectionIds: string[]) {
+  const [activeSection, setActiveSection] = useState<string>('home');
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-100px 0px -60% 0px' }
+    );
+    sectionIds.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+    return () => observer.disconnect();
+  }, [sectionIds]);
+  return activeSection;
+}
+
+function Header({ activeSection }: { activeSection: string }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => e.key === 'Escape' && setIsMobileMenuOpen(false);
+    const handleResize = () => window.innerWidth >= 768 && setIsMobileMenuOpen(false);
+    window.addEventListener('keydown', handleEscape);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const handleNavClick = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+    scrollToSection(id);
+  };
+
+  return (
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50 animate-slideDown">
+        <div className="max-w-[800px] mx-auto px-6 py-6 flex items-center justify-between">
+          <div 
+            role="button" tabIndex={0}
+            onClick={(e) => handleNavClick(e, 'home')}
+            onKeyDown={(e) => e.key === 'Enter' && handleNavClick(e as any, 'home')}
+            className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_4px_14px_rgba(0,0,0,0.16)] hover:scale-105 transition-transform cursor-pointer shrink-0"
+          >
+            <Triangle className="w-5 h-5 md:w-6 md:h-6 text-black fill-black" />
+          </div>
+
+          <nav className="hidden md:flex items-center gap-6 bg-brand-dark/80 backdrop-blur-md px-6 py-3 rounded-full border border-white/10">
+            {NAV_LINKS.map(link => (
+              <a 
+                key={link.id} 
+                href={`#${link.id}`} 
+                onClick={(e) => handleNavClick(e, link.id)} 
+                className={`text-sm font-medium transition-colors relative group ${activeSection === link.id ? 'text-white' : 'text-white/50 hover:text-white/75'}`}
+              >
+                {link.label}
+                {activeSection === link.id && (
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex gap-[2px]">
+                    <div className="w-[3px] h-[3px] rounded-full bg-white/80"></div>
+                    <div className="w-[3px] h-[3px] rounded-full bg-white/80"></div>
+                    <div className="w-[3px] h-[3px] rounded-full bg-white/80"></div>
+                  </div>
+                )}
+              </a>
+            ))}
+          </nav>
+
+          <button onClick={() => navigate('/signup')} className="hidden md:flex items-center px-5 py-2.5 bg-brand-dark text-brand-secondary text-sm font-medium rounded-full hover:bg-[#323234] hover:text-white hover:-translate-y-[1px] transition-all">
+            Get Started
+          </button>
+
+          <button
+            className={`md:hidden w-12 h-12 rounded-full flex flex-col justify-center items-center relative z-50 shrink-0 transition-colors duration-300 ${isMobileMenuOpen ? 'bg-white' : 'bg-brand-dark'}`}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {!isMobileMenuOpen ? (
+              <>
+                <span className="absolute w-5 h-[2px] bg-white rounded transition-all duration-300 -translate-y-1.5" />
+                <span className="absolute w-5 h-[2px] bg-white rounded transition-all duration-300 opacity-100" />
+                <span className="absolute w-5 h-[2px] bg-white rounded transition-all duration-300 translate-y-1.5" />
+              </>
+            ) : <X className="w-6 h-6 text-black" />}
+          </button>
+        </div>
+      </header>
+
+      <div className={`md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-md transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} onClick={(e) => e.target === e.currentTarget && setIsMobileMenuOpen(false)}>
+        <div className={`absolute bottom-0 left-0 right-0 bg-[#121212] rounded-t-3xl p-8 flex flex-col gap-6 transition-transform duration-300 delay-100 ${isMobileMenuOpen ? 'translate-y-0' : 'translate-y-full'}`}>
+          {NAV_LINKS.map(link => (
+            <a key={link.id} href={`#${link.id}`} className={`text-xl font-medium ${activeSection === link.id ? 'text-white' : 'text-white/60'}`} onClick={(e) => handleNavClick(e, link.id)}>
+              {link.label}
+            </a>
+          ))}
+          <button className="mt-4 w-full py-4 bg-white text-black font-semibold rounded-full hover:bg-white/90" onClick={() => { setIsMobileMenuOpen(false); navigate('/signup'); }}>
+            Get Started
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Hero() {
+  const navigate = useNavigate();
+  return (
+    <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-12 z-10 w-full relative">
+      <div className="max-w-[900px] mx-auto flex flex-col items-center">
+        <div className="flex flex-col items-center gap-4 mb-8 animate-fade-up stagger-1">
+          <div className="flex -space-x-3">
+            {[Sparkles, Briefcase, Target].map((Icon, i) => (
+              <div key={i} className="w-10 h-10 rounded-full bg-brand-dark border border-white/40 flex items-center justify-center relative overflow-hidden z-[1]">
+                <div className="absolute inset-[2px] rounded-full bg-white flex items-center justify-center">
+                  <Icon className="w-4 h-4 text-black" />
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-sm text-brand-muted font-medium">Trusted by ambitious job seekers</p>
+        </div>
+
+        <h1 className="text-brand-primary font-display text-[clamp(32px,6.2vw,80px)] leading-[1.1] tracking-[-0.04em] mb-6 flex flex-col items-center">
+          <span className="animate-fade-up stagger-2">Your AI Copilot</span>
+          <span className="animate-fade-up stagger-3">For Your Next Career Move</span>
+        </h1>
+
+        <p className="text-[#d0d0d0]/80 max-w-[500px] text-base md:text-lg leading-[1.55] mb-10 animate-fade-up stagger-4">
+          Discover opportunities, build better applications, and prepare for interviews with one intelligent career copilot.
+        </p>
+
+        <div className="animate-fade-up stagger-5">
+          <button onClick={() => navigate('/signup')} className="px-8 py-4 bg-white text-black font-semibold rounded-full transition-all duration-300 hover:-translate-y-[2px] hover:scale-[1.02] shadow-[0_0_0_1px_rgba(255,255,255,0.15),0_0_22px_rgba(255,255,255,0.32),0_0_44px_rgba(255,255,255,0.12)]">
+            Get Started
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Product() {
   const features = [
-    {
-      icon: Bot,
-      title: 'AI Mock Interviews',
-      desc: 'Practice realistic technical, behavioral, and HR questions powered by Google Gemini AI.',
-      badge: 'Realistic',
-    },
-    {
-      icon: Zap,
-      title: 'Instant Evaluation',
-      desc: 'Receive immediate multi-criteria scoring across Relevance, Accuracy, Completeness, and Clarity.',
-      badge: 'Real-Time',
-    },
-    {
-      icon: Brain,
-      title: 'Adaptive Questions',
-      desc: 'Question difficulty and depth dynamically adjust based on how well you answer previous questions.',
-      badge: 'Dynamic',
-    },
-    {
-      icon: BarChart3,
-      title: 'Performance Analytics',
-      desc: 'Deep-dive into your strengths, weakness radar, and communication mastery over time.',
-      badge: 'Insights',
-    },
-    {
-      icon: History,
-      title: 'Interview History',
-      desc: 'Track your growth and review detailed past transcripts, feedback points, and recommendations.',
-      badge: 'Tracking',
-    },
-    {
-      icon: Target,
-      title: 'Personalized Practice',
-      desc: 'Get tailored practice recommendations targeted specifically to your weakest interview categories.',
-      badge: 'Tailored',
-    },
+    { icon: Bot, title: 'AI Mock Interviews', desc: 'Practice realistic technical, behavioral, and HR questions powered by Google Gemini AI.' },
+    { icon: Zap, title: 'Instant Evaluation', desc: 'Receive immediate multi-criteria scoring across Relevance, Accuracy, Completeness, and Clarity.' },
+    { icon: Brain, title: 'Adaptive Questions', desc: 'Question difficulty and depth dynamically adjust based on how well you answer previous questions.' },
+    { icon: BarChart3, title: 'Performance Analytics', desc: 'Deep-dive into your strengths, weakness radar, and communication mastery over time.' },
+    { icon: History, title: 'Interview History', desc: 'Track your growth and review detailed past transcripts, feedback points, and recommendations.' },
+    { icon: Target, title: 'Personalized Practice', desc: 'Get tailored practice recommendations targeted specifically to your weakest interview categories.' },
   ];
+  return (
+    <section id="product" className="relative z-10 w-full py-24 md:py-32 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/5 scroll-mt-20">
+      <div className="max-w-[1200px] mx-auto space-y-16">
+        <div className="text-center space-y-4 max-w-2xl mx-auto">
+          <p className="text-[11px] font-bold tracking-[0.2em] text-brand-muted uppercase">Product Capabilities</p>
+          <h2 className="text-white font-display text-3xl md:text-5xl leading-tight tracking-tight">Engineered for realistic interview preparation</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((f, i) => (
+            <div key={i} className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
+              <div className="w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"><f.icon className="w-5 h-5" /></div>
+              <h4 className="text-xl font-display text-white mb-3">{f.title}</h4>
+              <p className="text-brand-muted leading-relaxed text-sm">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
+function HowItWorks() {
   const steps = [
-    {
-      step: '01',
-      title: 'Choose your role',
-      desc: 'Select from Software Engineer, Frontend, Backend, ML, DSA, HR, or specify your custom job title and target difficulty.',
-    },
-    {
-      step: '02',
-      title: 'Start your interview',
-      desc: 'Enter a clean, focused interview room designed to simulate genuine hiring manager interactions without distractions.',
-    },
-    {
-      step: '03',
-      title: 'Answer AI questions',
-      desc: 'Type your detailed explanations in text format and receive instant structured evaluations after each response.',
-    },
-    {
-      step: '04',
-      title: 'Get your performance report',
-      desc: 'Review a comprehensive final score, categorical strengths, weak points, and actionable next topics to master.',
-    },
+    { step: '01', title: 'Choose your role', desc: 'Select from Software Engineer, Frontend, Backend, ML, DSA, HR, or specify your custom job title and target difficulty.' },
+    { step: '02', title: 'Start your interview', desc: 'Enter a clean, focused interview room designed to simulate genuine hiring manager interactions without distractions.' },
+    { step: '03', title: 'Answer AI questions', desc: 'Type your detailed explanations in text format and receive instant structured evaluations after each response.' },
+    { step: '04', title: 'Get your performance report', desc: 'Review a comprehensive final score, categorical strengths, weak points, and actionable next topics to master.' },
   ];
+  return (
+    <section id="how-it-works" className="relative z-10 w-full py-24 md:py-32 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/5 scroll-mt-20">
+      <div className="max-w-[1200px] mx-auto space-y-16">
+        <div className="text-center space-y-4 max-w-2xl mx-auto">
+          <p className="text-[11px] font-bold tracking-[0.2em] text-brand-muted uppercase">Simple 4-Step Process</p>
+          <h2 className="text-white font-display text-3xl md:text-5xl leading-tight tracking-tight">How HirePilot Works</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((s, i) => (
+            <div key={i} className="p-8 rounded-2xl bg-[#1a1a1c] border border-white/5 hover:border-white/20 transition-colors">
+              <div className="font-mono text-4xl font-black text-white/10 mb-6">{s.step}</div>
+              <h4 className="text-lg font-bold text-white mb-3">{s.title}</h4>
+              <p className="text-brand-muted leading-relaxed text-sm">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-  const interviewTypes = [
-    {
-      type: 'Technical',
-      icon: Code2,
-      role: 'Full Stack / Backend / Frontend',
-      desc: 'Core architecture, design patterns, framework internals, state management, and production edge cases.',
-    },
-    {
-      type: 'Data Structures & Algorithms (DSA)',
-      icon: Binary,
-      role: 'Software Engineer',
-      desc: 'Time/space complexity analysis, tree traversals, dynamic programming logic, graph algorithms, and optimization.',
-    },
-    {
-      type: 'Behavioral',
-      icon: MessageSquare,
-      role: 'All Engineering Roles',
-      desc: 'STAR framework responses, conflict resolution, technical trade-offs, and handling production incidents.',
-    },
-    {
-      type: 'HR & Cultural',
-      icon: Users,
-      role: 'Graduates & Experienced Candidates',
-      desc: 'Career aspirations, motivation, leadership values, team collaboration, and communication style.',
-    },
-    {
-      type: 'Mixed (Full Loop)',
-      icon: Layers,
-      role: 'Comprehensive Preparation',
-      desc: 'A realistic simulation combining technical depth, problem-solving, and leadership scenario questions.',
-    },
-  ];
+function Founder() {
+  return (
+    <section id="founder" className="relative z-10 w-full py-24 md:py-32 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/5 scroll-mt-20">
+      <div className="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start md:items-center">
+        <div className="flex flex-col">
+          <p className="text-[11px] font-bold tracking-[0.2em] text-brand-muted uppercase mb-4 md:mb-6">The Founder</p>
+          <h2 className="text-white font-display text-4xl md:text-5xl lg:text-6xl leading-[1.15] tracking-[-0.02em] hidden md:block">Built by someone who understands the job search.</h2>
+        </div>
+        <div className="flex flex-col mt-[-1rem] md:mt-0">
+          <h3 className="md:hidden text-3xl font-display text-white mb-6">Faishal Naushad</h3>
+          <div className="group relative rounded-2xl overflow-hidden mb-6 md:mb-8 aspect-square bg-[#28282A]">
+            <img src="/faishal-founder.png" alt="Faishal Naushad" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <div className="absolute inset-0 border border-white/10 rounded-2xl z-10 pointer-events-none"></div>
+          </div>
+          <div>
+            <h3 className="hidden md:block text-2xl md:text-3xl font-display text-white mb-1">Faishal Naushad</h3>
+            <p className="text-brand-muted text-sm tracking-wide uppercase mb-6 md:mb-8">Founder / CEO</p>
+            <p className="text-[#C8C8C8] text-lg md:text-xl leading-relaxed font-light">"Building a smarter way to navigate your career."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-  const faqs = [
+function Pricing() {
+  const navigate = useNavigate();
+
+  const plans = [
     {
-      q: 'How does HirePilot evaluate my interview answers?',
-      a: 'HirePilot uses Google Gemini AI trained on engineering hiring rubrics. Every submitted answer is evaluated on four objective dimensions: Relevance (1-10), Technical Accuracy (1-10), Completeness (1-10), and Clarity (1-10), accompanied by specific missing points and improvement tips.',
+      id: "free",
+      name: "Free",
+      priceDisplay: "₹0",
+      interviews: "3 interviews",
+      description: "Start exploring HirePilot",
+      cta: "Start Free",
+      features: [
+        '3 Free Full Interviews',
+        'Instant Multi-Criteria Scoring',
+        'Lifetime Interview History'
+      ]
     },
     {
-      q: 'Is HirePilot free to use?',
-      a: 'Yes! Our Free tier allows up to 3 comprehensive mock interviews every month with up to 15 adaptive questions each, complete with instant evaluations and lifetime report history.',
+      id: "pro",
+      name: "Pro",
+      priceDisplay: "₹249",
+      interviews: "15 interviews",
+      description: "For active job seekers",
+      cta: "Choose Pro",
+      popular: true,
+      features: [
+        '15 Full Interviews per month',
+        'Advanced Analytics',
+        'Priority AI Processing',
+        'Custom Job Titles'
+      ]
     },
     {
-      q: 'Why is HirePilot strictly text-based?',
-      a: 'Text-based mock interviews allow you to practice articulating complex technical concepts, system design architectures, and behavioral situations with clarity and precision, without audio friction, stage fright, or expensive streaming costs.',
-    },
-    {
-      q: 'How does adaptive questioning work?',
-      a: 'If you answer a question with high technical precision, the AI interviewer will ask a more advanced question probing deeper edge cases or architectural tradeoffs. If you struggle, it will test foundational concepts to help you build confidence.',
-    },
-    {
-      q: 'Can I practice for non-standard or custom job roles?',
-      a: 'Yes! In the interview setup screen, you can select "Custom Role" and enter any specific target title (e.g. "DevOps Engineer", "iOS Developer", "Rust Systems Engineer").',
-    },
+      id: "unlimited",
+      name: "Unlimited",
+      priceDisplay: "₹599",
+      interviews: "Unlimited interviews",
+      description: "For serious job seekers",
+      cta: "Go Unlimited",
+      features: [
+        'Unlimited Interviews',
+        'All Pro Features',
+        'Unlimited Adaptive Questions',
+        'Early Access to New Features'
+      ]
+    }
   ];
 
   return (
-    <div ref={containerRef} className="min-h-screen flex flex-col bg-[#060b18] text-white">
-      <Navbar />
-
-      {/* ═══════════════════ HERO ═══════════════════ */}
-      <section className="relative pt-32 sm:pt-36 pb-20 md:pt-40 md:pb-28 overflow-hidden">
-        {/* Atmospheric glow orbs */}
-        <div className="glow-orb glow-orb-blue w-[600px] h-[400px] top-[10%] left-1/2 -translate-x-1/2 opacity-60" />
-        <div className="glow-orb glow-orb-cyan w-[300px] h-[300px] top-[30%] right-[10%] opacity-40" />
-        <div className="glow-orb glow-orb-indigo w-[400px] h-[300px] bottom-[10%] left-[10%] opacity-30" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-semibold animate-fade-in backdrop-blur-sm">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>YOUR AI CAREER COPILOT</span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black text-white tracking-tight max-w-5xl mx-auto leading-[1.1] animate-fade-in-up">
-            Land your next job with{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-blue-400 to-cyan-400">
-              an AI that works for you.
-            </span>
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-sm sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed animate-fade-in-up stagger-1">
-            HirePilot helps you practice realistic interviews, refine your resume, and track your career journey — all powered by advanced AI.
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 animate-fade-in-up stagger-2">
-            <Link to="/signup" className="w-full sm:w-auto">
-              <Button
-                variant="primary"
-                size="lg"
-                className="w-full shadow-lg shadow-sky-500/20"
-                rightIcon={<ArrowRight className="w-4 h-4" />}
+    <section id="pricing" className="relative z-10 w-full py-24 md:py-32 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/5 scroll-mt-20">
+      <div className="max-w-[1200px] mx-auto space-y-16">
+        <div className="text-center space-y-4 max-w-2xl mx-auto">
+          <p className="text-[11px] font-bold tracking-[0.2em] text-brand-muted uppercase">Pricing & Quota</p>
+          <h2 className="text-white font-display text-3xl md:text-5xl leading-tight tracking-tight">Simple, transparent pricing</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {plans.map((plan) => (
+            <div key={plan.id} className={`p-8 rounded-3xl bg-[#121212] border ${plan.popular ? 'border-white/30' : 'border-white/10'} hover:border-white/20 transition-all flex flex-col relative`}>
+              {plan.popular && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-white text-black text-xs font-bold uppercase tracking-wide">
+                  Most Popular
+                </div>
+              )}
+              <div className="mb-8">
+                <h4 className="text-2xl font-display text-white mb-2">{plan.name}</h4>
+                <p className="text-brand-muted text-sm min-h-[40px]">{plan.description}</p>
+                <div className="mt-6 flex items-baseline gap-2">
+                  <span className="text-4xl font-display text-white">{plan.priceDisplay}</span>
+                  <span className="text-brand-muted text-sm">/ month</span>
+                </div>
+                <div className="mt-2 text-brand-secondary text-sm font-semibold">
+                  {plan.interviews}
+                </div>
+              </div>
+              <ul className="space-y-4 mb-8 flex-1">
+                {plan.features.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-[#d0d0d0]">
+                    <CheckCircle2 className="w-5 h-5 text-white/50 shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <button 
+                onClick={() => navigate(`/signup?plan=${plan.id}`)} 
+                className={`w-full py-4 rounded-xl font-semibold transition-colors ${plan.popular ? 'bg-white text-black hover:bg-white/90' : 'bg-white/10 text-white hover:bg-white/20'}`}
               >
-                Start for Free
-              </Button>
-            </Link>
-            <a href="#how-it-works" className="w-full sm:w-auto">
-              <Button variant="outline" size="lg" className="w-full" leftIcon={<Play className="w-4 h-4" />}>
-                Explore HirePilot
-              </Button>
-            </a>
-          </div>
-
-          {/* Trust Stats Strip */}
-          <div className="pt-10 reveal-init stagger-3">
-            <div className="inline-flex flex-wrap items-center justify-center gap-4 sm:gap-0 px-6 py-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-xl">
-              {[
-                { value: '10K+', label: 'Candidates' },
-                { value: '50K+', label: 'AI Interviews' },
-                { value: '95%', label: 'Improvement Rate' },
-                { value: '4.9/5', label: 'User Rating' },
-              ].map((stat, i) => (
-                <div key={stat.label} className={`flex items-center gap-2 ${i > 0 ? 'sm:border-l sm:border-white/[0.08] sm:pl-6 sm:ml-6' : ''}`}>
-                  <span className="text-lg sm:text-xl font-display font-bold text-white">{stat.value}</span>
-                  <span className="text-xs text-slate-500 font-medium">{stat.label}</span>
-                </div>
-              ))}
+                {plan.cta}
+              </button>
             </div>
-          </div>
-
-          {/* Hero Interactive UI Preview */}
-          <div className="pt-8 sm:pt-12 max-w-4xl mx-auto reveal-init stagger-4">
-            <div className="rounded-2xl border border-white/[0.08] bg-[rgba(12,20,37,0.6)] backdrop-blur-xl shadow-glass-lg overflow-hidden text-left transition-all duration-500 hover:border-white/[0.12] hover:shadow-glow-blue">
-              {/* Window Header */}
-              <div className="bg-white/[0.03] px-3 sm:px-4 py-2.5 sm:py-3 border-b border-white/[0.06] flex items-center justify-between gap-2">
-                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-400/80" />
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400/80" />
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400/80" />
-                </div>
-                <div className="text-[11px] sm:text-xs font-mono text-slate-500 font-medium truncate px-1">
-                  HirePilot Live Mock Session — Software Engineer
-                </div>
-                <div className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20 shrink-0">
-                  Question 4 of 10
-                </div>
-              </div>
-
-              {/* Window Content */}
-              <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
-                {/* AI Question */}
-                <div className="p-3.5 sm:p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wider">
-                    <Bot className="w-4 h-4" />
-                    AI Interviewer
-                  </div>
-                  <p className="text-xs sm:text-sm font-semibold text-white">
-                    "Explain the difference between an ArrayList and a LinkedList in Java. Under what memory and runtime conditions would you choose one over the other?"
-                  </p>
-                </div>
-
-                {/* Candidate Answer Sample */}
-                <div className="p-3.5 sm:p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] text-xs text-slate-400 font-mono space-y-1">
-                  <span className="text-[10px] text-slate-500 uppercase font-semibold">Your Submitted Answer</span>
-                  <p className="break-words">
-                    ArrayList is backed by a dynamic array offering O(1) random access by index and better cache locality. LinkedList consists of doubly-linked nodes offering O(1) insertions/deletions at known positions but higher pointer overhead per element...
-                  </p>
-                </div>
-
-                {/* Live Evaluation Preview */}
-                <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-500/[0.07] border border-emerald-500/20 space-y-3">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-300">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      Instant AI Evaluation: 85/100
-                    </div>
-                    <div className="flex gap-2 text-[11px] font-mono">
-                      <span className="text-slate-400">Accuracy: <strong className="text-white">9/10</strong></span>
-                      <span className="text-slate-400">Clarity: <strong className="text-white">8/10</strong></span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    "Excellent explanation of memory cache locality and asymptotic complexities. Consider also mentioning how ArrayList amortizes resize costs (1.5x capacity growth)."
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ FEATURES ═══════════════════ */}
-      <section id="features" className="py-16 sm:py-24 border-t border-white/[0.04]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-            <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
-              Core Capabilities
-            </h2>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
-              Everything you need to get hired.
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Everything you need to gain confidence, master technical explanations, and secure top offers.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-            {features.map((f, idx) => (
-              <Card
-                key={f.title}
-                className={`p-5 sm:p-6 space-y-4 reveal-init stagger-${(idx % 3) + 1} glass-surface-hover`}
-                hoverable
-              >
-                <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/15">
-                    <f.icon className="w-5 h-5" />
-                  </div>
-                  <Badge variant="outline" size="sm">
-                    {f.badge}
-                  </Badge>
-                </div>
-                <div>
-                  <h4 className="text-base font-bold text-white">{f.title}</h4>
-                  <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{f.desc}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ HOW IT WORKS ═══════════════════ */}
-      <section id="how-it-works" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-          <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
-            Simple 4-Step Process
-          </h2>
-          <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
-            How HirePilot Works
-          </h3>
-          <p className="text-xs sm:text-sm text-slate-500">
-            From setup to complete performance report in four streamlined steps.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {steps.map((s, idx) => (
-            <Card key={s.step} className={`p-5 sm:p-6 space-y-3 relative overflow-hidden reveal-init stagger-${idx + 1}`} hoverable>
-              <div className="font-mono text-3xl font-black text-sky-400/15">
-                {s.step}
-              </div>
-              <h4 className="text-base font-bold text-white">{s.title}</h4>
-              <p className="text-xs text-slate-500 leading-relaxed">{s.desc}</p>
-            </Card>
           ))}
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* ═══════════════════ INTERVIEW TYPES ═══════════════════ */}
-      <section id="ai-interview" className="py-20 sm:py-24 border-t border-white/[0.04]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-            <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
-              Interview Catalog
-            </h2>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
-              Specialized Interview Modes
-            </h3>
-            <p className="text-sm text-slate-500">
-              Select the exact interview style you want to practice for your upcoming rounds.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {interviewTypes.map((t, idx) => (
-              <Card key={t.type} className={`p-5 flex flex-col justify-between space-y-4 reveal-init stagger-${idx + 1}`} hoverable>
-                <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sky-400 flex items-center justify-center">
-                    <t.icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-white">{t.type}</h4>
-                    <p className="text-[11px] text-sky-400 font-medium mt-0.5">{t.role}</p>
-                    <p className="text-xs text-slate-500 mt-2 leading-relaxed">{t.desc}</p>
-                  </div>
-                </div>
-
-                <Link to="/interview/setup" className="pt-2">
-                  <Button variant="outline" size="sm" className="w-full">
-                    Practice Now
-                  </Button>
-                </Link>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ PRICING ═══════════════════ */}
-      <section id="pricing" className="py-20 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-          <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
-            Pricing & Quota
-          </h2>
-          <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
-            Free forever for early career candidates
-          </h3>
-          <p className="text-sm text-slate-500">
-            Transparent usage limits designed to keep the platform free for students and job seekers.
-          </p>
-        </div>
-
-        <div className="max-w-lg mx-auto reveal-init">
-          <Card className="p-8 border-sky-500/30 shadow-glow space-y-6 relative" hoverable>
-            <div className="absolute -top-3 right-6">
-              <Badge variant="brand" size="md">
-                Standard Free Tier
-              </Badge>
-            </div>
-
-            <div>
-              <h4 className="text-2xl font-bold text-white">Community Pilot</h4>
-              <p className="text-xs text-slate-500 mt-1">Full access to all AI interview roles and analytics</p>
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-black text-white font-mono">$0</span>
-                <span className="text-xs text-slate-500">/ forever</span>
-              </div>
-            </div>
-
-            <ul className="space-y-3 text-xs text-slate-400">
-              <li className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span><strong className="text-slate-300">3 Free Full Interviews</strong> per user every calendar month</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span><strong className="text-slate-300">Up to 15 Adaptive Questions</strong> per interview session</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span><strong className="text-slate-300">Instant Multi-Criteria Scoring</strong> (Relevance, Accuracy, Clarity)</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span><strong className="text-slate-300">Comprehensive Final Performance Reports</strong> & AI Recommendations</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span><strong className="text-slate-300">Lifetime Interview History</strong> & Progress Tracking</span>
-              </li>
-            </ul>
-
-            <Link to="/signup" className="block pt-2">
-              <Button variant="primary" size="lg" className="w-full shadow-md shadow-sky-500/20">
-                Get Started Free
-              </Button>
-            </Link>
-          </Card>
-        </div>
-      </section>
-
-      {/* ═══════════════════ ABOUT / FOUNDER ═══════════════════ */}
-      <section id="about" className="py-20 sm:py-24 border-t border-white/[0.04]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-            <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
-              About The Platform
-            </h2>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
-              Empowering Job Seekers & Students
-            </h3>
-            <p className="text-sm text-slate-500">
-              Built to level the playing field with intelligent mock preparation.
-            </p>
-          </div>
-
-          <Card className="p-5 sm:p-8 md:p-10 reveal-init">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-              {/* Mission Statement */}
-              <div className="md:col-span-2 space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-semibold">
-                  <Compass className="w-3.5 h-3.5" />
-                  <span>Our Mission</span>
-                </div>
-                <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-normal">
-                  HirePilot is an AI-powered job search and career assistance platform designed to help students and job seekers discover opportunities, improve their resumes, prepare for interviews, and manage their applications.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center gap-3">
-                    <Briefcase className="w-4 h-4 text-sky-400 shrink-0" />
-                    <span className="text-xs font-medium text-slate-300">Opportunity Discovery</span>
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center gap-3">
-                    <FileText className="w-4 h-4 text-purple-400 shrink-0" />
-                    <span className="text-xs font-medium text-slate-300">Resume & Answer Refinement</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Founder Profile Card */}
-              <div className="p-6 sm:p-7 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-center space-y-4 hover:border-white/[0.12] transition-colors">
-                <div className="relative mx-auto w-24 h-24 sm:w-28 sm:h-28">
-                  <div className="w-full h-full rounded-full p-[3px] bg-gradient-to-tr from-sky-500 via-blue-500 to-purple-600 shadow-lg shadow-sky-500/20">
-                    <img
-                      src="/faishal-founder.png"
-                      alt="Faishal Naushad - Founder of HirePilot"
-                      className="w-full h-full rounded-full object-cover object-center bg-[#0c1425]"
-                      loading="eager"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-sky-500/10 text-sky-400 border border-sky-500/20">
-                    Founder
-                  </span>
-                  <h4 className="text-lg font-extrabold text-white mt-0.5">
-                    Faishal Naushad
-                  </h4>
-                  <p className="text-xs text-slate-500 font-medium">
-                    Founder of HirePilot
-                  </p>
-                </div>
-                <div className="pt-2 border-t border-white/[0.06]">
-                  <a
-                    href="mailto:connectwithfaishal@gmail.com"
-                    className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-sky-400 hover:text-sky-300 hover:underline break-all"
-                  >
-                    <Mail className="w-3.5 h-3.5 shrink-0" />
-                    <span>connectwithfaishal@gmail.com</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </section>
-
-      {/* ═══════════════════ CONTACT ═══════════════════ */}
-      <section id="contact" className="py-20 sm:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="text-center space-y-3 max-w-2xl mx-auto reveal-init">
-          <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
-            Get In Touch
-          </h2>
-          <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
-            Official Contact
-          </h3>
-          <p className="text-sm text-slate-500">
-            Reach out directly for platform inquiries, support, partnerships, or developer feedback.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 reveal-init">
-          {/* Direct Email Card */}
-          <Card className="p-6 space-y-4 md:col-span-2" hoverable>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/15">
-                <Mail className="w-5 h-5" />
-              </div>
+function Contact() {
+  const [status, setStatus] = useState<'idle'|'success'>('idle');
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('success');
+    setTimeout(() => setStatus('idle'), 5000);
+  };
+  return (
+    <section id="contact" className="relative z-10 w-full py-24 md:py-32 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/5 scroll-mt-20">
+      <div className="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
+        <div className="space-y-6">
+          <p className="text-[11px] font-bold tracking-[0.2em] text-brand-muted uppercase">Get In Touch</p>
+          <h2 className="text-white font-display text-4xl md:text-5xl leading-tight tracking-tight">Contact HirePilot</h2>
+          <p className="text-[#C8C8C8] text-lg leading-relaxed max-w-sm">Reach out directly for platform inquiries, support, partnerships, or developer feedback.</p>
+          <div className="pt-6 border-t border-white/10">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center"><Mail className="w-5 h-5 text-white" /></div>
               <div>
-                <h4 className="text-base font-bold text-white">Email the Founder</h4>
-                <p className="text-xs text-slate-500">Direct channel for all inquiries and support</p>
+                <p className="text-xs text-brand-muted uppercase tracking-wider mb-1">Official Contact Email</p>
+                <p className="text-white font-medium">connectwithfaishal@gmail.com</p>
               </div>
             </div>
-
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div>
-                <span className="text-[11px] text-slate-500 uppercase font-semibold">Official Contact Email</span>
-                <p className="text-sm font-bold text-white font-mono mt-0.5">
-                  connectwithfaishal@gmail.com
-                </p>
-              </div>
-              <a
-                href="mailto:connectwithfaishal@gmail.com?subject=HirePilot%20Inquiry"
-                className="w-full sm:w-auto"
-              >
-                <Button variant="primary" size="sm" className="w-full" leftIcon={<Send className="w-3.5 h-3.5" />}>
-                  Send Email
-                </Button>
-              </a>
-            </div>
-
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Whether you have feedback on AI interview question quality, need help navigating the dashboard, or want to suggest new features for job preparation, your emails go straight to the developer.
-            </p>
-          </Card>
-
-          {/* Quick Info Card */}
-          <Card className="p-6 space-y-4 flex flex-col justify-between" hoverable>
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.08] text-slate-400 flex items-center justify-center">
-                <UserCheck className="w-5 h-5" />
-              </div>
-              <h4 className="text-base font-bold text-white">Platform Leadership</h4>
-              <div className="space-y-1 text-xs text-slate-500">
-                <p><strong className="text-slate-300">Founder:</strong> Faishal Naushad</p>
-                <p><strong className="text-slate-300">Platform:</strong> HirePilot AI Mock Interviews</p>
-                <p><strong className="text-slate-300">Support:</strong> 100% Free Community Tier</p>
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-white/[0.06]">
-              <a
-                href="mailto:connectwithfaishal@gmail.com"
-                className="text-xs font-semibold text-sky-400 hover:text-sky-300 hover:underline inline-flex items-center gap-1"
-              >
-                <span>Write to Faishal Naushad</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </a>
-            </div>
-          </Card>
-        </div>
-      </section>
-
-      {/* ═══════════════════ FAQ ═══════════════════ */}
-      <section id="faq" className="py-20 sm:py-24 border-t border-white/[0.04]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="text-center space-y-3 reveal-init">
-            <h2 className="text-xs font-bold text-sky-400 uppercase tracking-widest">
-              Got Questions?
-            </h2>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
-              Frequently Asked Questions
-            </h3>
-          </div>
-
-          <div className="space-y-3 reveal-init">
-            {faqs.map((faq, idx) => (
-              <Card
-                key={idx}
-                className="cursor-pointer transition-all overflow-hidden"
-                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-              >
-                <div className="p-5 flex items-center justify-between gap-4">
-                  <span className="text-sm font-semibold text-white">
-                    {faq.q}
-                  </span>
-                  <ChevronDown
-                    className={`w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 ${
-                      openFaq === idx ? 'rotate-180 text-sky-400' : ''
-                    }`}
-                  />
-                </div>
-                {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-white/[0.06] pt-3 animate-fade-in">
-                    {faq.a}
-                  </div>
-                )}
-              </Card>
-            ))}
           </div>
         </div>
-      </section>
-
-      {/* ═══════════════════ CTA STRIP ═══════════════════ */}
-      <section className="py-16 sm:py-20 border-t border-white/[0.04] relative overflow-hidden">
-        <div className="glow-orb glow-orb-blue w-[500px] h-[300px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-50" />
-        <div className="max-w-4xl mx-auto px-4 space-y-6 reveal-init text-center relative z-10">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
-            Ready to ace your next interview?
-          </h2>
-          <p className="text-sm text-slate-400 max-w-xl mx-auto">
-            Join candidates using HirePilot to identify weaknesses, refine explanations, and get hired faster.
-          </p>
-          <div>
-            <Link to="/signup">
-              <Button variant="primary" size="lg" className="shadow-lg shadow-sky-500/20">
-                Create Free Account
-              </Button>
-            </Link>
-          </div>
+        <div className="bg-[#121212] p-8 rounded-3xl border border-white/10">
+          {status === 'success' ? (
+            <div className="h-full flex flex-col items-center justify-center py-12 text-center space-y-4 animate-fade-in">
+              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center"><CheckCircle2 className="w-8 h-8 text-white" /></div>
+              <h4 className="text-xl font-bold text-white">Message Sent</h4>
+              <p className="text-brand-muted">We'll get back to you as soon as possible.</p>
+            </div>
+          ) : (
+            <form onSubmit={onSubmit} className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-xs text-brand-muted uppercase tracking-wider ml-1">Name</label>
+                <input required type="text" className="w-full bg-[#1a1a1c] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors" placeholder="John Doe" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs text-brand-muted uppercase tracking-wider ml-1">Email</label>
+                <input required type="email" className="w-full bg-[#1a1a1c] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors" placeholder="john@example.com" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs text-brand-muted uppercase tracking-wider ml-1">Message</label>
+                <textarea required rows={4} className="w-full bg-[#1a1a1c] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors resize-none" placeholder="How can we help you?" />
+              </div>
+              <button type="submit" className="w-full py-4 rounded-xl bg-white text-black font-semibold hover:bg-white/90 transition-colors flex items-center justify-center gap-2 mt-2">
+                <Send className="w-4 h-4" /> Send Message
+              </button>
+            </form>
+          )}
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      <Footer />
-    </div>
+function Footer() {
+  return (
+    <footer className="relative z-10 w-full py-16 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/10">
+      <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shrink-0">
+            <Triangle className="w-5 h-5 text-black fill-black" />
+          </div>
+          <span className="font-display text-white text-xl">HirePilot</span>
+        </div>
+        <nav className="flex flex-wrap items-center gap-x-8 gap-y-4 md:justify-end">
+          {NAV_LINKS.map(link => (
+            <a key={link.id} href={`#${link.id}`} onClick={(e) => { e.preventDefault(); scrollToSection(link.id); }} className="text-sm font-medium text-white/50 hover:text-white transition-colors">
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </footer>
+  );
+}
+
+export const Landing: React.FC = () => {
+  const { hash } = useLocation();
+  const activeSection = useActiveSection(['home', 'product', 'how-it-works', 'founder', 'pricing', 'contact']);
+
+  useEffect(() => {
+    if (hash) {
+      setTimeout(() => {
+        scrollToSection(hash.replace('#', ''));
+      }, 100);
+    }
+  }, [hash]);
+
+  return (
+    <main className="min-h-screen w-full bg-brand-background relative flex flex-col overflow-x-hidden">
+      <video src={HERO_VIDEO_URL} autoPlay muted loop playsInline className="fixed inset-0 z-0 w-full h-full object-cover pointer-events-none" />
+      <div className="fixed inset-0 z-[1] bg-black/40" />
+      <Header activeSection={activeSection} />
+      <div className="relative z-10 flex flex-col w-full w-full">
+        <Hero />
+        <Product />
+        <HowItWorks />
+        <Founder />
+        <Pricing />
+        <Contact />
+        <Footer />
+      </div>
+    </main>
   );
 };

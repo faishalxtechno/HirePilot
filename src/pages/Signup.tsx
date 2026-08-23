@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import { Sparkles, Mail, Lock, User, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Triangle, Mail, Lock, User, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const Signup: React.FC = () => {
   const { signUp, signInWithGoogle, isConfigured } = useAuth();
@@ -60,39 +60,35 @@ export const Signup: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#060b18] px-4 py-12 relative overflow-hidden">
-      {/* Atmospheric glow orbs */}
-      <div className="glow-orb glow-orb-blue w-[500px] h-[350px] top-[15%] left-1/2 -translate-x-1/2 opacity-40" />
-      <div className="glow-orb glow-orb-cyan w-[300px] h-[250px] bottom-[10%] right-[15%] opacity-30" />
-
-      <div className="w-full max-w-md space-y-6 relative z-10">
+    <div className="min-h-screen flex items-center justify-center bg-black px-4 py-12 relative overflow-hidden">
+      <div className="w-full max-w-md space-y-8 relative z-10">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <Link to="/" className="inline-flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
-              <Sparkles className="w-5 h-5" />
+        <div className="text-center space-y-3">
+          <Link to="/" className="inline-flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
+              <Triangle className="w-4 h-4 text-black fill-black" />
             </div>
-            <span className="font-bold text-2xl text-white tracking-tight">
-              Hire<span className="text-sky-400">Pilot</span>
+            <span className="font-medium text-2xl text-white tracking-tight">
+              HirePilot
             </span>
           </Link>
-          <h2 className="text-xl font-bold text-white">Create your account</h2>
-          <p className="text-xs text-slate-400">
+          <h2 className="text-xl font-medium text-white">Create your account</h2>
+          <p className="text-sm text-brand-secondary">
             Start your free AI mock interviews today
           </p>
         </div>
 
-        <Card className="p-6 sm:p-8 space-y-5 shadow-glass-lg border-white/[0.08] bg-[rgba(12,20,37,0.7)] backdrop-blur-2xl">
+        <Card className="p-6 sm:p-8 space-y-6 shadow-2xl border-white/10 bg-[#121212]">
           {isSuccess ? (
-            <div className="text-center space-y-4 py-4">
-              <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mx-auto">
-                <CheckCircle2 className="w-6 h-6" />
+            <div className="text-center space-y-5 py-4">
+              <div className="w-14 h-14 rounded-full bg-white/5 text-white border border-white/10 flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-bold text-white">Verification email sent!</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                We sent a confirmation link to <strong className="text-slate-200">{email}</strong>. Please check your inbox to activate your account and access your dashboard.
+              <h3 className="text-lg font-medium text-white">Verification email sent!</h3>
+              <p className="text-sm text-brand-secondary leading-relaxed">
+                We sent a confirmation link to <strong className="text-white">{email}</strong>. Please check your inbox to activate your account and access your dashboard.
               </p>
-              <Link to="/login" className="block pt-2">
+              <Link to="/login" className="block pt-3">
                 <Button variant="primary" size="md" className="w-full">
                   Go to Login
                 </Button>
@@ -101,8 +97,8 @@ export const Signup: React.FC = () => {
           ) : (
             <>
               {error && (
-                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                <div className="p-3 rounded-lg bg-[#1a0505] border border-red-500/20 text-sm text-red-400 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
@@ -114,7 +110,7 @@ export const Signup: React.FC = () => {
                 size="md"
                 onClick={handleGoogleSignup}
                 disabled={isLoading}
-                className="w-full border-white/[0.1] hover:border-white/[0.2] hover:bg-white/[0.06] text-white"
+                className="w-full"
                 leftIcon={
                   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                     <path
@@ -140,8 +136,8 @@ export const Signup: React.FC = () => {
               </Button>
 
               <div className="relative flex items-center justify-center">
-                <div className="border-t border-white/[0.08] w-full" />
-                <span className="bg-[#0c1425] px-3 text-[11px] uppercase tracking-wider text-slate-500 font-semibold absolute">
+                <div className="border-t border-white/10 w-full" />
+                <span className="bg-[#121212] px-3 text-[11px] uppercase tracking-wider text-brand-muted font-medium absolute">
                   Or with email
                 </span>
               </div>
@@ -183,7 +179,7 @@ export const Signup: React.FC = () => {
                   variant="primary"
                   size="md"
                   isLoading={isLoading}
-                  className="w-full shadow-md shadow-sky-500/20"
+                  className="w-full mt-2"
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                 >
                   Create Account
@@ -194,9 +190,9 @@ export const Signup: React.FC = () => {
         </Card>
 
         {/* Footer Link */}
-        <p className="text-center text-xs text-slate-400">
+        <p className="text-center text-sm text-brand-muted">
           Already have an account?{' '}
-          <Link to="/login" className="text-sky-400 hover:text-sky-300 font-semibold transition-colors">
+          <Link to="/login" className="text-white hover:text-brand-secondary font-medium transition-colors">
             Sign in
           </Link>
         </p>

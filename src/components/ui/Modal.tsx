@@ -33,7 +33,7 @@ export const Modal: React.FC<ModalProps> = ({
         setMounted(false);
         setIsClosing(false);
         document.body.style.overflow = 'unset';
-      }, 200);
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
@@ -60,7 +60,7 @@ export const Modal: React.FC<ModalProps> = ({
     setTimeout(() => {
       onClose();
       setIsClosing(false);
-    }, 200);
+    }, 300);
   };
 
   if (!mounted) return null;
@@ -82,8 +82,8 @@ export const Modal: React.FC<ModalProps> = ({
       {/* Backdrop */}
       <div
         className={cn(
-          'fixed inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-200',
-          isClosing ? 'opacity-0' : 'opacity-100 animate-fade-in'
+          'fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300',
+          isClosing ? 'opacity-0' : 'opacity-100'
         )}
         onClick={handleDismiss}
       />
@@ -91,21 +91,21 @@ export const Modal: React.FC<ModalProps> = ({
       {/* Modal Dialog Card */}
       <div
         className={cn(
-          'relative w-full max-h-[90vh] flex flex-col rounded-2xl border border-white/[0.1] shadow-glass-lg p-5 sm:p-6 z-10 transition-all duration-200 overflow-hidden',
-          'bg-[rgba(12,20,37,0.9)] backdrop-blur-2xl',
+          'relative w-full max-h-[90vh] flex flex-col rounded-2xl border border-white/10 p-6 z-10 transition-all duration-300 overflow-hidden',
+          'bg-[#121212] shadow-2xl',
           maxWidths[maxWidth],
-          isClosing ? 'animate-modal-out' : 'animate-modal-in'
+          isClosing ? 'opacity-0 scale-95 translate-y-4' : 'opacity-100 scale-100 translate-y-0'
         )}
       >
-        <div className="flex items-start justify-between pb-3 gap-3 border-b border-white/[0.06] shrink-0">
+        <div className="flex items-start justify-between pb-4 gap-3 border-b border-white/5 shrink-0">
           <div>
             {title && (
-              <h3 id="modal-title" className="text-base sm:text-lg font-bold text-white tracking-tight">
+              <h3 id="modal-title" className="text-lg font-medium text-white tracking-tight">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-sm text-brand-secondary mt-1.5">
                 {description}
               </p>
             )}
@@ -113,12 +113,12 @@ export const Modal: React.FC<ModalProps> = ({
           <button
             onClick={handleDismiss}
             aria-label="Close modal"
-            className="p-2 text-slate-500 hover:text-white rounded-xl hover:bg-white/[0.06] transition-colors shrink-0 cursor-pointer"
+            className="p-2 text-brand-muted hover:text-white rounded-full hover:bg-white/5 transition-colors shrink-0 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
-        <div className="mt-3 overflow-y-auto flex-1 pr-0.5">{children}</div>
+        <div className="mt-4 overflow-y-auto flex-1 pr-1">{children}</div>
       </div>
     </div>
   );

@@ -20,13 +20,13 @@ export const InterviewHeader: React.FC<InterviewHeaderProps> = ({
   interviewType,
 }) => {
   return (
-    <div className="bg-[rgba(12,20,37,0.7)] backdrop-blur-2xl border border-white/[0.08] p-4 sm:p-6 rounded-2xl shadow-glass space-y-4">
+    <div className="bg-[#121212] border border-white/10 p-4 sm:p-6 rounded-2xl shadow-2xl space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         {/* Left: Role & Type */}
         <div className="flex items-start sm:items-center gap-3 min-w-0">
           <Link
             to="/dashboard"
-            className="p-2 min-h-[38px] min-w-[38px] flex items-center justify-center rounded-xl border border-white/[0.08] text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors shrink-0"
+            className="p-2 min-h-[38px] min-w-[38px] flex items-center justify-center rounded-xl border border-white/10 text-brand-muted hover:text-white hover:border-white/30 transition-colors shrink-0 bg-black"
             title="Back to Dashboard"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -47,16 +47,16 @@ export const InterviewHeader: React.FC<InterviewHeaderProps> = ({
                 {difficulty}
               </Badge>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">HirePilot AI Simulated Mock Session</p>
+            <p className="text-xs text-brand-muted mt-0.5">HirePilot AI Simulated Mock Session</p>
           </div>
         </div>
 
         {/* Right: Question Indicator */}
-        <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/[0.06]">
+        <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/10">
           <div className="text-left sm:text-right flex sm:block items-center gap-2">
-            <span className="text-xs text-slate-500 uppercase font-semibold tracking-wider">Question</span>
+            <span className="text-xs text-brand-muted uppercase font-medium tracking-wider">Question</span>
             <p className="font-mono text-base sm:text-lg font-bold text-white">
-              {currentQuestion} <span className="text-slate-500 font-normal">/ {totalQuestions}</span>
+              {currentQuestion} <span className="text-brand-muted/70 font-normal">/ {totalQuestions}</span>
             </p>
           </div>
         </div>

@@ -1,138 +1,133 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Mail, ArrowUpRight, Code2 } from 'lucide-react';
+import { Triangle, Mail, ArrowUpRight, Code2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="border-t border-white/[0.06] bg-[rgba(6,11,24,0.6)] backdrop-blur-xl py-12 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-white/[0.06]">
+    <footer className="border-t border-white/5 bg-black py-16 transition-colors">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/5">
           {/* Col 1: Brand & Description */}
-          <div className="space-y-3 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
-                <Sparkles className="w-4 h-4" />
+          <div className="space-y-4 md:col-span-1">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                <Triangle className="w-4 h-4 text-black fill-black" />
               </div>
-              <span className="font-bold text-lg text-white tracking-tight">
-                Hire<span className="text-sky-400">Pilot</span>
+              <span className="font-medium text-lg text-white tracking-tight">
+                HirePilot
               </span>
             </Link>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              AI-powered career assistance platform designed to help students and job seekers discover opportunities, improve resumes, prepare for interviews, and manage applications.
+            <p className="text-sm text-brand-secondary leading-relaxed">
+              AI-powered career assistance platform designed to help professionals discover opportunities, improve resumes, and prepare for interviews.
             </p>
-            <div className="pt-1">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] text-slate-400 text-[11px] font-medium border border-white/[0.08]">
-                <Code2 className="w-3.5 h-3.5 text-sky-400" />
-                <span>Founder — <strong className="text-slate-300">Faishal Naushad</strong></span>
+            <div className="pt-2">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 text-brand-muted text-xs font-medium border border-white/10">
+                <Code2 className="w-3.5 h-3.5 text-white" />
+                <span>Founder — <strong className="text-white">Faishal Naushad</strong></span>
               </div>
             </div>
           </div>
 
           {/* Col 2: Navigation Links */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+          <div className="space-y-4">
+            <h4 className="text-xs font-medium text-brand-muted uppercase tracking-wider">
               Navigation
             </h4>
-            <ul className="space-y-2 text-xs text-slate-500">
+            <ul className="space-y-3 text-sm text-brand-secondary">
               <li>
-                <Link to="/" className="hover:text-sky-400 transition-colors">
+                <Link to="/" className="hover:text-white transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/interview/setup" className="hover:text-sky-400 transition-colors">
-                  Mock Interview Catalog
+                <Link to="/interview/setup" className="hover:text-white transition-colors">
+                  Mock Interview
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="hover:text-sky-400 transition-colors">
+                <Link to="/dashboard" className="hover:text-white transition-colors">
                   Dashboard
                 </Link>
               </li>
               <li>
-                <Link to="/history" className="hover:text-sky-400 transition-colors">
-                  Applications & History
+                <Link to="/history" className="hover:text-white transition-colors">
+                  Applications
                 </Link>
               </li>
               <li>
-                <a href="/#about" className="hover:text-sky-400 transition-colors">
-                  About HirePilot
-                </a>
-              </li>
-              <li>
-                <a href="/#contact" className="hover:text-sky-400 transition-colors">
-                  Contact Founder
+                <a href="/#about" className="hover:text-white transition-colors">
+                  About
                 </a>
               </li>
             </ul>
           </div>
 
           {/* Col 3: Interview Types */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+          <div className="space-y-4">
+            <h4 className="text-xs font-medium text-brand-muted uppercase tracking-wider">
               Practice Modes
             </h4>
-            <ul className="space-y-2 text-xs text-slate-500">
+            <ul className="space-y-3 text-sm text-brand-secondary">
               <li>
-                <Link to="/interview/setup?type=technical" className="hover:text-sky-400 transition-colors">
+                <Link to="/interview/setup?type=technical" className="hover:text-white transition-colors">
                   Technical Architecture
                 </Link>
               </li>
               <li>
-                <Link to="/interview/setup?type=dsa" className="hover:text-sky-400 transition-colors">
+                <Link to="/interview/setup?type=dsa" className="hover:text-white transition-colors">
                   Data Structures & Algorithms
                 </Link>
               </li>
               <li>
-                <Link to="/interview/setup?type=behavioral" className="hover:text-sky-400 transition-colors">
+                <Link to="/interview/setup?type=behavioral" className="hover:text-white transition-colors">
                   Behavioral & STAR
                 </Link>
               </li>
               <li>
-                <Link to="/interview/setup?type=hr" className="hover:text-sky-400 transition-colors">
+                <Link to="/interview/setup?type=hr" className="hover:text-white transition-colors">
                   HR & Cultural Fit
                 </Link>
               </li>
               <li>
-                <Link to="/interview/setup?type=mixed" className="hover:text-sky-400 transition-colors">
-                  Mixed Full-Loop Simulation
+                <Link to="/interview/setup?type=mixed" className="hover:text-white transition-colors">
+                  Mixed Simulation
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* Col 4: Contact & Founder */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+          <div className="space-y-4">
+            <h4 className="text-xs font-medium text-brand-muted uppercase tracking-wider">
               Official Contact
             </h4>
-            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-2.5">
-              <p className="text-xs font-semibold text-slate-300">
+            <div className="p-5 rounded-2xl bg-[#121212] border border-white/5 space-y-3">
+              <p className="text-sm font-medium text-white">
                 Have questions or feedback?
               </p>
-              <p className="text-[11px] text-slate-500 leading-relaxed">
-                Reach out directly to the founder & developer:
+              <p className="text-xs text-brand-secondary leading-relaxed">
+                Reach out directly to the founder:
               </p>
               <a
                 href="mailto:connectwithfaishal@gmail.com"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-400 hover:text-sky-300 hover:underline pt-1 break-all"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-white hover:text-brand-secondary pt-1 break-all transition-colors"
               >
-                <Mail className="w-3.5 h-3.5 shrink-0" />
+                <Mail className="w-4 h-4 shrink-0" />
                 <span>connectwithfaishal@gmail.com</span>
-                <ArrowUpRight className="w-3 h-3 shrink-0" />
+                <ArrowUpRight className="w-3.5 h-3.5 shrink-0" />
               </a>
             </div>
           </div>
         </div>
 
         {/* Bottom Credits & Copyright */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} HirePilot. Founder — Faishal Naushad.</p>
-          <div className="flex items-center gap-2 text-[11px]">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-brand-muted">
+          <p>© {new Date().getFullYear()} HirePilot. All rights reserved.</p>
+          <div className="flex items-center gap-2">
             <span>Official Email:</span>
             <a
               href="mailto:connectwithfaishal@gmail.com"
-              className="font-medium text-slate-400 hover:text-sky-400 underline"
+              className="font-medium text-brand-secondary hover:text-white transition-colors"
             >
               connectwithfaishal@gmail.com
             </a>

@@ -48,8 +48,8 @@ export const InterviewResult: React.FC = () => {
     return (
       <DashboardLayout>
         <div className="py-24 flex flex-col items-center justify-center space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin text-sky-400" />
-          <p className="text-sm font-medium text-slate-400">
+          <Loader2 className="w-8 h-8 animate-spin text-white" />
+          <p className="text-sm font-medium text-brand-muted">
             Synthesizing final evaluation report with Gemini AI...
           </p>
         </div>
@@ -61,11 +61,11 @@ export const InterviewResult: React.FC = () => {
     return (
       <DashboardLayout>
         <div className="py-24 text-center space-y-4 max-w-md mx-auto">
-          <div className="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-full bg-[#1f0a0a] border border-rose-500/20 text-rose-500 flex items-center justify-center mx-auto">
             <AlertCircle className="w-6 h-6" />
           </div>
           <h2 className="text-xl font-bold text-white">Report Unavailable</h2>
-          <p className="text-xs text-slate-400">{error || 'Could not load interview report.'}</p>
+          <p className="text-xs text-brand-muted">{error || 'Could not load interview report.'}</p>
           <Button variant="primary" size="md" onClick={() => navigate('/dashboard')}>
             Back to Dashboard
           </Button>

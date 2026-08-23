@@ -63,9 +63,9 @@ const INTERVIEW_TYPES = [
 ];
 
 const DIFFICULTIES: Array<{ id: DifficultyLevel; title: string; desc: string; color: string }> = [
-  { id: 'easy', title: 'Easy', desc: 'Fundamentals, basic syntax, and definitions', color: 'text-emerald-400' },
-  { id: 'medium', title: 'Medium', desc: 'Real-world scenarios, architectural trade-offs', color: 'text-amber-400' },
-  { id: 'hard', title: 'Hard', desc: 'Complex edge cases, distributed scaling, nuances', color: 'text-rose-400' },
+  { id: 'easy', title: 'Easy', desc: 'Fundamentals, basic syntax, and definitions', color: 'text-white' },
+  { id: 'medium', title: 'Medium', desc: 'Real-world scenarios, architectural trade-offs', color: 'text-brand-secondary' },
+  { id: 'hard', title: 'Hard', desc: 'Complex edge cases, distributed scaling, nuances', color: 'text-white/60' },
 ];
 
 const QUESTION_COUNTS = [5, 10, 15];
@@ -139,22 +139,22 @@ export const InterviewSetup: React.FC = () => {
     <DashboardLayout>
       <div className="max-w-4xl mx-auto space-y-8 animate-fade-in pb-12">
         {/* Page Header */}
-        <div className="space-y-1 pb-4 border-b border-white/[0.06]">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <div className="space-y-1 pb-4 border-b border-white/10">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
             Create Your Interview
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400">
+          <p className="text-xs sm:text-sm text-brand-muted">
             Configure your role, interview format, and difficulty to start an AI-guided mock session.
           </p>
         </div>
 
         {/* Quota Exceeded Warning */}
         {quotaExhausted && (
-          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+          <div className="p-4 rounded-2xl bg-[#1f1a0a] border border-amber-500/20 text-xs text-amber-400 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <p className="font-bold">You've reached your free interview limit for this month.</p>
-              <p className="leading-relaxed text-slate-300">
+              <p className="font-medium">You've reached your free interview limit for this month.</p>
+              <p className="leading-relaxed text-brand-muted">
                 Free accounts have a limit of 3 mock interviews per month. Your quota will reset on the 1st of next month. You can still review all past reports and transcripts in your History.
               </p>
             </div>
@@ -162,19 +162,19 @@ export const InterviewSetup: React.FC = () => {
         )}
 
         {error && !quotaExhausted && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+          <div className="p-4 rounded-xl bg-[#1f0a0a] border border-rose-500/20 text-xs text-rose-400 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
             <span>{error}</span>
           </div>
         )}
 
         {/* Step 1: Target Role */}
-        <Card className="p-5 sm:p-6 space-y-4">
+        <Card className="p-5 sm:p-6 space-y-4 bg-[#121212] border-white/10">
           <div>
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+            <h3 className="text-sm font-medium text-white uppercase tracking-wider">
               1. Select Job Role
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-brand-muted mt-0.5">
               Select your target profession or enter a custom title.
             </p>
           </div>
@@ -187,14 +187,14 @@ export const InterviewSetup: React.FC = () => {
                   key={role}
                   type="button"
                   onClick={() => setSelectedRole(role)}
-                  className={`p-3 min-h-[44px] rounded-xl border text-left text-xs font-semibold transition-all duration-200 flex items-center justify-between cursor-pointer ${
+                  className={`p-3 min-h-[44px] rounded-xl border text-left text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${
                     isSelected
-                      ? 'border-sky-500/50 bg-sky-500/15 text-sky-300 shadow-[0_0_12px_rgba(56,171,248,0.15)]'
-                      : 'border-white/[0.08] bg-white/[0.03] text-slate-300 hover:border-white/[0.15] hover:bg-white/[0.05] hover:-translate-y-0.5'
+                      ? 'border-white bg-white text-black'
+                      : 'border-white/10 bg-black text-brand-muted hover:border-white/30 hover:text-white'
                   }`}
                 >
                   <span className="truncate pr-2">{role}</span>
-                  {isSelected && <Check className="w-3.5 h-3.5 text-sky-400 shrink-0" />}
+                  {isSelected && <Check className="w-3.5 h-3.5 text-black shrink-0" />}
                 </button>
               );
             })}
@@ -214,12 +214,12 @@ export const InterviewSetup: React.FC = () => {
         </Card>
 
         {/* Step 2: Interview Type */}
-        <Card className="p-6 space-y-4">
+        <Card className="p-6 space-y-4 bg-[#121212] border-white/10">
           <div>
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+            <h3 className="text-sm font-medium text-white uppercase tracking-wider">
               2. Choose Interview Type
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-brand-muted mt-0.5">
               The AI interviewer will adapt its questions strictly to this domain.
             </p>
           </div>
@@ -233,21 +233,21 @@ export const InterviewSetup: React.FC = () => {
                   key={type.id}
                   type="button"
                   onClick={() => setSelectedType(type.id as InterviewType)}
-                  className={`p-4 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between space-y-3 cursor-pointer ${
+                  className={`p-4 rounded-xl border text-left transition-colors flex flex-col justify-between space-y-3 cursor-pointer ${
                     isSelected
-                      ? 'border-sky-500/50 bg-sky-500/15 shadow-[0_0_12px_rgba(56,171,248,0.15)]'
-                      : 'border-white/[0.08] bg-white/[0.03] hover:border-white/[0.15] hover:bg-white/[0.05] hover:-translate-y-0.5'
+                      ? 'border-white bg-white text-black'
+                      : 'border-white/10 bg-black hover:border-white/30'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isSelected ? 'bg-sky-500 text-white shadow-sm' : 'bg-white/[0.04] text-slate-400'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isSelected ? 'bg-black text-white' : 'bg-white/5 text-brand-muted'}`}>
                       <Icon className="w-4 h-4" />
                     </div>
-                    {isSelected && <Check className="w-4 h-4 text-sky-400" />}
+                    {isSelected && <Check className="w-4 h-4 text-black" />}
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">{type.title}</h4>
-                    <p className="text-[11px] text-slate-400 mt-1 leading-snug">{type.desc}</p>
+                    <h4 className={`text-xs font-bold ${isSelected ? 'text-black' : 'text-white'}`}>{type.title}</h4>
+                    <p className={`text-[11px] mt-1 leading-snug ${isSelected ? 'text-black/70' : 'text-brand-muted'}`}>{type.desc}</p>
                   </div>
                 </button>
               );
@@ -258,12 +258,12 @@ export const InterviewSetup: React.FC = () => {
         {/* Step 3: Difficulty & Question Count */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {/* Difficulty */}
-          <Card className="p-6 space-y-4">
+          <Card className="p-6 space-y-4 bg-[#121212] border-white/10">
             <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+              <h3 className="text-sm font-medium text-white uppercase tracking-wider">
                 3. Difficulty Level
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-brand-muted mt-0.5">
                 Sets the baseline complexity for the first question.
               </p>
             </div>
@@ -276,17 +276,17 @@ export const InterviewSetup: React.FC = () => {
                     key={diff.id}
                     type="button"
                     onClick={() => setSelectedDifficulty(diff.id)}
-                    className={`w-full p-3.5 rounded-xl border text-left text-xs transition-all duration-200 flex items-center justify-between cursor-pointer ${
+                    className={`w-full p-3.5 rounded-xl border text-left text-xs transition-colors flex items-center justify-between cursor-pointer ${
                       isSelected
-                        ? 'border-sky-500/50 bg-sky-500/15 shadow-[0_0_12px_rgba(56,171,248,0.15)]'
-                        : 'border-white/[0.08] bg-white/[0.03] hover:border-white/[0.15] hover:bg-white/[0.05] hover:-translate-y-0.5'
+                        ? 'border-white bg-white text-black'
+                        : 'border-white/10 bg-black hover:border-white/30'
                     }`}
                   >
                     <div>
-                      <span className={`font-bold ${diff.color}`}>{diff.title}</span>
-                      <p className="text-[11px] text-slate-400 mt-0.5">{diff.desc}</p>
+                      <span className={`font-bold ${isSelected ? 'text-black' : diff.color}`}>{diff.title}</span>
+                      <p className={`text-[11px] mt-0.5 ${isSelected ? 'text-black/70' : 'text-brand-muted'}`}>{diff.desc}</p>
                     </div>
-                    {isSelected && <Check className="w-4 h-4 text-sky-400 shrink-0" />}
+                    {isSelected && <Check className="w-4 h-4 text-black shrink-0" />}
                   </button>
                 );
               })}
@@ -294,12 +294,12 @@ export const InterviewSetup: React.FC = () => {
           </Card>
 
           {/* Number of Questions */}
-          <Card className="p-6 space-y-4 flex flex-col justify-between">
+          <Card className="p-6 space-y-4 flex flex-col justify-between bg-[#121212] border-white/10">
             <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+              <h3 className="text-sm font-medium text-white uppercase tracking-wider">
                 4. Total Questions
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-brand-muted mt-0.5">
                 Default is 10 questions for standard interview loops.
               </p>
             </div>
@@ -312,20 +312,20 @@ export const InterviewSetup: React.FC = () => {
                     key={count}
                     type="button"
                     onClick={() => setTotalQuestions(count)}
-                    className={`p-4 rounded-xl border text-center font-mono font-bold transition-all duration-200 cursor-pointer ${
+                    className={`p-4 rounded-xl border text-center font-mono font-bold transition-colors cursor-pointer ${
                       isSelected
-                        ? 'border-sky-400 bg-gradient-to-b from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/25'
-                        : 'border-white/[0.08] bg-white/[0.03] text-slate-300 hover:border-white/[0.15] hover:bg-white/[0.05] hover:-translate-y-0.5'
+                        ? 'border-white bg-white text-black'
+                        : 'border-white/10 bg-black text-white hover:border-white/30'
                     }`}
                   >
                     <span className="text-xl block">{count}</span>
-                    <span className="text-[10px] uppercase tracking-wider font-sans font-normal opacity-80">Questions</span>
+                    <span className={`text-[10px] uppercase tracking-wider font-sans font-normal opacity-80 ${isSelected ? 'text-black/70' : 'text-brand-muted'}`}>Questions</span>
                   </button>
                 );
               })}
             </div>
 
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-brand-muted">
               Estimated duration: ~{totalQuestions * 2.5} minutes
             </p>
           </Card>
@@ -339,8 +339,8 @@ export const InterviewSetup: React.FC = () => {
             onClick={handleStartInterview}
             disabled={isLoading || quotaExhausted}
             isLoading={isLoading}
-            className="w-full sm:w-auto shadow-lg shadow-sky-500/25 px-8"
-            rightIcon={<Play className="w-4 h-4 fill-white" />}
+            className="w-full sm:w-auto px-8"
+            rightIcon={<Play className="w-4 h-4" />}
           >
             {isLoading ? 'Generating First Question...' : 'Start Interview'}
           </Button>
