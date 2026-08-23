@@ -37,7 +37,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    let mounted = true;
     const savedGuest = localStorage.getItem('hirepilot_guest_user');
+
+    const handleAuthChange = async (event: string, currentSession: Session | null) => {
+      console.log('[AUTH EVENT]', event);
+      if (!mounted) return;
+
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
+
+      if (currentSession?.user) {
+        await fetchUserProfile(
+          currentSession.user.id,
+          currentSession.user.email,
+          currentSession.user.user_metadata
+        );
+      } else if (savedGuest) {
+        setProfile(JSON.parse(savedGuest));
+        setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
+      } else {
+        setProfile(null);
+      }
+      
+      if (mounted) setLoading(false);
+    };
 
     const initializeAuth = async () => {
       if (!isSupabaseConfigured) {
@@ -49,63 +73,67 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setProfile(DEMO_USER_PROFILE);
           setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
         }
-        setLoading(false);
+        if (mounted) setLoading(false);
         return;
       }
 
       try {
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        console.log('[AUTH] getSession completed');
+        if (error) {
+          console.error('[AUTH] Error in getSession:', error);
+        }
         
-        setSession(initialSession);
-        setUser(initialSession?.user ?? null);
+        if (mounted) {
+          setSession(initialSession);
+          setUser(initialSession?.user ?? null);
 
-        if (initialSession?.user) {
-          await fetchUserProfile(
-            initialSession.user.id,
-            initialSession.user.email,
-            initialSession.user.user_metadata
-          );
-        } else if (savedGuest) {
-          setProfile(JSON.parse(savedGuest));
-          setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
-        } else {
-          setProfile(null);
+          if (initialSession?.user) {
+            await fetchUserProfile(
+              initialSession.user.id,
+              initialSession.user.email,
+              initialSession.user.user_metadata
+            );
+          } else if (savedGuest) {
+            setProfile(JSON.parse(savedGuest));
+            setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
+          } else {
+            setProfile(null);
+          }
         }
       } catch (error) {
         console.error('Error getting initial session:', error);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
 
     initializeAuth();
 
+    let subscription: any = null;
     if (isSupabaseConfigured) {
-      // Listen to auth state changes (handles login, logout, token refresh)
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
-
-        if (currentSession?.user) {
-          await fetchUserProfile(
-            currentSession.user.id,
-            currentSession.user.email,
-            currentSession.user.user_metadata
-          );
-        } else if (savedGuest) {
-          setProfile(JSON.parse(savedGuest));
-          setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
-        } else {
-          setProfile(null);
-        }
-        setLoading(false);
+      const { data } = supabase.auth.onAuthStateChange((event, currentSession) => {
+        handleAuthChange(event, currentSession);
       });
-
-      return () => {
-        subscription.unsubscribe();
-      };
+      subscription = data.subscription;
     }
+
+    return () => {
+      mounted = false;
+      if (subscription) subscription.unsubscribe();
+    };
   }, []);
+
+  // Debug logging for state changes
+  useEffect(() => {
+    console.log(
+      '[AUTH]',
+      'session:',
+      session ? 'ACTIVE' : 'NONE',
+      'loading:',
+      loading
+    );
+  }, [session, loading]);
 
   const fetchUserProfile = async (userId: string, email?: string, userMetadata?: any) => {
     try {
