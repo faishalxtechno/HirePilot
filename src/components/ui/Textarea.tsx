@@ -36,7 +36,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           maxLength={maxLength}
           className={cn(
             'block w-full rounded-lg border border-white/10 bg-transparent p-3.5 text-sm text-white placeholder-brand-muted transition-all duration-300',
-            'focus:border-white/30 focus:outline-none focus:bg-white/5',
+            'focus:border-white/30 focus:outline-none focus:bg-white/5 focus:-translate-y-[1px] focus:shadow-[0_4px_12px_rgba(255,255,255,0.03)]',
             'disabled:opacity-50 disabled:cursor-not-allowed resize-y min-h-[140px] leading-relaxed',
             error && 'border-red-500/50 focus:border-red-500/50',
             className

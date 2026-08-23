@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Triangle, Sparkles, Briefcase, Target, X, Bot, Zap, Brain, BarChart3, History, CheckCircle2, Send, Mail } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useScrollReveal } from '../lib/useScrollReveal';
 
 const HERO_VIDEO_URL = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4";
 
@@ -91,7 +92,7 @@ function Header({ activeSection }: { activeSection: string }) {
                 <Link 
                   key={link.id} 
                   to={link.path!} 
-                  className={`text-sm font-medium transition-colors relative group text-white/50 hover:text-white/75`}
+                  className={`text-sm font-medium transition-colors relative group text-white/50 hover:text-white/75 nav-link`}
                 >
                   {link.label}
                 </Link>
@@ -100,7 +101,7 @@ function Header({ activeSection }: { activeSection: string }) {
                   key={link.id} 
                   href={`#${link.id}`} 
                   onClick={(e) => handleNavClick(e, link)} 
-                  className={`text-sm font-medium transition-colors relative group ${activeSection === link.id ? 'text-white' : 'text-white/50 hover:text-white/75'}`}
+                  className={`text-sm font-medium transition-colors relative group nav-link ${activeSection === link.id ? 'text-white' : 'text-white/50 hover:text-white/75'}`}
                 >
                   {link.label}
                   {activeSection === link.id && (
@@ -184,7 +185,7 @@ function Hero() {
         </p>
 
         <div className="animate-fade-up stagger-5">
-          <button onClick={() => navigate('/signup')} className="px-8 py-4 bg-white text-black font-semibold rounded-full transition-all duration-300 hover:-translate-y-[2px] hover:scale-[1.02] shadow-[0_0_0_1px_rgba(255,255,255,0.15),0_0_22px_rgba(255,255,255,0.32),0_0_44px_rgba(255,255,255,0.12)]">
+          <button onClick={() => navigate('/signup')} className="px-8 py-4 bg-white text-black font-semibold rounded-full transition-all duration-300 shadow-[0_0_0_1px_rgba(255,255,255,0.15),0_0_22px_rgba(255,255,255,0.32),0_0_44px_rgba(255,255,255,0.12)] button-lift magnetic">
             Get Started
           </button>
         </div>
@@ -204,15 +205,15 @@ function Product() {
   ];
   return (
     <section id="product" className="relative z-10 w-full py-24 md:py-32 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/5 scroll-mt-20">
-      <div className="max-w-[1200px] mx-auto space-y-16">
+      <div className="max-w-[1200px] mx-auto space-y-16 reveal-hidden">
         <div className="text-center space-y-4 max-w-2xl mx-auto">
           <p className="text-[11px] font-bold tracking-[0.2em] text-brand-muted uppercase">Product Capabilities</p>
           <h2 className="text-white font-display text-3xl md:text-5xl leading-tight tracking-tight">Engineered for realistic interview preparation</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((f, i) => (
-            <div key={i} className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
-              <div className="w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"><f.icon className="w-5 h-5" /></div>
+            <div key={i} className="p-8 rounded-2xl bg-[#121212] border border-white/10 hover:bg-white/5 transition-colors group card-hover">
+              <div className="w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"><f.icon className="w-5 h-5 icon-pop" /></div>
               <h4 className="text-xl font-display text-white mb-3">{f.title}</h4>
               <p className="text-brand-muted leading-relaxed text-sm">{f.desc}</p>
             </div>
@@ -232,15 +233,15 @@ function HowItWorks() {
   ];
   return (
     <section id="how-it-works" className="relative z-10 w-full py-24 md:py-32 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/5 scroll-mt-20">
-      <div className="max-w-[1200px] mx-auto space-y-16">
+      <div className="max-w-[1200px] mx-auto space-y-16 reveal-hidden">
         <div className="text-center space-y-4 max-w-2xl mx-auto">
           <p className="text-[11px] font-bold tracking-[0.2em] text-brand-muted uppercase">Simple 4-Step Process</p>
           <h2 className="text-white font-display text-3xl md:text-5xl leading-tight tracking-tight">How HirePilot Works</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((s, i) => (
-            <div key={i} className="p-8 rounded-2xl bg-[#1a1a1c] border border-white/5 hover:border-white/20 transition-colors">
-              <div className="font-mono text-4xl font-black text-white/10 mb-6">{s.step}</div>
+            <div key={i} className="p-8 rounded-2xl bg-[#1a1a1c] border border-white/5 hover:border-white/20 transition-colors card-hover">
+              <div className="font-mono text-4xl font-black text-white/10 mb-6 group-hover:text-white/20 transition-colors">{s.step}</div>
               <h4 className="text-lg font-bold text-white mb-3">{s.title}</h4>
               <p className="text-brand-muted leading-relaxed text-sm">{s.desc}</p>
             </div>
@@ -254,7 +255,7 @@ function HowItWorks() {
 function Founder() {
   return (
     <section id="founder" className="relative z-10 w-full py-24 md:py-32 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/5 scroll-mt-20">
-      <div className="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start md:items-center">
+      <div className="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start md:items-center reveal-hidden">
         <div className="flex flex-col">
           <p className="text-[11px] font-bold tracking-[0.2em] text-brand-muted uppercase mb-4 md:mb-6">The Founder</p>
           <h2 className="text-white font-display text-4xl md:text-5xl lg:text-6xl leading-[1.15] tracking-[-0.02em] hidden md:block">Built by someone who understands the job search.</h2>
@@ -335,14 +336,14 @@ function Pricing() {
 
   return (
     <section id="pricing" className="relative z-10 w-full py-24 md:py-32 px-6 bg-brand-background/95 backdrop-blur-2xl border-t border-white/5 scroll-mt-20">
-      <div className="max-w-[1200px] mx-auto space-y-16">
+      <div className="max-w-[1200px] mx-auto space-y-16 reveal-hidden">
         <div className="text-center space-y-4 max-w-2xl mx-auto">
           <p className="text-[11px] font-bold tracking-[0.2em] text-brand-muted uppercase">Pricing & Quota</p>
           <h2 className="text-white font-display text-3xl md:text-5xl leading-tight tracking-tight">Simple, transparent pricing</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {plans.map((plan) => (
-            <div key={plan.id} className={`p-8 rounded-3xl bg-[#121212] border ${plan.popular ? 'border-white/30' : 'border-white/10'} hover:border-white/20 transition-all flex flex-col relative`}>
+            <div key={plan.id} className={`p-8 rounded-3xl bg-[#121212] border ${plan.popular ? 'border-white/30' : 'border-white/10'} hover:border-white/20 transition-all flex flex-col relative card-hover`}>
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-white text-black text-xs font-bold uppercase tracking-wide">
                   Most Popular
@@ -374,7 +375,7 @@ function Pricing() {
               </ul>
               <button 
                 onClick={() => navigate(`/signup?plan=${plan.id}`)} 
-                className={`w-full py-4 rounded-xl font-semibold transition-colors ${plan.popular ? 'bg-white text-black hover:bg-white/90' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                className={`w-full py-4 rounded-xl font-semibold transition-colors ${plan.popular ? 'bg-white text-black hover:bg-white/90 magnetic' : 'bg-white/10 text-white hover:bg-white/20'} button-lift`}
               >
                 {plan.cta}
               </button>
@@ -432,6 +433,7 @@ function Footer() {
 export const Landing: React.FC = () => {
   const { hash } = useLocation();
   const activeSection = useActiveSection(['home', 'product', 'how-it-works', 'founder', 'pricing']);
+  useScrollReveal();
 
   useEffect(() => {
     if (hash) {

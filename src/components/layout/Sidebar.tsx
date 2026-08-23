@@ -71,15 +71,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={onCloseMobile}
               className={({ isActive }) =>
                 cn(
-                  'relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300',
+                  'relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 group',
                   isActive
                     ? 'bg-white/10 text-white'
                     : 'text-brand-secondary hover:bg-white/5 hover:text-white'
                 )
               }
             >
-              <item.icon className="w-4 h-4 shrink-0" />
-              <span>{item.label}</span>
+              <item.icon className="w-4 h-4 shrink-0 icon-pop" />
+              <span className="group-hover:translate-x-1 transition-transform duration-200">{item.label}</span>
             </NavLink>
           ))}
         </nav>
@@ -134,7 +134,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               navigate('/');
             }}
             title="Logout"
-            className="p-2 text-brand-muted hover:text-white rounded-full hover:bg-white/5 transition-colors shrink-0 cursor-pointer"
+            className="p-2 text-brand-muted hover:text-white rounded-full hover:bg-white/5 transition-colors shrink-0 cursor-pointer icon-button"
           >
             <LogOut className="w-4 h-4" />
           </button>

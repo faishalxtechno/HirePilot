@@ -1,8 +1,10 @@
 import React from 'react';
 import { Triangle, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useScrollReveal } from '../lib/useScrollReveal';
 
 export const Terms: React.FC = () => {
+  useScrollReveal();
   return (
     <main className="min-h-screen w-full bg-brand-background text-[#d0d0d0] relative flex flex-col font-sans">
       {/* Header */}
@@ -25,7 +27,7 @@ export const Terms: React.FC = () => {
       </header>
 
       {/* Content */}
-      <div className="max-w-[800px] mx-auto px-6 pt-32 pb-24 w-full">
+      <div className="max-w-[800px] mx-auto px-6 pt-32 pb-24 w-full reveal-hidden">
         <h1 className="text-white font-display text-4xl md:text-5xl mb-4">Terms & Conditions</h1>
         <p className="text-brand-muted text-sm mb-12 uppercase tracking-widest">Last updated: August 23, 2026</p>
 

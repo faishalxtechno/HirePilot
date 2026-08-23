@@ -66,3 +66,119 @@ html {
     scroll-behavior: auto !important;
   }
 }
+
+/* Micro-interaction Utilities */
+.interactive {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease, background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.icon-pop {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+}
+
+.interactive:hover .icon-pop,
+.button-lift:hover .icon-pop,
+.group:hover .icon-pop,
+.nav-link:hover .icon-pop {
+  transform: translateY(-2px) scale(1.15);
+}
+
+.interactive:hover .icon-arrow,
+.button-lift:hover .icon-arrow,
+.group:hover .icon-arrow {
+  transform: translateX(4px) scale(1.08);
+}
+
+.interactive:hover .icon-chevron,
+.button-lift:hover .icon-chevron,
+.group:hover .icon-chevron {
+  transform: translateY(2px);
+}
+
+.button-lift {
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease, background-color 220ms ease;
+}
+
+.button-lift:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.button-lift:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.nav-link {
+  position: relative;
+  transition: color 180ms ease, opacity 180ms ease, transform 180ms ease;
+}
+
+.nav-link:hover {
+  transform: translateY(-1px);
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 0;
+  height: 2px;
+  background-color: currentColor;
+  transform: translateX(-50%);
+  transition: width 220ms ease;
+}
+
+.nav-link:hover::after {
+  width: 18px;
+}
+
+.card-hover {
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 280ms ease, border-color 220ms ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+}
+
+.icon-button {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.icon-button:hover {
+  transform: translateY(-1px) scale(1.06);
+}
+
+.icon-button:active {
+  transform: scale(0.94);
+}
+
+/* Modal and Toast entrance animations */
+@keyframes modal-enter {
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes toast-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-modal {
+  animation: modal-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-toast {
+  animation: toast-enter 250ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Scroll reveal utility */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 700ms ease, transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}

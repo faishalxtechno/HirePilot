@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
+import { Cursor } from './components/layout/Cursor';
 
 // Pages
 import { Landing } from './pages/Landing';
@@ -25,6 +26,7 @@ export const App: React.FC = () => {
   return (
     <AuthProvider>
       <ToastProvider>
+        <Cursor />
         <BrowserRouter>
           <Routes>
             {/* Public Routes */}

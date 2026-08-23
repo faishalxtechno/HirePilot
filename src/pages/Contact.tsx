@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Triangle, ArrowLeft, Send, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useScrollReveal } from '../lib/useScrollReveal';
 
 export const Contact: React.FC = () => {
+  useScrollReveal();
   const [status, setStatus] = useState<'idle' | 'success'>('idle');
 
   const onSubmit = (e: React.FormEvent) => {
@@ -34,7 +36,7 @@ export const Contact: React.FC = () => {
       </header>
 
       {/* Content */}
-      <div className="max-w-[600px] mx-auto px-6 pt-32 pb-24 w-full flex-grow flex flex-col justify-center">
+      <div className="max-w-[600px] mx-auto px-6 pt-32 pb-24 w-full flex-grow flex flex-col justify-center reveal-hidden">
         <h1 className="text-white font-display text-4xl md:text-5xl mb-4 text-center">Contact Us</h1>
         <p className="text-brand-muted text-center mb-10 max-w-md mx-auto">
           Reach out directly for platform inquiries, support, partnerships, or developer feedback.
