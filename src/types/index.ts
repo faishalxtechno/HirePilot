@@ -138,3 +138,5 @@ export interface DashboardData {
   recommendation: DashboardRecommendation;
   recentInterviews: Interview[];
 }
+
+export * from './resumeBuilder';
