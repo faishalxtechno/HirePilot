@@ -55,8 +55,8 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <a href="/#about" className="hover:text-white transition-colors">
-                  About
+                <a href="/#founder" className="hover:text-white transition-colors">
+                  Founder
                 </a>
               </li>
             </ul>

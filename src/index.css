@@ -80,13 +80,13 @@ html {
 .button-lift:hover .icon-pop,
 .group:hover .icon-pop,
 .nav-link:hover .icon-pop {
-  transform: translateY(-2px) scale(1.15);
+  transform: perspective(1000px) translateY(-1px) scale(1.05);
 }
 
 .interactive:hover .icon-arrow,
 .button-lift:hover .icon-arrow,
 .group:hover .icon-arrow {
-  transform: translateX(4px) scale(1.08);
+  transform: translateX(3px) scale(1.02);
 }
 
 .interactive:hover .icon-chevron,
@@ -96,24 +96,26 @@ html {
 }
 
 .button-lift {
-  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease, background-color 220ms ease;
+  transform: perspective(1000px) translateZ(0);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 200ms ease, background-color 200ms ease;
 }
 
 .button-lift:hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: perspective(1000px) translateY(-1px) scale(1.01);
 }
 
 .button-lift:active {
-  transform: translateY(0) scale(0.97);
+  transform: perspective(1000px) translateY(1px) scale(0.98);
 }
 
 .nav-link {
   position: relative;
-  transition: color 180ms ease, opacity 180ms ease, transform 180ms ease;
+  transform: perspective(1000px) translateZ(0);
+  transition: color 200ms ease, opacity 200ms ease, transform 200ms ease;
 }
 
 .nav-link:hover {
-  transform: translateY(-1px);
+  transform: perspective(1000px) translateY(-1px);
 }
 
 .nav-link::after {
@@ -125,62 +127,119 @@ html {
   height: 2px;
   background-color: currentColor;
   transform: translateX(-50%);
-  transition: width 220ms ease;
+  transition: width 200ms ease;
 }
 
 .nav-link:hover::after {
   width: 18px;
 }
 
+.sidebar-link {
+  transform: perspective(1000px) translateZ(0);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1), background-color 200ms ease, color 200ms ease, box-shadow 200ms ease;
+}
+
+.sidebar-link:hover {
+  transform: perspective(1000px) translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sidebar-link.active-link {
+  transform: perspective(1000px) translateZ(0);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.sidebar-link:hover .sidebar-icon {
+  transform: scale(1.05);
+}
+
+.sidebar-link:hover .sidebar-label {
+  transform: translateX(2px);
+}
+
 .card-hover {
-  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 280ms ease, border-color 220ms ease;
+  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease, border-color 200ms ease;
 }
 
 .card-hover:hover {
-  transform: translateY(-4px);
+  transform: perspective(1000px) translateY(-3px);
+}
+
+.pricing-card-3d {
+  transform: perspective(1000px) translateZ(0);
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 350ms ease, border-color 300ms ease;
+  transform-style: preserve-3d;
+}
+
+.pricing-card-3d:hover {
+  transform: perspective(1000px) translateY(-4px) rotateX(1deg) rotateY(-1deg) translateZ(4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.resume-paper {
+  box-shadow: 0 25px 60px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.05);
+  transform: translateZ(0);
+}
+
+.template-card {
+  transform: perspective(1000px) translateZ(0);
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), border-color 200ms ease, box-shadow 300ms ease;
+  transform-style: preserve-3d;
+}
+
+.template-card:hover {
+  transform: perspective(1000px) translateY(-4px) rotateY(2deg) scale(1.01);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.template-card.active {
+  transform: perspective(1000px) translateZ(8px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 .icon-button {
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .icon-button:hover {
-  transform: translateY(-1px) scale(1.06);
+  transform: scale(1.05);
 }
 
 .icon-button:active {
-  transform: scale(0.94);
+  transform: scale(0.95);
 }
 
 /* Modal and Toast entrance animations */
 @keyframes modal-enter {
-  from { opacity: 0; transform: scale(0.97) translateY(8px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from { opacity: 0; transform: perspective(1000px) translateY(10px) scale(0.97); }
+  to { opacity: 1; transform: perspective(1000px) translateY(0) scale(1); }
 }
 
 @keyframes toast-enter {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: perspective(1000px) translateY(10px) scale(0.97); }
+  to { opacity: 1; transform: perspective(1000px) translateY(0) scale(1); }
 }
 
 .animate-modal {
-  animation: modal-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: modal-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .animate-toast {
-  animation: toast-enter 250ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: toast-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* Scroll reveal utility */
 .reveal-hidden {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(12px);
 }
 
 .reveal-visible {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 700ms ease, transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 500ms ease, transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Trust Icons Animation */
@@ -216,11 +275,11 @@ html {
 @media (hover: hover) and (pointer: fine) {
   .trust-avatar:hover {
     z-index: 50;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.28), 0 0 0 3px rgba(255,255,255,0.25);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15), 0 0 0 2px rgba(255,255,255,0.2);
   }
   
   .trust-avatar:hover svg {
-    transform: scale(1.12);
+    transform: scale(1.05);
   }
   
   .trust-avatar:hover::after {
@@ -228,20 +287,20 @@ html {
   }
   
   .trust-avatar:nth-child(1):hover {
-    transform: translateY(-6px) scale(1.08);
+    transform: translateY(-4px) scale(1.02);
   }
   
   .trust-avatar:nth-child(2):hover {
-    transform: translateY(-9px) scale(1.10);
+    transform: translateY(-6px) scale(1.05);
   }
   
   .trust-avatar:nth-child(3):hover {
-    transform: translateY(-6px) scale(1.08);
+    transform: translateY(-4px) scale(1.02);
   }
 }
 
 .trust-avatar:active {
-  transform: translateY(-4px) scale(0.96) !important;
+  transform: translateY(-2px) scale(0.98) !important;
 }
 
 .trust-avatar.active {
@@ -261,4 +320,82 @@ html {
 
 .animate-trust-popup {
   animation: trust-popup 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 3D Transform Utilities */
+.card-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.is-tilting {
+  transform: perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg)) translateZ(2px);
+  transition: transform 100ms ease, box-shadow 100ms ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  z-index: 10;
+}
+
+.is-tilting:not(:hover) {
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 350ms ease;
+  transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+}
+
+.layer-icon {
+  transform: translateZ(8px);
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.layer-title {
+  transform: translateZ(4px);
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.layer-desc {
+  transform: translateZ(2px);
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.layer-btn {
+  transform: translateZ(6px);
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  .is-tilting {
+    transform: none !important;
+  }
+  .layer-icon, .layer-title, .layer-desc, .layer-btn {
+    transform: none !important;
+  }
+}
+
+/* Mouse Glow Effect */
+.card-glow-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glow-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(255, 255, 255, 0.03),
+    transparent 40%
+  );
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 300ms ease;
+  opacity: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-glow-wrapper:hover::before {
+    opacity: 1;
+  }
 }

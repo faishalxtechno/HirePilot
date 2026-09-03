@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
+import { TiltCard } from '../components/ui/TiltCard';
 import { Card, CardHeader, CardTitle, CardDescription } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
@@ -79,7 +80,12 @@ export const Profile: React.FC = () => {
     setPhotoSuccess(null);
     setIsUploadingPhoto(true);
 
-    const userId = user?.id || profile?.id || 'guest-user-123';
+    const userId = user?.id || profile?.id;
+    if (!userId) {
+      setPhotoError('User not authenticated.');
+      setIsUploadingPhoto(false);
+      return;
+    }
     const uploadResult = await uploadProfilePhoto(file, userId);
 
     if (uploadResult.error || !uploadResult.url) {
@@ -110,7 +116,12 @@ export const Profile: React.FC = () => {
     setPhotoSuccess(null);
     setIsRemovingPhoto(true);
 
-    const userId = user?.id || profile?.id || 'guest-user-123';
+    const userId = user?.id || profile?.id;
+    if (!userId) {
+      setPhotoError('User not authenticated.');
+      setIsRemovingPhoto(false);
+      return;
+    }
     await deleteProfilePhoto(userId, profile.avatar_url);
 
     const { error } = await updateProfile({
@@ -170,34 +181,34 @@ export const Profile: React.FC = () => {
 
         {/* Lifetime Stats Overview */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-          <Card className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
+          <TiltCard maxRotation={2} className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
             <span className="text-[10px] sm:text-[11px] font-medium text-brand-muted uppercase tracking-wider block truncate">Total Completed</span>
-            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-              <BarChart className="w-4 h-4 sm:w-5 sm:h-5 text-white shrink-0" />
+            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2 layer-title">
+              <BarChart className="w-4 h-4 sm:w-5 sm:h-5 text-white shrink-0 layer-icon" />
               <span>{stats.total}</span>
             </div>
-          </Card>
-          <Card className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
+          </TiltCard>
+          <TiltCard maxRotation={2} className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
             <span className="text-[10px] sm:text-[11px] font-medium text-brand-muted uppercase tracking-wider block truncate">Average Score</span>
-            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-              <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-brand-secondary shrink-0" />
+            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2 layer-title">
+              <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-brand-secondary shrink-0 layer-icon" />
               <span>{stats.avgScore}%</span>
             </div>
-          </Card>
-          <Card className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
+          </TiltCard>
+          <TiltCard maxRotation={2} className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
             <span className="text-[10px] sm:text-[11px] font-medium text-brand-muted uppercase tracking-wider block truncate">Best Score</span>
-            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-              <Award className="w-4 h-4 sm:w-5 sm:h-5 text-white shrink-0" />
+            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2 layer-title">
+              <Award className="w-4 h-4 sm:w-5 sm:h-5 text-white shrink-0 layer-icon" />
               <span>{stats.bestScore}%</span>
             </div>
-          </Card>
-          <Card className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
+          </TiltCard>
+          <TiltCard maxRotation={2} className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
             <span className="text-[10px] sm:text-[11px] font-medium text-brand-muted uppercase tracking-wider block truncate">Active Streak</span>
-            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-brand-secondary shrink-0" />
+            <div className="font-mono text-xl sm:text-2xl font-bold text-white flex items-center gap-2 layer-title">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-brand-secondary shrink-0 layer-icon" />
               <span>{stats.streak}d</span>
             </div>
-          </Card>
+          </TiltCard>
         </div>
 
         {/* Profile Photo Card */}

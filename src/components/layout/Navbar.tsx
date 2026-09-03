@@ -5,12 +5,21 @@ import { Button } from '../ui/Button';
 import { Triangle, Menu, X, ArrowRight, User as UserIcon, LayoutDashboard, LogOut } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const handleGetStarted = () => {
+    if (loading) return;
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/login');
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -36,7 +45,8 @@ export const Navbar: React.FC = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-6 pt-4">
       <div
-        className={`max-w-7xl mx-auto rounded-2xl border transition-all duration-500 ${
+        style={{ transform: 'translateZ(0)', boxShadow: '0 8px 30px rgba(0,0,0,0.08)' }}
+        className={`max-w-7xl mx-auto rounded-2xl border transition-all duration-500 card-3d ${
           scrolled
             ? 'bg-black/80 border-white/5 shadow-glass backdrop-blur-2xl py-2.5'
             : 'bg-transparent border-transparent py-3'
@@ -55,21 +65,21 @@ export const Navbar: React.FC = () => {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-brand-secondary">
-            <a href="/#features" className="hover:text-white transition-colors duration-200">
-              Features
+            <a href="/#product" className="nav-link hover:text-white">
+              Product
             </a>
-            <a href="/#how-it-works" className="hover:text-white transition-colors duration-200">
+            <a href="/#how-it-works" className="nav-link hover:text-white">
               How It Works
             </a>
-            <a href="/#ai-interview" className="hover:text-white transition-colors duration-200">
-              AI Interview
+            <a href="/#founder" className="nav-link hover:text-white">
+              Founder
             </a>
-            <a href="/#pricing" className="hover:text-white transition-colors duration-200">
+            <a href="/#pricing" className="nav-link hover:text-white">
               Pricing
             </a>
-            <a href="/#about" className="hover:text-white transition-colors duration-200">
-              About
-            </a>
+            <Link to="/contact" className="nav-link hover:text-white">
+              Contact
+            </Link>
           </nav>
 
           {/* Right CTA / User Status */}
@@ -135,11 +145,11 @@ export const Navbar: React.FC = () => {
                     Login
                   </Button>
                 </Link>
-                <Link to="/signup">
+                <button onClick={handleGetStarted}>
                   <Button variant="primary" size="sm" rightIcon={<ArrowRight className="w-4 h-4" />}>
                     Get Started
                   </Button>
-                </Link>
+                </button>
               </>
             )}
           </div>
@@ -157,23 +167,23 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden mt-2 mx-auto max-w-7xl rounded-2xl border border-white/10 bg-[#121212] backdrop-blur-2xl px-4 pt-3 pb-6 space-y-3 animate-slide-up shadow-glass-lg">
+        <div className="md:hidden mt-2 mx-auto max-w-7xl rounded-2xl border border-white/10 bg-[#121212] backdrop-blur-2xl px-4 pt-3 pb-6 space-y-3 animate-slideDown shadow-lg">
           <nav className="flex flex-col gap-1 font-medium text-sm text-brand-secondary">
-            <a href="/#features" onClick={() => setMobileMenuOpen(false)} className="py-3 px-4 rounded-xl hover:bg-white/5 hover:text-white transition-colors">
-              Features
+            <a href="/#product" onClick={() => setMobileMenuOpen(false)} className="py-3 px-4 rounded-xl hover:bg-white/5 hover:text-white transition-colors">
+              Product
             </a>
             <a href="/#how-it-works" onClick={() => setMobileMenuOpen(false)} className="py-3 px-4 rounded-xl hover:bg-white/5 hover:text-white transition-colors">
               How It Works
             </a>
-            <a href="/#ai-interview" onClick={() => setMobileMenuOpen(false)} className="py-3 px-4 rounded-xl hover:bg-white/5 hover:text-white transition-colors">
-              AI Interview
+            <a href="/#founder" onClick={() => setMobileMenuOpen(false)} className="py-3 px-4 rounded-xl hover:bg-white/5 hover:text-white transition-colors">
+              Founder
             </a>
             <a href="/#pricing" onClick={() => setMobileMenuOpen(false)} className="py-3 px-4 rounded-xl hover:bg-white/5 hover:text-white transition-colors">
               Pricing
             </a>
-            <a href="/#about" onClick={() => setMobileMenuOpen(false)} className="py-3 px-4 rounded-xl hover:bg-white/5 hover:text-white transition-colors">
-              About
-            </a>
+            <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="py-3 px-4 rounded-xl hover:bg-white/5 hover:text-white transition-colors">
+              Contact
+            </Link>
           </nav>
 
           <div className="pt-4 border-t border-white/5 flex flex-col gap-3">
@@ -222,11 +232,11 @@ export const Navbar: React.FC = () => {
                     Login
                   </Button>
                 </Link>
-                <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>
+                <button onClick={() => { setMobileMenuOpen(false); handleGetStarted(); }} className="w-full">
                   <Button variant="primary" size="md" className="w-full">
                     Get Started
                   </Button>
-                </Link>
+                </button>
               </>
             )}
           </div>

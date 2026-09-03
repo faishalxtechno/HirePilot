@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '../ui/Card';
+import { TiltCard } from '../ui/TiltCard';
 import { cn } from '../../lib/utils';
 
 interface StatCardProps {
@@ -30,7 +30,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   };
 
   return (
-    <Card className="p-5 flex flex-col justify-between glass-surface-hover" hoverable>
+    <TiltCard className="p-5 flex flex-col justify-between glass-surface-hover">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-xs font-semibold text-slate-400">{title}</p>
@@ -38,7 +38,7 @@ export const StatCard: React.FC<StatCardProps> = ({
             {value}
           </h3>
         </div>
-        <div className={cn('p-2.5 rounded-xl shrink-0', accentColors[accentColor])}>
+        <div className={cn('p-2.5 rounded-xl shrink-0 layer-icon', accentColors[accentColor])}>
           {icon}
         </div>
       </div>
@@ -58,6 +58,6 @@ export const StatCard: React.FC<StatCardProps> = ({
           )}
         </div>
       )}
-    </Card>
+    </TiltCard>
   );
 };

@@ -105,7 +105,7 @@ export const App: React.FC = () => {
           />
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<div>404 Not Found - Hit Wildcard</div>} />
         </Routes>
       </BrowserRouter>
       </ToastProvider>

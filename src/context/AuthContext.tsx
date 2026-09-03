@@ -15,20 +15,9 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<{ error: Error | null }>;
-  loginAsGuest: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const DEMO_USER_PROFILE: UserProfile = {
-  id: 'guest-user-123',
-  name: 'Alex Morgan',
-  email: 'alex.morgan@hirepilot.dev',
-  avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-  target_role: 'Software Engineer',
-  experience_level: '1-3 Years',
-  created_at: new Date().toISOString(),
-};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -36,13 +25,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  console.log('[AUTH DEBUG] initial', {
+    loading,
+    hasUser: Boolean(user),
+  });
+
   useEffect(() => {
     let mounted = true;
-    const savedGuest = localStorage.getItem('hirepilot_guest_user');
 
     const handleAuthChange = async (event: string, currentSession: Session | null) => {
-      console.log('[AUTH EVENT]', event);
+      console.log('[AUTH DEBUG] auth change', {
+        event,
+        hasSession: Boolean(currentSession),
+        hasUser: Boolean(currentSession?.user),
+      });
       if (!mounted) return;
+
+      // Ignore INITIAL_SESSION here because getSession() handles the initial load safely.
+      // This prevents a race condition where INITIAL_SESSION fires with null before storage is fully read,
+      // causing premature loading=false and redirect to /login.
+      if (event === 'INITIAL_SESSION') return;
 
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
@@ -53,33 +55,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           currentSession.user.email,
           currentSession.user.user_metadata
         );
-      } else if (savedGuest) {
-        setProfile(JSON.parse(savedGuest));
-        setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
       } else {
         setProfile(null);
       }
-      
-      if (mounted) setLoading(false);
     };
 
     const initializeAuth = async () => {
       if (!isSupabaseConfigured) {
-        if (savedGuest) {
-          setProfile(JSON.parse(savedGuest));
-          setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
-        } else {
-          localStorage.setItem('hirepilot_guest_user', JSON.stringify(DEMO_USER_PROFILE));
-          setProfile(DEMO_USER_PROFILE);
-          setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
-        }
+        console.warn('Supabase is not configured. Authentication will not work properly.');
         if (mounted) setLoading(false);
         return;
       }
 
       try {
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
-        console.log('[AUTH] getSession completed');
+        console.log('[AUTH DEBUG] getSession', {
+          hasSession: Boolean(initialSession),
+          hasUser: Boolean(initialSession?.user),
+        });
+        
         if (error) {
           console.error('[AUTH] Error in getSession:', error);
         }
@@ -94,9 +88,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               initialSession.user.email,
               initialSession.user.user_metadata
             );
-          } else if (savedGuest) {
-            setProfile(JSON.parse(savedGuest));
-            setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
           } else {
             setProfile(null);
           }
@@ -184,31 +175,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
-    if (!isSupabaseConfigured) {
-      const guestProfile = { ...DEMO_USER_PROFILE, email, name: email.split('@')[0] };
-      localStorage.setItem('hirepilot_guest_user', JSON.stringify(guestProfile));
-      setProfile(guestProfile);
-      setUser({ id: 'guest-user-123', email } as any);
-      return { error: null };
-    }
-
+    if (!isSupabaseConfigured) return { error: new Error('Supabase not configured') };
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error: error ? new Error(error.message) : null };
   };
 
   const signUp = async (email: string, password: string, name?: string) => {
-    if (!isSupabaseConfigured) {
-      const guestProfile = {
-        ...DEMO_USER_PROFILE,
-        email,
-        name: name || email.split('@')[0],
-      };
-      localStorage.setItem('hirepilot_guest_user', JSON.stringify(guestProfile));
-      setProfile(guestProfile);
-      setUser({ id: 'guest-user-123', email } as any);
-      return { error: null };
-    }
-
+    if (!isSupabaseConfigured) return { error: new Error('Supabase not configured') };
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -222,11 +195,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithGoogle = async () => {
-    if (!isSupabaseConfigured) {
-      loginAsGuest();
-      return { error: null };
-    }
-
+    if (!isSupabaseConfigured) return { error: new Error('Supabase not configured') };
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -237,7 +206,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    localStorage.removeItem('hirepilot_guest_user');
     if (isSupabaseConfigured) {
       await supabase.auth.signOut();
     }
@@ -247,9 +215,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const resetPassword = async (email: string) => {
-    if (!isSupabaseConfigured) {
-      return { error: null };
-    }
+    if (!isSupabaseConfigured) return { error: new Error('Supabase not configured') };
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
@@ -275,16 +241,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           { onConflict: 'id' }
         );
       return { error: error ? new Error(error.message) : null };
-    } else {
-      localStorage.setItem('hirepilot_guest_user', JSON.stringify(updated));
-      return { error: null };
     }
-  };
-
-  const loginAsGuest = () => {
-    localStorage.setItem('hirepilot_guest_user', JSON.stringify(DEMO_USER_PROFILE));
-    setProfile(DEMO_USER_PROFILE);
-    setUser({ id: 'guest-user-123', email: DEMO_USER_PROFILE.email } as any);
+    return { error: new Error('Supabase not configured or no user logged in') };
   };
 
   return (
@@ -301,7 +259,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signOut,
         resetPassword,
         updateProfile,
-        loginAsGuest,
       }}
     >
       {children}

@@ -16,7 +16,7 @@ export const ResumePreview: React.FC<Props> = ({ resume, scale = 1 }) => {
   // A4 aspect ratio wrapper with scaling
   return (
     <div 
-      className="bg-white shadow-2xl origin-top-left transition-transform duration-200 ease-out resume-a4-container"
+      className="bg-white resume-paper origin-top-left transition-transform duration-200 ease-out resume-a4-container"
       style={{ 
         width: '210mm', 
         minHeight: '297mm', 

@@ -15,24 +15,25 @@ export const resumeBuilderService = {
    * Fetch all resumes for the current user
    */
   async getResumes(userId: string): Promise<ResumeData[]> {
-    if (isSupabaseConfigured) {
-      try {
-        const { data, error } = await supabase
-          .from('resumes')
-          .select('*')
-          .eq('user_id', userId)
-          .order('updated_at', { ascending: false });
+    if (!isSupabaseConfigured) return [];
+    try {
+      const { data, error } = await supabase
+        .from('resumes')
+        .select('*')
+        .eq('user_id', userId)
+        .order('updated_at', { ascending: false });
 
-        if (!error && data) {
-          return data.map(this.mapDatabaseToResumeData);
-        }
-      } catch (err) {
-        console.warn('Failed to fetch from Supabase, falling back to local storage', err);
+      if (error) {
+        console.error('Failed to fetch resumes from Supabase', error);
+        return [];
       }
+      if (data) {
+        return data.map(this.mapDatabaseToResumeData);
+      }
+    } catch (err) {
+      console.error('Exception fetching resumes from Supabase', err);
     }
-
-    // Fallback to local storage
-    return this.getLocalResumes().filter(r => r.userId === userId);
+    return [];
   },
 
   /**
@@ -42,57 +43,57 @@ export const resumeBuilderService = {
     const now = new Date().toISOString();
     const updatedResume = { ...resume, updatedAt: now };
 
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase
-          .from('resumes')
-          .upsert({
-            id: updatedResume.id,
-            user_id: updatedResume.userId,
-            name: updatedResume.name,
-            template: updatedResume.template,
-            personal_info: updatedResume.personalInfo,
-            education: updatedResume.education,
-            experience: updatedResume.experience,
-            projects: updatedResume.projects,
-            skills: updatedResume.skills,
-            certifications: updatedResume.certifications,
-            achievements: updatedResume.achievements,
-            languages: updatedResume.languages,
-            updated_at: now,
-          });
-        
-        if (!error) {
-          // Sync to local storage for offline access
-          this.saveLocalResume(updatedResume);
-          return;
-        }
-        console.error('Supabase save error:', error);
-      } catch (err) {
-        console.warn('Failed to save to Supabase, falling back to local storage', err);
-      }
+    if (!isSupabaseConfigured) {
+      throw new Error("Supabase is not configured.");
     }
 
-    // Fallback to local storage
-    this.saveLocalResume(updatedResume);
+    try {
+      const { error } = await supabase
+        .from('resumes')
+        .upsert({
+          id: updatedResume.id,
+          user_id: updatedResume.userId,
+          name: updatedResume.name,
+          template: updatedResume.template,
+          personal_info: updatedResume.personalInfo,
+          education: updatedResume.education,
+          experience: updatedResume.experience,
+          projects: updatedResume.projects,
+          skills: updatedResume.skills,
+          certifications: updatedResume.certifications,
+          achievements: updatedResume.achievements,
+          languages: updatedResume.languages,
+          updated_at: now,
+        });
+      
+      if (error) {
+        console.error('Supabase save error:', error);
+        throw new Error(error.message);
+      }
+    } catch (err) {
+      console.error('Failed to save to Supabase', err);
+      throw err;
+    }
   },
 
   /**
    * Delete a resume
    */
   async deleteResume(id: string): Promise<void> {
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.from('resumes').delete().eq('id', id);
-        if (error) console.error('Supabase delete error:', error);
-      } catch (err) {
-        console.warn('Failed to delete from Supabase', err);
-      }
+    if (!isSupabaseConfigured) {
+      throw new Error("Supabase is not configured.");
     }
 
-    // Fallback to local storage
-    const resumes = this.getLocalResumes().filter(r => r.id !== id);
-    this.saveLocalData(resumes);
+    try {
+      const { error } = await supabase.from('resumes').delete().eq('id', id);
+      if (error) {
+        console.error('Supabase delete error:', error);
+        throw new Error(error.message);
+      }
+    } catch (err) {
+      console.error('Failed to delete from Supabase', err);
+      throw err;
+    }
   },
 
   /**

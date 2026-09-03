@@ -46,17 +46,8 @@ export async function uploadProfilePhoto(file: File, userId: string): Promise<Up
   }
 
   // Local/Guest fallback mode using FileReader
-  if (!isSupabaseConfigured || userId === 'guest-user-123') {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve({ url: reader.result as string, error: null });
-      };
-      reader.onerror = () => {
-        resolve({ url: null, error: 'Failed to read image file.' });
-      };
-      reader.readAsDataURL(file);
-    });
+  if (!isSupabaseConfigured) {
+    return { url: null, error: 'Supabase is not configured.' };
   }
 
   try {
@@ -93,8 +84,8 @@ export async function uploadProfilePhoto(file: File, userId: string): Promise<Up
  * Deletes user's profile photo from storage.
  */
 export async function deleteProfilePhoto(userId: string, currentUrl?: string): Promise<{ success: boolean; error: string | null }> {
-  if (!isSupabaseConfigured || userId === 'guest-user-123') {
-    return { success: true, error: null };
+  if (!isSupabaseConfigured) {
+    return { success: false, error: 'Supabase is not configured.' };
   }
 
   try {

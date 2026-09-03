@@ -71,15 +71,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={onCloseMobile}
               className={({ isActive }) =>
                 cn(
-                  'relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 group',
+                  'sidebar-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 group',
                   isActive
-                    ? 'bg-white/10 text-white'
-                    : 'text-brand-secondary hover:bg-white/5 hover:text-white'
+                    ? 'active-link bg-white/10 text-white border border-white/10'
+                    : 'text-brand-secondary hover:bg-white/5 hover:text-white border border-transparent'
                 )
               }
             >
-              <item.icon className="w-4 h-4 shrink-0 icon-pop" />
-              <span className="group-hover:translate-x-1 transition-transform duration-200">{item.label}</span>
+              <item.icon className="w-4 h-4 shrink-0 sidebar-icon transition-transform duration-300" />
+              <span className="sidebar-label transition-transform duration-300">{item.label}</span>
             </NavLink>
           ))}
         </nav>

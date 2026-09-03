@@ -1,8 +1,4 @@
-/**
- * HirePilot Jobs & Application Tracker Service
- * Provides job listings with dynamic match scores against candidate profile,
- * and a persistent application tracking pipeline.
- */
+import { supabase, isSupabaseConfigured } from './supabase';
 
 export interface Job {
   id: string;
@@ -37,9 +33,6 @@ export interface JobApplication {
   interviewDate?: string;
   notes?: string;
 }
-
-const LOCAL_STORAGE_KEY_APPLICATIONS = 'hirepilot_job_applications';
-const LOCAL_STORAGE_KEY_SAVED_JOBS = 'hirepilot_saved_jobs';
 
 export const INITIAL_JOBS: Job[] = [
   {
@@ -137,53 +130,7 @@ export const INITIAL_JOBS: Job[] = [
   },
 ];
 
-export const INITIAL_APPLICATIONS: JobApplication[] = [
-  {
-    id: 'app-01',
-    jobId: 'job-01',
-    jobTitle: 'Senior Frontend Engineer (React & TypeScript)',
-    company: 'Stripe',
-    location: 'San Francisco, CA / Remote',
-    salary: '$165,000 - $195,000 / yr',
-    workplaceType: 'Remote',
-    stage: 'interviewing',
-    appliedDate: '3 days ago',
-    lastUpdated: 'Yesterday',
-    interviewDate: 'Tomorrow at 2:00 PM PST',
-    notes: 'Technical round 2: System Design & Live Coding with the Core Dashboard team.',
-  },
-  {
-    id: 'app-02',
-    jobId: 'job-02',
-    jobTitle: 'Full Stack Engineer (AI Platform)',
-    company: 'Vercel',
-    location: 'New York, NY / Remote',
-    salary: '$150,000 - $185,000 / yr',
-    workplaceType: 'Remote',
-    stage: 'applied',
-    appliedDate: '1 day ago',
-    lastUpdated: '1 day ago',
-    notes: 'Submitted customized resume generated through HirePilot ATS optimizer.',
-  },
-  {
-    id: 'app-03',
-    jobId: 'job-05',
-    jobTitle: 'Junior Software Engineer',
-    company: 'Supabase',
-    location: 'Remote (Worldwide)',
-    salary: '$95,000 - $125,000 / yr',
-    workplaceType: 'Remote',
-    stage: 'offer',
-    appliedDate: '2 weeks ago',
-    lastUpdated: '3 days ago',
-    notes: 'Offer package received. Reviewing equity grant and start date options.',
-  },
-];
-
 export const jobsService = {
-  /**
-   * Retrieves available jobs
-   */
   getJobs(filter?: { search?: string; role?: string; workplace?: string }): Job[] {
     let result = INITIAL_JOBS;
 
@@ -210,13 +157,9 @@ export const jobsService = {
     return result;
   },
 
-  /**
-   * Calculates dynamic match percentage against user's profile
-   */
   calculateMatchScore(job: Job, candidateRole = 'Software Engineer'): number {
     let score = 75;
 
-    // Direct role match
     if (job.targetRoles.some((r) => r.toLowerCase() === candidateRole.toLowerCase())) {
       score += 15;
     } else if (job.targetRoles.some((r) => candidateRole.toLowerCase().includes(r.toLowerCase()) || r.toLowerCase().includes(candidateRole.toLowerCase()))) {
@@ -230,45 +173,69 @@ export const jobsService = {
     return Math.min(98, score + (job.id.charCodeAt(job.id.length - 1) % 7));
   },
 
-  /**
-   * Retrieves saved job applications
-   */
-  getApplications(): JobApplication[] {
+  async getApplications(userId: string): Promise<JobApplication[]> {
+    if (!isSupabaseConfigured) return [];
     try {
-      const raw = localStorage.getItem(LOCAL_STORAGE_KEY_APPLICATIONS);
-      if (raw) {
-        return JSON.parse(raw);
+      const { data, error } = await supabase
+        .from('applications')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Failed to fetch applications', error);
+        return [];
       }
-    } catch (e) {
-      console.warn('Error reading applications from localStorage:', e);
+      if (data) {
+        return data.map(row => ({
+          id: row.id,
+          jobId: row.job_id,
+          jobTitle: row.job_title,
+          company: row.company,
+          location: row.location,
+          salary: row.salary,
+          workplaceType: row.workplace_type,
+          stage: row.stage as ApplicationStage,
+          appliedDate: row.applied_date,
+          lastUpdated: row.last_updated,
+          interviewDate: row.interview_date,
+          notes: row.notes,
+        }));
+      }
+    } catch (err) {
+      console.error('Exception fetching applications', err);
     }
-    return INITIAL_APPLICATIONS;
+    return [];
   },
 
-  /**
-   * Creates or updates a job application
-   */
-  saveApplication(app: JobApplication): void {
-    const all = this.getApplications();
-    const existingIndex = all.findIndex((a) => a.id === app.id || a.jobId === app.jobId);
-
-    if (existingIndex >= 0) {
-      all[existingIndex] = { ...all[existingIndex], ...app, lastUpdated: 'Just now' };
-    } else {
-      all.unshift(app);
-    }
-
+  async saveApplication(userId: string, app: JobApplication): Promise<void> {
+    if (!isSupabaseConfigured) return;
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATIONS, JSON.stringify(all));
-    } catch (e) {
-      console.error('Error saving application:', e);
+      const { error } = await supabase.from('applications').upsert({
+        id: app.id,
+        user_id: userId,
+        job_id: app.jobId,
+        job_title: app.jobTitle,
+        company: app.company,
+        location: app.location,
+        salary: app.salary,
+        workplace_type: app.workplaceType,
+        stage: app.stage,
+        applied_date: app.appliedDate,
+        last_updated: 'Just now',
+        interview_date: app.interviewDate,
+        notes: app.notes,
+      });
+
+      if (error) {
+        console.error('Error saving application:', error);
+      }
+    } catch (err) {
+      console.error('Exception saving application', err);
     }
   },
 
-  /**
-   * Quick Apply to a job
-   */
-  applyToJob(job: Job): JobApplication {
+  async applyToJob(userId: string, job: Job): Promise<JobApplication> {
     const newApp: JobApplication = {
       id: `app-${Date.now()}`,
       jobId: job.id,
@@ -282,57 +249,56 @@ export const jobsService = {
       lastUpdated: 'Just now',
       notes: 'Applied via HirePilot 1-Tap Application with AI-tailored profile.',
     };
-    this.saveApplication(newApp);
+    await this.saveApplication(userId, newApp);
     return newApp;
   },
 
-  /**
-   * Updates application stage (e.g. interviewing, offer)
-   */
-  updateStage(applicationId: string, stage: ApplicationStage): void {
-    const all = this.getApplications();
-    const target = all.find((a) => a.id === applicationId);
-    if (target) {
-      target.stage = stage;
-      target.lastUpdated = 'Just now';
-      try {
-        localStorage.setItem(LOCAL_STORAGE_KEY_APPLICATIONS, JSON.stringify(all));
-      } catch (e) {
-        console.error('Error updating stage:', e);
-      }
-    }
-  },
-
-  /**
-   * Saved Jobs management
-   */
-  getSavedJobIds(): string[] {
+  async updateStage(userId: string, applicationId: string, stage: ApplicationStage): Promise<void> {
+    if (!isSupabaseConfigured) return;
     try {
-      const raw = localStorage.getItem(LOCAL_STORAGE_KEY_SAVED_JOBS);
-      return raw ? JSON.parse(raw) : ['job-01', 'job-04'];
-    } catch {
-      return ['job-01'];
-    }
-  },
-
-  toggleSaveJob(jobId: string): boolean {
-    const saved = this.getSavedJobIds();
-    const index = saved.indexOf(jobId);
-    let isSaved = false;
-
-    if (index >= 0) {
-      saved.splice(index, 1);
-      isSaved = false;
-    } else {
-      saved.push(jobId);
-      isSaved = true;
-    }
-
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY_SAVED_JOBS, JSON.stringify(saved));
+      await supabase.from('applications')
+        .update({ stage, last_updated: 'Just now' })
+        .eq('id', applicationId)
+        .eq('user_id', userId);
     } catch (e) {
-      console.error('Error saving saved jobs:', e);
+      console.error('Error updating stage:', e);
     }
-    return isSaved;
+  },
+
+  async getSavedJobIds(userId: string): Promise<string[]> {
+    if (!isSupabaseConfigured) return [];
+    try {
+      const { data, error } = await supabase
+        .from('saved_jobs')
+        .select('job_id')
+        .eq('user_id', userId);
+      
+      if (!error && data) {
+        return data.map(r => r.job_id);
+      }
+    } catch (err) {
+      console.error('Exception fetching saved jobs', err);
+    }
+    return [];
+  },
+
+  async toggleSaveJob(userId: string, jobId: string): Promise<void> {
+    if (!isSupabaseConfigured) return;
+    try {
+      const { data, error } = await supabase
+        .from('saved_jobs')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('job_id', jobId)
+        .maybeSingle();
+
+      if (data) {
+        await supabase.from('saved_jobs').delete().eq('id', data.id);
+      } else {
+        await supabase.from('saved_jobs').insert({ user_id: userId, job_id: jobId });
+      }
+    } catch (e) {
+      console.error('Error saving job:', e);
+    }
   },
 };

@@ -1,16 +1,16 @@
 import React from 'react';
-import { Card } from '../ui/Card';
+import { TiltCard } from '../ui/TiltCard';
 import { Badge } from '../ui/Badge';
 import { Bot, Sparkles, Volume2 } from 'lucide-react';
 import { Question } from '../../types';
 
 export const QuestionCard: React.FC<{ question: Question }> = ({ question }) => {
   return (
-    <Card className="p-4 sm:p-6 bg-[#121212] border-white/10 shadow-2xl space-y-4">
+    <TiltCard className="p-4 sm:p-6 bg-[#121212] border-white/10 shadow-2xl space-y-4">
       {/* Header with AI Voice / Waveform indicator */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-black border border-white/10 flex items-center justify-center text-white shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-black border border-white/10 flex items-center justify-center text-white shrink-0 layer-icon">
             <Bot className="w-4 h-4" />
           </div>
           <div>
@@ -56,6 +56,6 @@ export const QuestionCard: React.FC<{ question: Question }> = ({ question }) => 
         <Sparkles className="w-3.5 h-3.5 text-white shrink-0" />
         <span>Answer clearly. Highlight concepts, design decisions, edge cases, and trade-offs.</span>
       </div>
-    </Card>
+    </TiltCard>
   );
 };

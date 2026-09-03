@@ -20,9 +20,9 @@ export const TemplateSelector: React.FC<Props> = ({ currentTemplate, onChange })
         <button
           key={t.id}
           onClick={() => onChange(t.id)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors border ${
+          className={`template-card flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors border ${
             currentTemplate === t.id 
-              ? 'bg-white/10 border-white/20 text-white font-medium' 
+              ? 'active bg-white/10 border-white/20 text-white font-medium' 
               : 'bg-transparent border-transparent text-gray-400 hover:bg-white/5 hover:text-white'
           }`}
         >

@@ -245,7 +245,7 @@ export const ResumePage: React.FC = () => {
       <div className="min-h-[calc(100vh-64px)] flex flex-col -mt-6 -mx-4 sm:-mx-8 relative">
         
         {/* Builder Toolbar */}
-        <div className="h-16 border-b border-white/10 bg-[#0a0a0b] flex items-center justify-between px-4 sm:px-6 shrink-0">
+        <div className="sticky top-0 z-30 h-16 border-b border-white/10 bg-[#0a0a0b] flex items-center justify-between px-4 sm:px-6 shrink-0">
           <div className="flex items-center gap-4">
             <button onClick={() => setActiveResume(null)} className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 text-sm font-medium">
               <ChevronLeft className="w-4 h-4" /> Back

@@ -25,8 +25,8 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             id={selectId}
             ref={ref}
             className={cn(
-              'block w-full appearance-none rounded-lg border border-white/10 bg-transparent px-3.5 py-2.5 pr-10 text-sm text-white transition-all duration-300',
-              'focus:border-white/30 focus:outline-none focus:bg-white/5 focus:-translate-y-[1px] focus:shadow-[0_4px_12px_rgba(255,255,255,0.03)]',
+              'block w-full appearance-none rounded-lg border border-white/10 bg-transparent px-3.5 py-2.5 pr-10 text-sm text-white transition-all duration-200',
+              'focus:border-white/30 focus:outline-none focus:bg-white/5 focus:ring-1 focus:ring-white/20',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               error && 'border-red-500/50 focus:border-red-500/50',
               className

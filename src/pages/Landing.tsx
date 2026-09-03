@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Triangle, Sparkles, Briefcase, Target, X, Bot, Zap, Brain, BarChart3, History, CheckCircle2, Send, Mail } from 'lucide-react';
+import { TiltCard } from '../components/ui/TiltCard';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { useScrollReveal } from '../lib/useScrollReveal';
 
 const HERO_VIDEO_URL = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4";
@@ -46,6 +48,16 @@ function useActiveSection(sectionIds: string[]) {
 function Header({ activeSection }: { activeSection: string }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
+
+  const handleGetStarted = () => {
+    if (loading) return;
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/login');
+    }
+  };
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
@@ -116,7 +128,7 @@ function Header({ activeSection }: { activeSection: string }) {
             ))}
           </nav>
 
-          <button onClick={() => navigate('/signup')} className="hidden md:flex items-center px-5 py-2.5 bg-brand-dark text-brand-secondary text-sm font-medium rounded-full hover:bg-[#323234] hover:text-white hover:-translate-y-[1px] transition-all">
+          <button onClick={handleGetStarted} className="hidden md:flex items-center px-5 py-2.5 bg-brand-dark text-brand-secondary text-sm font-medium rounded-full hover:bg-[#323234] hover:text-white hover:-translate-y-[1px] transition-all">
             Get Started
           </button>
 
@@ -148,7 +160,7 @@ function Header({ activeSection }: { activeSection: string }) {
               </a>
             )
           ))}
-          <button className="mt-4 w-full py-4 bg-white text-black font-semibold rounded-full hover:bg-white/90" onClick={() => { setIsMobileMenuOpen(false); navigate('/signup'); }}>
+          <button className="mt-4 w-full py-4 bg-white text-black font-semibold rounded-full hover:bg-white/90" onClick={() => { setIsMobileMenuOpen(false); handleGetStarted(); }}>
             Get Started
           </button>
         </div>
@@ -159,8 +171,18 @@ function Header({ activeSection }: { activeSection: string }) {
 
 function Hero() {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [activeTrust, setActiveTrust] = useState<string | null>(null);
   const trustRef = useRef<HTMLDivElement>(null);
+
+  const handleGetStarted = () => {
+    if (loading) return;
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/login');
+    }
+  };
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -243,7 +265,7 @@ function Hero() {
         </p>
 
         <div className="animate-fade-up stagger-5">
-          <button onClick={() => navigate('/signup')} className="px-8 py-4 bg-white text-black font-semibold rounded-full transition-all duration-300 shadow-[0_0_0_1px_rgba(255,255,255,0.15),0_0_22px_rgba(255,255,255,0.32),0_0_44px_rgba(255,255,255,0.12)] button-lift magnetic">
+          <button onClick={handleGetStarted} className="px-8 py-4 bg-white text-black font-semibold rounded-xl transition-all duration-200 shadow-sm hover:bg-white/90 button-lift">
             Get Started
           </button>
         </div>
@@ -270,11 +292,11 @@ function Product() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((f, i) => (
-            <div key={i} className="p-8 rounded-2xl bg-[#121212] border border-white/10 hover:bg-white/5 transition-colors group card-hover">
-              <div className="w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"><f.icon className="w-5 h-5 icon-pop" /></div>
-              <h4 className="text-xl font-display text-white mb-3">{f.title}</h4>
-              <p className="text-brand-muted leading-relaxed text-sm">{f.desc}</p>
-            </div>
+            <TiltCard key={i} className="p-8 rounded-2xl bg-[#121212] border border-white/10 hover:bg-white/5 transition-colors group">
+              <div className="w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center mb-6 group-hover:scale-110 transition-transform layer-icon"><f.icon className="w-5 h-5 icon-pop" /></div>
+              <h4 className="text-xl font-display text-white mb-3 layer-title">{f.title}</h4>
+              <p className="text-brand-muted leading-relaxed text-sm layer-desc">{f.desc}</p>
+            </TiltCard>
           ))}
         </div>
       </div>
@@ -341,7 +363,7 @@ function Pricing() {
   const PRICING_CONFIG = {
     free: { basePrice: 0, gstRate: 0, gstAmount: 0, total: 0 },
     pro: { basePrice: 249, gstRate: 18, gstAmount: 44.82, total: 293.82 },
-    career: { basePrice: 599, gstRate: 18, gstAmount: 107.82, total: 706.82 }
+    unlimited: { basePrice: 599, gstRate: 18, gstAmount: 107.82, total: 706.82 }
   };
 
   const plans = [
@@ -376,13 +398,13 @@ function Pricing() {
       ]
     },
     {
-      id: "career",
-      name: "Career",
-      priceDisplay: `₹${PRICING_CONFIG.career.total}`,
-      priceDetails: `Includes 18% GST\nBase price ₹${PRICING_CONFIG.career.basePrice} + ₹${PRICING_CONFIG.career.gstAmount} GST`,
+      id: "unlimited",
+      name: "Unlimited",
+      priceDisplay: `₹${PRICING_CONFIG.unlimited.total}`,
+      priceDetails: `Includes 18% GST\nBase price ₹${PRICING_CONFIG.unlimited.basePrice} + ₹${PRICING_CONFIG.unlimited.gstAmount} GST`,
       interviews: "Unlimited interviews",
       description: "For serious job seekers",
-      cta: "Choose Career",
+      cta: "Choose Unlimited",
       features: [
         'Unlimited Interviews',
         'All Pro Features',
@@ -401,13 +423,13 @@ function Pricing() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {plans.map((plan) => (
-            <div key={plan.id} className={`p-8 rounded-3xl bg-[#121212] border ${plan.popular ? 'border-white/30' : 'border-white/10'} hover:border-white/20 transition-all flex flex-col relative card-hover`}>
+            <div key={plan.id} className={`pricing-card-3d p-8 rounded-3xl bg-[#121212] border ${plan.popular ? 'border-white/30' : 'border-white/10'} hover:border-white/20 transition-all flex flex-col relative`}>
               {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-white text-black text-xs font-bold uppercase tracking-wide">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-white text-black text-xs font-bold uppercase tracking-wide layer-title">
                   Most Popular
                 </div>
               )}
-              <div className="mb-6">
+              <div className="mb-6 layer-title">
                 <h4 className="text-2xl font-display text-white mb-2">{plan.name}</h4>
                 <p className="text-brand-muted text-sm min-h-[40px]">{plan.description}</p>
                 <div className="mt-6 flex flex-col gap-1">
@@ -423,7 +445,7 @@ function Pricing() {
                   {plan.interviews}
                 </div>
               </div>
-              <ul className="space-y-4 mb-8 flex-1">
+              <ul className="space-y-4 mb-8 flex-1 layer-desc">
                 {plan.features.map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-[#d0d0d0]">
                     <CheckCircle2 className="w-5 h-5 text-white/50 shrink-0" />
@@ -433,12 +455,17 @@ function Pricing() {
               </ul>
               <button 
                 onClick={() => navigate(`/signup?plan=${plan.id}`)} 
-                className={`w-full py-4 rounded-xl font-semibold transition-colors ${plan.popular ? 'bg-white text-black hover:bg-white/90 magnetic' : 'bg-white/10 text-white hover:bg-white/20'} button-lift`}
+                className={`layer-btn w-full py-4 rounded-xl font-semibold transition-colors ${plan.popular ? 'bg-white text-black hover:bg-white/90 magnetic' : 'bg-white/10 text-white hover:bg-white/20'} button-lift`}
               >
                 {plan.cta}
               </button>
             </div>
           ))}
+        </div>
+        <div className="text-center mt-8 p-4 rounded-xl bg-[#1a0505] border border-red-500/20 max-w-2xl mx-auto">
+          <p className="text-sm text-red-400 font-medium flex items-center justify-center gap-2">
+            <span>⚠️</span> Payment integration is currently under development. To upgrade your plan, please connect a payment provider (e.g., Stripe) in the environment settings.
+          </p>
         </div>
       </div>
     </section>

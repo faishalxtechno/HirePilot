@@ -7,8 +7,15 @@ import { Button } from '../components/ui/Button';
 import { Triangle, Mail, Lock, User, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const Signup: React.FC = () => {
-  const { signUp, signInWithGoogle, isConfigured } = useAuth();
+  const { signUp, signInWithGoogle, isConfigured, user, loading } = useAuth();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!loading && user) {
+      console.log('[ROUTE DEBUG]', { pathname: '/signup', user: Boolean(user), loading, action: 'REDIRECT_TO_DASHBOARD' });
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

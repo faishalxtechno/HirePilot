@@ -187,9 +187,9 @@ export const InterviewSetup: React.FC = () => {
                   key={role}
                   type="button"
                   onClick={() => setSelectedRole(role)}
-                  className={`p-3 min-h-[44px] rounded-xl border text-left text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${
+                  className={`template-card p-3 min-h-[44px] rounded-xl border text-left text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${
                     isSelected
-                      ? 'border-white bg-white text-black'
+                      ? 'active border-white bg-white text-black'
                       : 'border-white/10 bg-black text-brand-muted hover:border-white/30 hover:text-white'
                   }`}
                 >
@@ -233,9 +233,9 @@ export const InterviewSetup: React.FC = () => {
                   key={type.id}
                   type="button"
                   onClick={() => setSelectedType(type.id as InterviewType)}
-                  className={`p-4 rounded-xl border text-left transition-colors flex flex-col justify-between space-y-3 cursor-pointer ${
+                  className={`template-card p-4 rounded-xl border text-left transition-colors flex flex-col justify-between space-y-3 cursor-pointer ${
                     isSelected
-                      ? 'border-white bg-white text-black'
+                      ? 'active border-white bg-white text-black'
                       : 'border-white/10 bg-black hover:border-white/30'
                   }`}
                 >
@@ -276,9 +276,9 @@ export const InterviewSetup: React.FC = () => {
                     key={diff.id}
                     type="button"
                     onClick={() => setSelectedDifficulty(diff.id)}
-                    className={`w-full p-3.5 rounded-xl border text-left text-xs transition-colors flex items-center justify-between cursor-pointer ${
+                    className={`template-card w-full p-3.5 rounded-xl border text-left text-xs transition-colors flex items-center justify-between cursor-pointer ${
                       isSelected
-                        ? 'border-white bg-white text-black'
+                        ? 'active border-white bg-white text-black'
                         : 'border-white/10 bg-black hover:border-white/30'
                     }`}
                   >

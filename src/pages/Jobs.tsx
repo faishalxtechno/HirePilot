@@ -4,6 +4,7 @@ import { jobsService, Job, JobApplication, ApplicationStage } from '../lib/jobsS
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { TiltCard } from '../components/ui/TiltCard';
 import { Badge } from '../components/ui/Badge';
 import { Link } from 'react-router-dom';
 import {
@@ -37,35 +38,49 @@ export const JobsPage: React.FC = () => {
   const targetRole = profile?.target_role || 'Software Engineer';
 
   useEffect(() => {
-    loadData();
-  }, [searchQuery, selectedRole, selectedWorkplace]);
+    if (profile?.id) {
+      loadData();
+    }
+  }, [searchQuery, selectedRole, selectedWorkplace, profile?.id]);
 
-  const loadData = () => {
+  const loadData = async () => {
     const list = jobsService.getJobs({
       search: searchQuery,
       role: selectedRole,
       workplace: selectedWorkplace,
     });
     setJobs(list);
-    setApplications(jobsService.getApplications());
-    setSavedJobIds(jobsService.getSavedJobIds());
+    
+    if (profile?.id) {
+      const apps = await jobsService.getApplications(profile.id);
+      setApplications(apps);
+      
+      const saved = await jobsService.getSavedJobIds(profile.id);
+      setSavedJobIds(saved);
+    }
   };
 
-  const handleApply = (job: Job) => {
-    const newApp = jobsService.applyToJob(job);
-    setApplications(jobsService.getApplications());
+  const handleApply = async (job: Job) => {
+    if (!profile?.id) return;
+    await jobsService.applyToJob(profile.id, job);
+    const updatedApps = await jobsService.getApplications(profile.id);
+    setApplications(updatedApps);
     setApplySuccessMsg(`Application sent to ${job.company} for ${job.title}! Tracked in your applications pipeline.`);
     setTimeout(() => setApplySuccessMsg(null), 5000);
   };
 
-  const handleToggleSave = (jobId: string) => {
-    jobsService.toggleSaveJob(jobId);
-    setSavedJobIds(jobsService.getSavedJobIds());
+  const handleToggleSave = async (jobId: string) => {
+    if (!profile?.id) return;
+    await jobsService.toggleSaveJob(profile.id, jobId);
+    const updatedSaved = await jobsService.getSavedJobIds(profile.id);
+    setSavedJobIds(updatedSaved);
   };
 
-  const handleStageChange = (appId: string, stage: ApplicationStage) => {
-    jobsService.updateStage(appId, stage);
-    setApplications(jobsService.getApplications());
+  const handleStageChange = async (appId: string, stage: ApplicationStage) => {
+    if (!profile?.id) return;
+    await jobsService.updateStage(profile.id, appId, stage);
+    const updatedApps = await jobsService.getApplications(profile.id);
+    setApplications(updatedApps);
   };
 
   const roleChips = ['All', 'Frontend', 'Backend', 'Full Stack', 'Software Engineer', 'Machine Learning'];
@@ -193,11 +208,11 @@ export const JobsPage: React.FC = () => {
                   const matchScore = jobsService.calculateMatchScore(job, targetRole);
 
                   return (
-                    <Card key={job.id} className="p-4 sm:p-6 space-y-4 bg-[#121212] border-white/10 hover:border-white/20 transition-all">
+                    <TiltCard key={job.id} maxRotation={2} className="p-4 sm:p-6 space-y-4 bg-[#121212] border-white/10 hover:border-white/20 transition-all">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                         <div className="flex items-start gap-3.5">
                           {/* Company Logo */}
-                          <div className="w-12 h-12 rounded-2xl bg-black border border-white/10 flex items-center justify-center text-white font-medium overflow-hidden shrink-0 shadow-sm">
+                          <div className="w-12 h-12 rounded-2xl bg-black border border-white/10 flex items-center justify-center text-white font-medium overflow-hidden shrink-0 shadow-sm layer-icon">
                             {job.companyLogo ? (
                               <img src={job.companyLogo} alt={job.company} className="w-full h-full object-cover" />
                             ) : (
@@ -232,7 +247,7 @@ export const JobsPage: React.FC = () => {
 
                         {/* Match score & Bookmark */}
                         <div className="flex items-center gap-2 shrink-0 self-start">
-                          <span className="px-2.5 py-1 rounded-xl bg-white/5 border border-white/10 text-white text-xs font-mono font-medium">
+                          <span className="px-2.5 py-1 rounded-xl bg-white/5 border border-white/10 text-white text-xs font-mono font-medium layer-title">
                             {matchScore}% Match
                           </span>
                           <button
@@ -288,7 +303,7 @@ export const JobsPage: React.FC = () => {
                           </Button>
                         </div>
                       </div>
-                    </Card>
+                    </TiltCard>
                   );
                 })
               )}

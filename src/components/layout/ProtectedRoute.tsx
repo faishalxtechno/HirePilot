@@ -17,6 +17,7 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
   }
 
   if (!user) {
+    console.log('[ROUTE DEBUG]', { pathname: location.pathname, user: Boolean(user), loading, action: 'REDIRECT_TO_LOGIN' });
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

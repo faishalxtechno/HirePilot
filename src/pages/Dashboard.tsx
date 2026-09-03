@@ -59,7 +59,10 @@ export const Dashboard: React.FC = () => {
       const resume = resumeService.getAnalysis();
       setResumeData(resume);
 
-      setSavedJobIds(jobsService.getSavedJobIds());
+      if (profile?.id) {
+        const saved = await jobsService.getSavedJobIds(profile.id);
+        setSavedJobIds(saved);
+      }
     } catch (err) {
       console.error('Error loading dashboard:', err);
     } finally {
@@ -67,11 +70,14 @@ export const Dashboard: React.FC = () => {
     }
   };
 
-  const toggleSaveJob = (e: React.MouseEvent, jobId: string) => {
+  const toggleSaveJob = async (e: React.MouseEvent, jobId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    jobsService.toggleSaveJob(jobId);
-    setSavedJobIds(jobsService.getSavedJobIds());
+    if (profile?.id) {
+      await jobsService.toggleSaveJob(profile.id, jobId);
+      const saved = await jobsService.getSavedJobIds(profile.id);
+      setSavedJobIds(saved);
+    }
   };
 
   const displayName = profile?.name || user?.email?.split('@')[0] || 'Candidate';

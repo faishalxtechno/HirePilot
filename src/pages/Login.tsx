@@ -7,9 +7,16 @@ import { Button } from '../components/ui/Button';
 import { Triangle, Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
 
 export const Login: React.FC = () => {
-  const { signIn, signInWithGoogle, isConfigured } = useAuth();
+  const { signIn, signInWithGoogle, isConfigured, user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  React.useEffect(() => {
+    if (!loading && user) {
+      console.log('[ROUTE DEBUG]', { pathname: location.pathname, user: Boolean(user), loading, action: 'REDIRECT_TO_DASHBOARD' });
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, loading, navigate, location.pathname]);
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
@@ -34,6 +41,7 @@ export const Login: React.FC = () => {
     if (signInError) {
       setError(signInError.message || 'Invalid email or password.');
     } else {
+      console.log('[LOGIN DEBUG] successful login');
       navigate(from, { replace: true });
     }
   };
