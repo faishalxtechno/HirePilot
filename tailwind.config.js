@@ -11,13 +11,21 @@ export default {
           background: "#000000",
           primary: "#ffffff",
           muted: "#8e8e8e",
-          dark: "#28282a",
-          secondary: "#c8c8c8"
+          dark: "#141417",
+          secondary: "#c8c8c8",
+          obsidian: "#070709",
+          card: "#0d0d12",
+          cardBorder: "rgba(255, 255, 255, 0.08)",
+          accent: "#38bdf8",
+          emerald: "#10b981",
+          violet: "#a855f7"
         }
       },
       fontFamily: {
+        sans: ["Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],
         inter: ["Inter", "Segoe UI", "system-ui", "sans-serif"],
-        display: ["BubbledotICG-FinePos", "Geist Pixel Circle", "monospace"],
+        display: ["Plus Jakarta Sans", "Inter", "sans-serif"],
+        mono: ["JetBrains Mono", "SF Mono", "Menlo", "monospace"],
       }
     },
   },
