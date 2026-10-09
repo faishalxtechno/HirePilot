@@ -27,7 +27,6 @@ import {
   ArrowRight,
   Briefcase,
   FileText,
-  Triangle,
   ChevronRight,
   Clock,
   Building2,
@@ -127,7 +126,7 @@ export const Dashboard: React.FC = () => {
             {/* Top row: Target Role pill + status */}
             <div className="flex items-center justify-between">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white text-[11px] font-semibold">
-                <Triangle className="w-3 h-3 text-brand-secondary fill-brand-secondary" />
+                <img src="/assets/hirepilot-logo.png" alt="" className="w-3.5 h-3.5 object-contain" />
                 {targetRole}
               </span>
               <span className="flex items-center gap-1 text-[11px] font-medium text-brand-secondary bg-white/5 border border-white/10 px-2 py-0.5 rounded-full">

@@ -8,7 +8,6 @@ import {
   History,
   User,
   LogOut,
-  Triangle,
   Zap,
   FileText,
   Briefcase,
@@ -52,10 +51,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="space-y-8">
         {/* Brand (only shown when not in mobile drawer) */}
         {!isMobileDrawer && (
-          <Link to="/" className="px-3 flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-              <Triangle className="w-5 h-5 text-black fill-black" />
-            </div>
+          <Link to="/" className="px-3 flex items-center gap-2.5 group">
+            <img
+              src="/assets/hirepilot-logo.png"
+              alt="HirePilot"
+              className="h-9 w-9 object-contain transition-transform duration-200 group-hover:scale-105"
+            />
             <span className="font-medium text-xl text-white tracking-tight">
               HirePilot
             </span>

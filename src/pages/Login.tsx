@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import { Triangle, Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
+import { Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const { signIn, signInWithGoogle, isConfigured, user, loading } = useAuth();
@@ -65,9 +65,11 @@ export const Login: React.FC = () => {
         {/* Brand Header */}
         <div className="text-center space-y-3">
           <Link to="/" className="inline-flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
-              <Triangle className="w-4 h-4 text-black fill-black" />
-            </div>
+            <img
+              src="/assets/hirepilot-logo.png"
+              alt="HirePilot"
+              className="w-10 h-10 object-contain group-hover:scale-105 transition-transform duration-300"
+            />
             <span className="font-medium text-2xl text-white tracking-tight">
               HirePilot
             </span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Triangle, Mail, ArrowUpRight, Code2 } from 'lucide-react';
+import { Mail, ArrowUpRight, Code2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
@@ -9,10 +9,12 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/5">
           {/* Col 1: Brand & Description */}
           <div className="space-y-4 md:col-span-1">
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                <Triangle className="w-4 h-4 text-black fill-black" />
-              </div>
+            <Link to="/" className="flex items-center gap-2.5 group">
+              <img
+                src="/assets/hirepilot-logo.png"
+                alt="HirePilot"
+                className="h-8 w-8 object-contain transition-transform group-hover:scale-105"
+              />
               <span className="font-medium text-lg text-white tracking-tight">
                 HirePilot
               </span>

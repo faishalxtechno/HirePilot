@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { MobileBottomNav } from './MobileBottomNav';
-import { Menu, X, Triangle, AlertCircle } from 'lucide-react';
+import { Menu, X, AlertCircle } from 'lucide-react';
 import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -62,11 +62,13 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               <Link
                 to="/"
                 onClick={() => setMobileSidebarOpen(false)}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2.5"
               >
-                <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                  <Triangle className="w-4 h-4 text-black fill-black" />
-                </div>
+                <img
+                  src="/assets/hirepilot-logo.png"
+                  alt="HirePilot"
+                  className="h-8 w-8 object-contain"
+                />
                 <span className="font-medium text-lg text-white">
                   HirePilot
                 </span>
@@ -106,9 +108,11 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               <Menu className="w-6 h-6" />
             </button>
             <Link to="/dashboard" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center">
-                <Triangle className="w-3.5 h-3.5 text-black fill-black" />
-              </div>
+              <img
+                src="/assets/hirepilot-logo.png"
+                alt="HirePilot"
+                className="h-7 w-7 object-contain"
+              />
               <span className="font-medium text-base text-white">
                 HirePilot
               </span>

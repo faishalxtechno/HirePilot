@@ -14,7 +14,6 @@ import {
   Building2,
   MapPin,
   CheckCircle2,
-  Triangle,
   ArrowRight,
   Check,
   Send,
@@ -101,8 +100,8 @@ export const JobsPage: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6 relative z-10">
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-white/5 text-white border border-white/10 flex items-center gap-1">
-                  <Triangle className="w-3.5 h-3.5 text-brand-secondary fill-brand-secondary" />
+                <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-white/5 text-white border border-white/10 flex items-center gap-1.5">
+                  <img src="/assets/hirepilot-logo.png" alt="" className="w-3.5 h-3.5 object-contain" />
                   AI Matchmaking Engine
                 </span>
                 <span className="text-xs text-brand-muted">

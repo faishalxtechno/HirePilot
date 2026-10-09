@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../ui/Button';
-import { Triangle, Menu, X, ArrowRight, User as UserIcon, LayoutDashboard, LogOut } from 'lucide-react';
+import { Menu, X, ArrowRight, User as UserIcon, LayoutDashboard, LogOut } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { user, profile, loading, signOut } = useAuth();
@@ -54,10 +54,12 @@ export const Navbar: React.FC = () => {
       >
         <div className="px-4 sm:px-6 flex items-center justify-between">
           {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
-              <Triangle className="w-4 h-4 text-black fill-black" />
-            </div>
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <img
+              src="/assets/hirepilot-logo.png"
+              alt="HirePilot"
+              className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-105"
+            />
             <span className="font-medium text-lg text-white tracking-tight leading-none">
               HirePilot
             </span>

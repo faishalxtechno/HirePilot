@@ -91,9 +91,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-2.5 group cursor-pointer focus:outline-none"
             aria-label="HirePilot Home"
           >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#8750FF] to-[#A855F7] flex items-center justify-center text-white shadow-[0_4px_12px_rgba(135,80,255,0.35)] transition-transform duration-300 group-hover:scale-105">
-              <i className="pi pi-compass text-sm font-bold" />
-            </div>
+            <img
+              src="/assets/hirepilot-logo.png"
+              alt="HirePilot"
+              className="h-8 sm:h-9 w-8 sm:w-9 object-contain transition-transform duration-300 group-hover:scale-105"
+            />
             <div className="flex items-center gap-1.5">
               <span className="font-sans text-lg sm:text-xl font-extrabold tracking-tight text-slate-900">
                 HirePilot

@@ -9,9 +9,11 @@ export const Footer: React.FC = () => {
         {/* Brand column */}
         <div className="flex flex-col gap-4 max-w-sm">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#8750FF] to-[#A855F7] flex items-center justify-center text-white shadow-sm transition-transform duration-300 group-hover:scale-105">
-              <i className="pi pi-compass text-sm font-bold" />
-            </div>
+            <img
+              src="/assets/hirepilot-logo.png"
+              alt="HirePilot"
+              className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-105"
+            />
             <span className="font-sans font-extrabold text-xl text-slate-900 tracking-tight">
               HirePilot
             </span>
