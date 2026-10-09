@@ -8,15 +8,12 @@ export const Footer: React.FC = () => {
         
         {/* Brand column */}
         <div className="flex flex-col gap-4 max-w-sm">
-          <Link to="/" className="flex items-center gap-2.5 group">
+          <Link to="/" className="flex items-center group focus:outline-none" aria-label="HirePilot Home">
             <img
               src="/assets/hirepilot-logo.png"
               alt="HirePilot"
-              className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-105"
+              className="h-10 w-auto max-h-12 object-contain transition-transform duration-300 group-hover:scale-105"
             />
-            <span className="font-sans font-extrabold text-xl text-slate-900 tracking-tight">
-              HirePilot
-            </span>
           </Link>
 
           <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">

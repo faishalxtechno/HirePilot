@@ -51,15 +51,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="space-y-8">
         {/* Brand (only shown when not in mobile drawer) */}
         {!isMobileDrawer && (
-          <Link to="/" className="px-3 flex items-center gap-2.5 group">
+          <Link to="/" className="px-3 flex items-center group focus:outline-none" aria-label="HirePilot Home">
             <img
               src="/assets/hirepilot-logo.png"
               alt="HirePilot"
-              className="h-9 w-9 object-contain transition-transform duration-200 group-hover:scale-105"
+              className="h-10 w-auto max-h-11 object-contain transition-transform duration-200 group-hover:scale-105"
             />
-            <span className="font-medium text-xl text-white tracking-tight">
-              HirePilot
-            </span>
           </Link>
         )}
 

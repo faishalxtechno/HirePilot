@@ -64,15 +64,12 @@ export const Login: React.FC = () => {
       <div className="w-full max-w-md space-y-8 relative z-10">
         {/* Brand Header */}
         <div className="text-center space-y-3">
-          <Link to="/" className="inline-flex items-center gap-3 group">
+          <Link to="/" className="inline-flex items-center justify-center group focus:outline-none" aria-label="HirePilot Home">
             <img
               src="/assets/hirepilot-logo.png"
               alt="HirePilot"
-              className="w-10 h-10 object-contain group-hover:scale-105 transition-transform duration-300"
+              className="h-14 w-auto max-h-16 object-contain group-hover:scale-105 transition-transform duration-300"
             />
-            <span className="font-medium text-2xl text-white tracking-tight">
-              HirePilot
-            </span>
           </Link>
           <h2 className="text-xl font-medium text-white">Welcome back</h2>
           <p className="text-sm text-brand-secondary">

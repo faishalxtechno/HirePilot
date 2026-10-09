@@ -62,16 +62,14 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               <Link
                 to="/"
                 onClick={() => setMobileSidebarOpen(false)}
-                className="flex items-center gap-2.5"
+                className="flex items-center focus:outline-none"
+                aria-label="HirePilot Home"
               >
                 <img
                   src="/assets/hirepilot-logo.png"
                   alt="HirePilot"
-                  className="h-8 w-8 object-contain"
+                  className="h-8 w-auto max-h-8 object-contain"
                 />
-                <span className="font-medium text-lg text-white">
-                  HirePilot
-                </span>
               </Link>
               <button
                 onClick={() => setMobileSidebarOpen(false)}
@@ -107,15 +105,12 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
             >
               <Menu className="w-6 h-6" />
             </button>
-            <Link to="/dashboard" className="flex items-center gap-2">
+            <Link to="/dashboard" className="flex items-center focus:outline-none" aria-label="HirePilot Dashboard">
               <img
                 src="/assets/hirepilot-logo.png"
                 alt="HirePilot"
-                className="h-7 w-7 object-contain"
+                className="h-8 w-auto max-h-8 object-contain"
               />
-              <span className="font-medium text-base text-white">
-                HirePilot
-              </span>
             </Link>
           </div>
 

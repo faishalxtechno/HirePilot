@@ -54,15 +54,12 @@ export const Navbar: React.FC = () => {
       >
         <div className="px-4 sm:px-6 flex items-center justify-between">
           {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
+          <Link to="/" className="flex items-center group focus:outline-none shrink-0" aria-label="HirePilot Home">
             <img
               src="/assets/hirepilot-logo.png"
               alt="HirePilot"
-              className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-105"
+              className="h-9 sm:h-10 w-auto max-h-10 object-contain transition-transform duration-300 group-hover:scale-105"
             />
-            <span className="font-medium text-lg text-white tracking-tight leading-none">
-              HirePilot
-            </span>
           </Link>
 
           {/* Desktop Navigation Links */}

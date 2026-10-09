@@ -10,13 +10,12 @@ export const Terms: React.FC = () => {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-brand-dark/80 backdrop-blur-md border-b border-white/10">
         <div className="max-w-[1000px] mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center group focus:outline-none" aria-label="HirePilot Home">
             <img
               src="/assets/hirepilot-logo.png"
               alt="HirePilot"
-              className="w-10 h-10 object-contain shrink-0 group-hover:scale-105 transition-transform"
+              className="h-10 w-auto max-h-11 object-contain shrink-0 group-hover:scale-105 transition-transform"
             />
-            <span className="font-display text-white text-xl hidden sm:block">HirePilot</span>
           </Link>
           <Link 
             to="/" 

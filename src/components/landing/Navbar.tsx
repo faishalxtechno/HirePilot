@@ -84,24 +84,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           }`}
           aria-label="Main Navigation"
         >
-          {/* Left: Brand Logo & Wordmark */}
+          {/* Left: Brand Logo */}
           <a
             href="#home"
             onClick={(e) => handleLinkClick(e, { label: 'Home', href: '#home', isRoute: false })}
-            className="flex items-center gap-2.5 group cursor-pointer focus:outline-none"
+            className="flex items-center group cursor-pointer focus:outline-none shrink-0"
             aria-label="HirePilot Home"
           >
             <img
               src="/assets/hirepilot-logo.png"
               alt="HirePilot"
-              className="h-8 sm:h-9 w-8 sm:w-9 object-contain transition-transform duration-300 group-hover:scale-105"
+              className="h-9 sm:h-10 md:h-11 w-auto max-h-11 object-contain transition-transform duration-300 group-hover:scale-105"
             />
-            <div className="flex items-center gap-1.5">
-              <span className="font-sans text-lg sm:text-xl font-extrabold tracking-tight text-slate-900">
-                HirePilot
-              </span>
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#8750FF] animate-pulse" />
-            </div>
           </a>
 
           {/* Center: Desktop Navigation Links */}

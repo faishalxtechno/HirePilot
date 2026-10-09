@@ -9,15 +9,12 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/5">
           {/* Col 1: Brand & Description */}
           <div className="space-y-4 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2.5 group">
+            <Link to="/" className="flex items-center group focus:outline-none" aria-label="HirePilot Home">
               <img
                 src="/assets/hirepilot-logo.png"
                 alt="HirePilot"
-                className="h-8 w-8 object-contain transition-transform group-hover:scale-105"
+                className="h-10 w-auto max-h-12 object-contain transition-transform group-hover:scale-105"
               />
-              <span className="font-medium text-lg text-white tracking-tight">
-                HirePilot
-              </span>
             </Link>
             <p className="text-sm text-brand-secondary leading-relaxed">
               AI-powered career assistance platform designed to help professionals discover opportunities, improve resumes, and prepare for interviews.

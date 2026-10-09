@@ -25,12 +25,12 @@ export interface LogoProps {
 }
 
 const sizeClasses: Record<LogoSize, { img: string; text: string }> = {
-  xs: { img: 'h-6 w-6', text: 'text-sm' },
-  sm: { img: 'h-8 w-8', text: 'text-base' },
-  md: { img: 'h-10 w-10', text: 'text-lg sm:text-xl' },
-  lg: { img: 'h-12 w-12', text: 'text-xl sm:text-2xl' },
-  xl: { img: 'h-16 w-16', text: 'text-2xl sm:text-3xl' },
-  '2xl': { img: 'h-20 w-20', text: 'text-3xl' },
+  xs: { img: 'h-6 w-auto max-h-6', text: 'text-sm' },
+  sm: { img: 'h-8 w-auto max-h-8', text: 'text-base' },
+  md: { img: 'h-10 w-auto max-h-10', text: 'text-lg sm:text-xl' },
+  lg: { img: 'h-12 w-auto max-h-12', text: 'text-xl sm:text-2xl' },
+  xl: { img: 'h-16 w-auto max-h-16', text: 'text-2xl sm:text-3xl' },
+  '2xl': { img: 'h-20 w-auto max-h-20', text: 'text-3xl' },
   custom: { img: '', text: '' },
 };
 
