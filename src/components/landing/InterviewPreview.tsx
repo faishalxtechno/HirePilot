@@ -60,7 +60,7 @@ export const InterviewPreview: React.FC<InterviewPreviewProps> = ({ onTestDemo }
   };
 
   return (
-    <section id="product" className="relative w-full py-12 sm:py-20 px-4 sm:px-6">
+    <section id="product" className="relative w-full pt-4 sm:pt-6 pb-16 sm:pb-24 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         
         {/* Section Heading */}
