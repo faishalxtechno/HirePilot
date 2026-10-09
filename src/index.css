@@ -486,3 +486,153 @@ html.lenis, html.lenis body {
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
+/* ==========================================================================
+   REMASTO LIGHT THEME DESIGN SYSTEM (HirePilot Redesign)
+   ========================================================================== */
+:root {
+  --remasto-purple: #8750FF;
+  --remasto-purple-hover: #723DE8;
+  --remasto-purple-light: #F5EFFF;
+  --remasto-purple-subtle: #FAF7FF;
+  --remasto-charcoal: #0F172A;
+  --remasto-charcoal-muted: #475569;
+  --remasto-charcoal-light: #64748B;
+  --remasto-bg: #FFFFFF;
+  --remasto-bg-page: #FAFAFC;
+  --remasto-border: rgba(148, 163, 184, 0.2);
+  --remasto-border-purple: rgba(135, 80, 255, 0.18);
+  --remasto-shadow-subtle: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  --remasto-shadow-card: 0 16px 36px -8px rgba(135, 80, 255, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+  --remasto-shadow-hover: 0 24px 48px -12px rgba(135, 80, 255, 0.16), 0 8px 16px -4px rgba(15, 23, 42, 0.06);
+}
+
+/* Light grid overlay for Remasto aesthetic */
+.bg-remasto-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(135, 80, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(135, 80, 255, 0.035) 1px, transparent 1px);
+}
+
+/* Ambient Remasto Light Glows */
+.remasto-glow-purple {
+  background: radial-gradient(circle at center, rgba(135, 80, 255, 0.12) 0%, rgba(168, 85, 247, 0.06) 45%, transparent 75%);
+}
+
+.remasto-glow-cyan {
+  background: radial-gradient(circle at center, rgba(56, 189, 248, 0.12) 0%, rgba(14, 165, 233, 0.05) 50%, transparent 75%);
+}
+
+.remasto-glass-pill {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+}
+
+.remasto-glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 16px 40px -12px rgba(135, 80, 255, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+}
+
+/* Subtle floating animation */
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 6s ease-in-out infinite;
+}
+
+/* PrimeReact Remasto Theme Adaptations */
+.p-menubar.remasto-menubar {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.p-menubar.remasto-menubar .p-menubar-root-list {
+  background: transparent !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.p-menubar.remasto-menubar .p-menuitem-link {
+  padding: 0.5rem 0.85rem !important;
+  border-radius: 9999px !important;
+  color: #475569 !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.p-menubar.remasto-menubar .p-menuitem-link:hover {
+  background: #F5EFFF !important;
+  color: #8750FF !important;
+}
+
+/* PrimeReact Accordion Styling */
+.remasto-accordion .p-accordion-header .p-accordion-header-link {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  border-radius: 1rem !important;
+  padding: 1.25rem 1.5rem !important;
+  color: #0F172A !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  transition: all 0.25s ease !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+}
+
+.remasto-accordion .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
+  background: #FAF7FF !important;
+  border-color: rgba(135, 80, 255, 0.3) !important;
+  color: #8750FF !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.remasto-accordion .p-accordion-content {
+  background: #FAF7FF !important;
+  border: 1px solid rgba(135, 80, 255, 0.25) !important;
+  border-top: none !important;
+  border-bottom-left-radius: 1rem !important;
+  border-bottom-right-radius: 1rem !important;
+  padding: 1.25rem 1.5rem !important;
+  color: #475569 !important;
+  font-size: 0.9375rem !important;
+  line-height: 1.6 !important;
+}
+
+.remasto-accordion .p-accordion-tab {
+  margin-bottom: 0.85rem !important;
+}
+
+/* PrimeReact Dialog styling */
+.remasto-dialog .p-dialog-header {
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+  padding: 1.5rem !important;
+  background: #FFFFFF !important;
+}
+
+.remasto-dialog .p-dialog-content {
+  padding: 1.5rem !important;
+  background: #FAFAFC !important;
+}
+
+.remasto-dialog .p-dialog-footer {
+  border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
+  padding: 1.25rem 1.5rem !important;
+  background: #FFFFFF !important;
+}
+
