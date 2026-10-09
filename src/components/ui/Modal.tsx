@@ -82,7 +82,7 @@ export const Modal: React.FC<ModalProps> = ({
       {/* Backdrop */}
       <div
         className={cn(
-          'fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300 ease-out',
+          'fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-200 ease-out',
           isClosing ? 'opacity-0' : 'opacity-100'
         )}
         onClick={handleDismiss}
@@ -91,10 +91,10 @@ export const Modal: React.FC<ModalProps> = ({
       {/* Modal Dialog Card */}
       <div
         className={cn(
-          'relative w-full max-h-[90vh] flex flex-col rounded-2xl border border-white/10 p-6 z-10 transition-all duration-300 ease-out overflow-hidden',
+          'relative w-full max-h-[90vh] flex flex-col rounded-2xl border border-white/10 p-6 z-10 transition-all duration-300 ease-[cubic-bezier(0.42,1.67,0.21,0.90)] overflow-hidden',
           'bg-[#121212] shadow-xl',
           maxWidths[maxWidth],
-          isClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+          isClosing ? 'opacity-0 scale-[0.97]' : 'opacity-100 scale-100'
         )}
       >
         <div className="flex items-start justify-between pb-4 gap-3 border-b border-white/5 shrink-0">

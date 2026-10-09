@@ -165,7 +165,11 @@ export const Interview: React.FC = () => {
         )}
 
         {/* AI Interviewer Question Card */}
-        {currentQuestion && <QuestionCard question={currentQuestion} />}
+        {currentQuestion && (
+          <div key={currentQuestion.id} className="animate-fade-up">
+            <QuestionCard question={currentQuestion} />
+          </div>
+        )}
 
         {/* Answer Textarea (Shown if not yet evaluated) */}
         {!evaluation && (
@@ -180,12 +184,14 @@ export const Interview: React.FC = () => {
 
         {/* Answer Evaluation Breakdown (Shown after submission) */}
         {evaluation && (
-          <EvaluationFeedback
-            evaluation={evaluation}
-            onNext={handleNextQuestion}
-            isLoadingNext={isLoadingNext}
-            isLastQuestion={isLastQuestion}
-          />
+          <div className="animate-slide-up">
+            <EvaluationFeedback
+              evaluation={evaluation}
+              onNext={handleNextQuestion}
+              isLoadingNext={isLoadingNext}
+              isLastQuestion={isLastQuestion}
+            />
+          </div>
         )}
       </div>
     </div>

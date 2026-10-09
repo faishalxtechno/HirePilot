@@ -43,7 +43,7 @@ export const Progress: React.FC<ProgressProps> = ({
       )}
       <div className={cn('w-full bg-[#28282A] rounded-full overflow-hidden', sizes[size])}>
         <div
-          className={cn('h-full rounded-full transition-all duration-700 ease-out', variants[variant])}
+          className={cn('h-full rounded-full transition-all duration-500 ease-[cubic-bezier(0.27,1.06,0.18,1.00)]', variants[variant])}
           style={{ width: `${percentage}%` }}
         />
       </div>

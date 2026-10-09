@@ -268,13 +268,13 @@ export const ResumePage: React.FC = () => {
         {/* Mobile Toggle */}
         <div className="lg:hidden flex border-b border-white/10 bg-[#0a0a0b] shrink-0">
           <button 
-            className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${mobileView === 'editor' ? 'border-brand-secondary text-white' : 'border-transparent text-gray-500'}`}
+            className={`flex-1 py-3 text-sm font-medium border-b-2 transition-all duration-150 ${mobileView === 'editor' ? 'border-brand-secondary text-white' : 'border-transparent text-gray-500 hover:text-gray-300'}`}
             onClick={() => setMobileView('editor')}
           >
             Editor
           </button>
           <button 
-            className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${mobileView === 'preview' ? 'border-brand-secondary text-white' : 'border-transparent text-gray-500'}`}
+            className={`flex-1 py-3 text-sm font-medium border-b-2 transition-all duration-150 ${mobileView === 'preview' ? 'border-brand-secondary text-white' : 'border-transparent text-gray-500 hover:text-gray-300'}`}
             onClick={() => setMobileView('preview')}
           >
             Live Preview

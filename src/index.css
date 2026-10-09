@@ -20,10 +20,58 @@ html {
   scroll-behavior: smooth;
 }
 
+:root {
+  /* Expressive spatial motion */
+  --motion-expressive-fast-spatial:
+    cubic-bezier(0.42, 1.67, 0.21, 0.90);
+  --motion-expressive-default-spatial:
+    cubic-bezier(0.38, 1.21, 0.22, 1.00);
+  --motion-expressive-slow-spatial:
+    cubic-bezier(0.39, 1.29, 0.35, 0.98);
+
+  /* Expressive effects */
+  --motion-expressive-fast-effects:
+    cubic-bezier(0.31, 0.94, 0.34, 1.00);
+  --motion-expressive-default-effects:
+    cubic-bezier(0.34, 0.80, 0.34, 1.00);
+  --motion-expressive-slow-effects:
+    cubic-bezier(0.34, 0.88, 0.34, 1.00);
+
+  /* Standard spatial motion */
+  --motion-standard-spatial:
+    cubic-bezier(0.27, 1.06, 0.18, 1.00);
+
+  /* Standard effects */
+  --motion-standard-fast-effects:
+    cubic-bezier(0.31, 0.94, 0.34, 1.00);
+  --motion-standard-default-effects:
+    cubic-bezier(0.34, 0.80, 0.34, 1.00);
+  --motion-standard-slow-effects:
+    cubic-bezier(0.34, 0.88, 0.34, 1.00);
+
+  /* Durations */
+  --duration-expressive-fast-spatial: 350ms;
+  --duration-expressive-default-spatial: 500ms;
+  --duration-expressive-slow-spatial: 650ms;
+
+  --duration-expressive-fast-effects: 150ms;
+  --duration-expressive-default-effects: 200ms;
+  --duration-expressive-slow-effects: 300ms;
+
+  --duration-standard-fast-spatial: 350ms;
+  --duration-standard-default-spatial: 500ms;
+  --duration-standard-slow-spatial: 750ms;
+
+  --duration-standard-fast-effects: 150ms;
+  --duration-standard-default-effects: 200ms;
+  --duration-standard-slow-effects: 300ms;
+}
+
+/* Material 3 Motion Physics & Keyframes */
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -34,7 +82,105 @@ html {
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes navbar-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Hero Coordinated Sequence Keyframes */
+@keyframes hero-badge-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes hero-headline-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-desc-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-cta-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes hero-trust-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -43,44 +189,70 @@ html {
 }
 
 .animate-fade-up {
-  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fade-up var(--duration-expressive-default-spatial) var(--motion-expressive-default-spatial) both;
 }
 
 .animate-slideDown {
-  animation: slideDown 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: slideDown var(--duration-expressive-fast-spatial) var(--motion-expressive-default-spatial) both;
 }
 
-.stagger-1 { animation-delay: 100ms; }
-.stagger-2 { animation-delay: 200ms; }
-.stagger-3 { animation-delay: 300ms; }
-.stagger-4 { animation-delay: 400ms; }
-.stagger-5 { animation-delay: 500ms; }
-.stagger-6 { animation-delay: 600ms; }
-.stagger-7 { animation-delay: 700ms; }
+.animate-slide-up {
+  animation: slide-up var(--duration-expressive-fast-spatial) var(--motion-expressive-default-spatial) both;
+}
 
+.animate-navbar-enter {
+  animation: navbar-in var(--duration-standard-default-spatial) var(--motion-standard-spatial) both;
+}
+
+.animate-page-enter {
+  animation: page-enter var(--duration-standard-fast-spatial) var(--motion-standard-spatial) both;
+}
+
+.animate-fade-in {
+  animation: fade-in var(--duration-expressive-default-effects) var(--motion-expressive-default-effects) both;
+}
+
+/* Coordinated Stagger Classes (Material 3 rhythmic delays) */
+.stagger-1 { animation-delay: 80ms; }
+.stagger-2 { animation-delay: 160ms; }
+.stagger-3 { animation-delay: 240ms; }
+.stagger-4 { animation-delay: 320ms; }
+.stagger-5 { animation-delay: 400ms; }
+.stagger-6 { animation-delay: 480ms; }
+.stagger-7 { animation-delay: 560ms; }
+.stagger-8 { animation-delay: 640ms; }
+
+/* Strict Accessibility Preference */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 }
 
 /* Micro-interaction Utilities */
 .interactive {
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease, background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  transition: transform var(--duration-standard-fast-spatial) var(--motion-standard-spatial),
+              opacity var(--duration-standard-fast-effects) var(--motion-standard-fast-effects),
+              background-color var(--duration-standard-fast-effects) var(--motion-standard-default-effects),
+              border-color var(--duration-standard-fast-effects) var(--motion-standard-default-effects),
+              box-shadow var(--duration-standard-fast-effects) var(--motion-standard-default-effects);
 }
 
 .icon-pop {
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+  transition: transform var(--duration-standard-fast-effects) var(--motion-standard-spatial),
+              opacity var(--duration-standard-fast-effects) var(--motion-standard-fast-effects);
 }
 
 .interactive:hover .icon-pop,
 .button-lift:hover .icon-pop,
 .group:hover .icon-pop,
 .nav-link:hover .icon-pop {
-  transform: perspective(1000px) translateY(-1px) scale(1.05);
+  transform: translateY(-1px) scale(1.05);
 }
 
 .interactive:hover .icon-arrow,
@@ -97,11 +269,14 @@ html {
 
 .button-lift {
   transform: perspective(1000px) translateZ(0);
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 200ms ease, background-color 200ms ease;
+  transition: transform var(--duration-standard-fast-effects) var(--motion-standard-spatial),
+              box-shadow var(--duration-standard-fast-effects) var(--motion-standard-default-effects),
+              background-color var(--duration-standard-fast-effects) var(--motion-standard-default-effects),
+              border-color var(--duration-standard-fast-effects) var(--motion-standard-default-effects);
 }
 
 .button-lift:hover {
-  transform: perspective(1000px) translateY(-1px) scale(1.01);
+  transform: perspective(1000px) translateY(-1px);
 }
 
 .button-lift:active {
@@ -111,7 +286,9 @@ html {
 .nav-link {
   position: relative;
   transform: perspective(1000px) translateZ(0);
-  transition: color 200ms ease, opacity 200ms ease, transform 200ms ease;
+  transition: color var(--duration-standard-fast-effects) var(--motion-standard-default-effects),
+              opacity var(--duration-standard-fast-effects) var(--motion-standard-default-effects),
+              transform var(--duration-standard-fast-effects) var(--motion-standard-spatial);
 }
 
 .nav-link:hover {
@@ -122,12 +299,12 @@ html {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -5px;
+  bottom: -4px;
   width: 0;
   height: 2px;
   background-color: currentColor;
   transform: translateX(-50%);
-  transition: width 200ms ease;
+  transition: width var(--duration-standard-fast-effects) var(--motion-standard-default-effects);
 }
 
 .nav-link:hover::after {
@@ -136,7 +313,10 @@ html {
 
 .sidebar-link {
   transform: perspective(1000px) translateZ(0);
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1), background-color 200ms ease, color 200ms ease, box-shadow 200ms ease;
+  transition: transform var(--duration-standard-fast-effects) var(--motion-standard-spatial),
+              background-color var(--duration-standard-fast-effects) var(--motion-standard-default-effects),
+              color var(--duration-standard-fast-effects) var(--motion-standard-default-effects),
+              box-shadow var(--duration-standard-fast-effects) var(--motion-standard-default-effects);
 }
 
 .sidebar-link:hover {
@@ -158,22 +338,26 @@ html {
 }
 
 .card-hover {
-  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease, border-color 200ms ease;
+  transition: transform var(--duration-standard-fast-spatial) var(--motion-standard-spatial),
+              box-shadow var(--duration-standard-default-effects) var(--motion-standard-default-effects),
+              border-color var(--duration-standard-fast-effects) var(--motion-standard-default-effects);
 }
 
 .card-hover:hover {
-  transform: perspective(1000px) translateY(-3px);
+  transform: perspective(1000px) translateY(-2px);
 }
 
 .pricing-card-3d {
   transform: perspective(1000px) translateZ(0);
-  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 350ms ease, border-color 300ms ease;
+  transition: transform var(--duration-expressive-fast-spatial) var(--motion-expressive-default-spatial),
+              box-shadow var(--duration-expressive-slow-effects) var(--motion-expressive-default-effects),
+              border-color var(--duration-standard-default-effects) var(--motion-standard-default-effects);
   transform-style: preserve-3d;
 }
 
 .pricing-card-3d:hover {
-  transform: perspective(1000px) translateY(-4px) rotateX(1deg) rotateY(-1deg) translateZ(4px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  transform: perspective(1000px) translateY(-3px) translateZ(2px);
+  box-shadow: 0 16px 36px rgba(135, 80, 255, 0.08);
   z-index: 10;
 }
 
@@ -184,23 +368,25 @@ html {
 
 .template-card {
   transform: perspective(1000px) translateZ(0);
-  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), border-color 200ms ease, box-shadow 300ms ease;
+  transition: transform var(--duration-expressive-fast-spatial) var(--motion-expressive-default-spatial),
+              border-color var(--duration-standard-default-effects) var(--motion-standard-default-effects),
+              box-shadow var(--duration-standard-default-effects) var(--motion-standard-default-effects);
   transform-style: preserve-3d;
 }
 
 .template-card:hover {
-  transform: perspective(1000px) translateY(-4px) rotateY(2deg) scale(1.01);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  transform: perspective(1000px) translateY(-3px) scale(1.01);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
   z-index: 10;
 }
 
 .template-card.active {
-  transform: perspective(1000px) translateZ(8px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  transform: perspective(1000px) translateZ(6px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
 }
 
 .icon-button {
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--duration-standard-fast-effects) var(--motion-standard-spatial);
 }
 
 .icon-button:hover {
@@ -213,44 +399,49 @@ html {
 
 /* Modal and Toast entrance animations */
 @keyframes modal-enter {
-  from { opacity: 0; transform: perspective(1000px) translateY(10px) scale(0.97); }
+  from { opacity: 0; transform: perspective(1000px) translateY(8px) scale(0.98); }
   to { opacity: 1; transform: perspective(1000px) translateY(0) scale(1); }
 }
 
 @keyframes toast-enter {
-  from { opacity: 0; transform: perspective(1000px) translateY(10px) scale(0.97); }
+  from { opacity: 0; transform: perspective(1000px) translateY(8px) scale(0.98); }
   to { opacity: 1; transform: perspective(1000px) translateY(0) scale(1); }
 }
 
 .animate-modal {
-  animation: modal-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: modal-enter var(--duration-expressive-fast-spatial) var(--motion-expressive-fast-spatial) forwards;
 }
 
 .animate-toast {
-  animation: toast-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: toast-enter var(--duration-expressive-fast-spatial) var(--motion-expressive-fast-spatial) forwards;
 }
 
 /* Scroll reveal utility */
 .reveal-hidden {
   opacity: 0;
   transform: translateY(12px);
+  transition: opacity var(--duration-standard-default-spatial) var(--motion-standard-default-effects),
+              transform var(--duration-standard-default-spatial) var(--motion-standard-spatial);
+  will-change: opacity, transform;
 }
 
 .reveal-visible {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 500ms ease, transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Trust Icons Animation */
 .trust-avatar {
   cursor: pointer;
   user-select: none;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, background-color 0.25s ease, z-index 0s;
+  transition: transform var(--duration-expressive-fast-spatial) var(--motion-expressive-fast-spatial),
+              box-shadow var(--duration-expressive-fast-effects) var(--motion-expressive-fast-effects),
+              background-color var(--duration-standard-fast-effects) var(--motion-standard-default-effects),
+              z-index 0s;
 }
 
 .trust-avatar svg {
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--duration-expressive-fast-spatial) var(--motion-expressive-fast-spatial);
 }
 
 .trust-avatar:nth-child(1) { z-index: 3; }

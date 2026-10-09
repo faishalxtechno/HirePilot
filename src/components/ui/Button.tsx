@@ -26,19 +26,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer group button-lift';
+      'inline-flex items-center justify-center font-medium rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8750FF]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer group button-lift active:scale-[0.98] active:translate-y-0.5 transition-all duration-150';
 
     const variants = {
       primary:
-        'bg-white text-black border border-white/20 shadow-sm hover:bg-white/90',
+        'bg-white text-black border border-white/20 shadow-sm hover:bg-white/90 hover:shadow-md hover:-translate-y-0.5',
       secondary:
-        'bg-brand-dark text-brand-secondary hover:bg-[#323234] hover:text-white border border-transparent',
+        'bg-brand-dark text-brand-secondary hover:bg-[#323234] hover:text-white border border-transparent hover:-translate-y-0.5',
       outline:
-        'border border-white/20 bg-transparent hover:bg-white/5 text-brand-secondary hover:text-white',
+        'border border-white/20 bg-transparent hover:bg-white/5 text-brand-secondary hover:text-white hover:-translate-y-0.5',
       ghost:
-        'bg-transparent hover:bg-white/5 text-brand-secondary hover:text-white border border-transparent',
+        'bg-transparent hover:bg-white/5 text-brand-secondary hover:text-white border border-transparent hover:-translate-y-0.5',
       danger:
-        'bg-[#1a0505] text-red-400 hover:bg-[#2a0505] border border-red-500/20 hover:border-red-500/40',
+        'bg-[#1a0505] text-red-400 hover:bg-[#2a0505] border border-red-500/20 hover:border-red-500/40 hover:-translate-y-0.5',
     };
 
     const sizes = {

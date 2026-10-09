@@ -1,13 +1,15 @@
 import React from 'react';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 
+import { ScrollReveal } from '../ui/ScrollReveal';
+
 export const FAQSection: React.FC = () => {
   return (
     <section id="faq" className="py-20 sm:py-28 px-4 sm:px-6 bg-white border-t border-slate-200/80">
       <div className="max-w-4xl mx-auto">
         
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-18">
+        <ScrollReveal className="text-center max-w-2xl mx-auto mb-14 sm:mb-18">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-[#8750FF] text-xs font-mono font-semibold tracking-wide uppercase mb-3 border border-purple-200/50">
             <i className="pi pi-question-circle text-xs" />
             <span>Got Questions?</span>
@@ -18,10 +20,10 @@ export const FAQSection: React.FC = () => {
           <p className="mt-3 text-slate-600 text-sm sm:text-base">
             Everything you need to know about interview limits, resume features, AI evaluations, and getting started.
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* PrimeReact Accordion */}
-        <div className="remasto-accordion">
+        <ScrollReveal delayMs={100} className="remasto-accordion">
           <Accordion activeIndex={0}>
             
             {/* 1. Interview limits */}
@@ -64,10 +66,10 @@ export const FAQSection: React.FC = () => {
             </AccordionTab>
 
           </Accordion>
-        </div>
+        </ScrollReveal>
 
         {/* Still have questions banner */}
-        <div className="mt-12 text-center p-6 rounded-2xl bg-slate-50 border border-slate-200/80">
+        <ScrollReveal delayMs={160} className="mt-12 text-center p-6 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-sm">
           <h4 className="text-sm font-bold text-slate-800">Have a custom question or need dedicated assistance?</h4>
           <p className="text-xs text-slate-500 mt-1">Our team is here to help you accelerate your career.</p>
           <div className="mt-3">
@@ -79,7 +81,7 @@ export const FAQSection: React.FC = () => {
               <i className="pi pi-arrow-right text-[10px]" />
             </a>
           </div>
-        </div>
+        </ScrollReveal>
 
       </div>
     </section>

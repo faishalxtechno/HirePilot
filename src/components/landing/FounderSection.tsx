@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { ScrollReveal } from '../ui/ScrollReveal';
+
 export const FounderSection: React.FC = () => {
   return (
     <section id="founder" className="relative w-full py-20 sm:py-28 px-4 sm:px-6 bg-white border-t border-slate-200/80 overflow-hidden">
@@ -11,7 +13,7 @@ export const FounderSection: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         
         {/* Section Pre-Header */}
-        <div className="max-w-3xl mb-12 sm:mb-16">
+        <ScrollReveal className="max-w-3xl mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 border border-purple-200/70 text-[#8750FF] text-xs font-mono font-semibold uppercase tracking-wider mb-4">
             <i className="pi pi-user text-xs" />
             <span>Leadership & Vision</span>
@@ -23,13 +25,13 @@ export const FounderSection: React.FC = () => {
               Show what you can do.
             </span>
           </h2>
-        </div>
+        </ScrollReveal>
 
         {/* Two-Column Storytelling Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           
           {/* Left: Founder Portrait Frame */}
-          <div className="lg:col-span-5 relative flex justify-center">
+          <ScrollReveal delayMs={100} className="lg:col-span-5 relative flex justify-center">
             
             {/* Ambient backlight */}
             <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-[#8750FF]/15 via-purple-300/10 to-transparent blur-xl pointer-events-none" />
@@ -61,10 +63,10 @@ export const FounderSection: React.FC = () => {
               </div>
             </div>
 
-          </div>
+          </ScrollReveal>
 
           {/* Right: Founder Story & Vision */}
-          <div className="lg:col-span-7 space-y-7">
+          <ScrollReveal delayMs={160} className="lg:col-span-7 space-y-7">
             
             <div>
               <span className="text-xs font-mono uppercase tracking-widest text-[#8750FF] font-bold block mb-1.5">
@@ -94,7 +96,7 @@ export const FounderSection: React.FC = () => {
                 href="https://www.linkedin.com/in/faishal-naushad-b28807273/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-slate-50 hover:bg-white border border-slate-200 hover:border-[#8750FF]/50 text-slate-700 hover:text-[#8750FF] text-xs sm:text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow"
+                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-slate-50 hover:bg-white border border-slate-200 hover:border-[#8750FF]/50 text-slate-700 hover:text-[#8750FF] text-xs sm:text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow hover:-translate-y-0.5 active:translate-y-0"
               >
                 <i className="pi pi-linkedin text-sm text-[#0A66C2]" />
                 <span>Connect on LinkedIn</span>
@@ -105,7 +107,7 @@ export const FounderSection: React.FC = () => {
                 href="https://www.instagram.com/techifyfaishal?stkn=MWE1ZGo1cmEzYWw3eA=="
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-slate-50 hover:bg-white border border-slate-200 hover:border-pink-300 text-slate-700 hover:text-pink-600 text-xs sm:text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow"
+                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-slate-50 hover:bg-white border border-slate-200 hover:border-pink-300 text-slate-700 hover:text-pink-600 text-xs sm:text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow hover:-translate-y-0.5 active:translate-y-0"
               >
                 <i className="pi pi-instagram text-sm text-pink-500" />
                 <span>Follow on Instagram</span>
@@ -113,7 +115,7 @@ export const FounderSection: React.FC = () => {
               </a>
             </div>
 
-          </div>
+          </ScrollReveal>
 
         </div>
 

@@ -43,10 +43,10 @@ export const Navbar: React.FC = () => {
   }, [userDropdownOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-6 pt-4">
+    <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-6 pt-4 animate-navbar-enter">
       <div
         style={{ transform: 'translateZ(0)', boxShadow: '0 8px 30px rgba(0,0,0,0.08)' }}
-        className={`max-w-7xl mx-auto rounded-2xl border transition-all duration-500 card-3d ${
+        className={`max-w-7xl mx-auto rounded-2xl border transition-all duration-300 card-3d ${
           scrolled
             ? 'bg-black/80 border-white/5 shadow-glass backdrop-blur-2xl py-2.5'
             : 'bg-transparent border-transparent py-3'
@@ -58,7 +58,7 @@ export const Navbar: React.FC = () => {
             <img
               src="/assets/hirepilot-logo.png"
               alt="HirePilot"
-              className="h-9 sm:h-10 w-auto max-h-10 object-contain transition-transform duration-300 group-hover:scale-105"
+              className="h-9 sm:h-10 w-auto max-h-10 object-contain transition-transform duration-standard-fast-effects ease-standard-spatial group-hover:scale-105"
             />
           </Link>
 
@@ -87,7 +87,7 @@ export const Navbar: React.FC = () => {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2.5 p-1 pr-3 rounded-full border border-white/10 bg-transparent hover:bg-white/5 transition-all duration-200 cursor-pointer"
+                  className="flex items-center gap-2.5 p-1 pr-3 rounded-full border border-white/10 bg-transparent hover:bg-white/5 transition-all duration-200 cursor-pointer hover:-translate-y-0.5 active:translate-y-0.5"
                   aria-expanded={userDropdownOpen}
                 >
                   <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center text-xs font-bold overflow-hidden">
@@ -104,7 +104,7 @@ export const Navbar: React.FC = () => {
 
                 {userDropdownOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-48 rounded-2xl border border-white/10 bg-[#121212] backdrop-blur-2xl shadow-glass-lg py-2 z-50 animate-modal-in"
+                    className="absolute right-0 mt-2 w-48 rounded-2xl border border-white/10 bg-[#121212] backdrop-blur-2xl shadow-glass-lg py-2 z-50 animate-modal"
                   >
                     <Link
                       to="/dashboard"

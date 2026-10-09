@@ -42,8 +42,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
     >
       <div className="max-w-4xl mx-auto flex flex-col items-center relative z-10 w-full">
         
-        {/* Eyebrow Badge */}
-        <div className="inline-flex items-center gap-2 mb-5 sm:mb-6 animate-fade-up">
+        {/* Eyebrow Badge — step 1 in coordinated sequence */}
+        <div className="inline-flex items-center gap-2 mb-5 sm:mb-6 animate-hero-badge">
           <Tag
             value="AI-POWERED CAREER COPILOT"
             icon="pi pi-sparkles"
@@ -51,27 +51,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
           />
         </div>
 
-        {/* Main Headline */}
-        <h1 className="font-sans font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-[76px] tracking-tight text-slate-900 leading-[1.08] mb-5 sm:mb-6 animate-fade-up stagger-1 max-w-4xl mx-auto">
+        {/* Main Headline — step 2 in coordinated sequence */}
+        <h1 className="font-sans font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-[76px] tracking-tight text-slate-900 leading-[1.08] mb-5 sm:mb-6 animate-hero-headline max-w-4xl mx-auto">
           <span className="block text-slate-900">Practice Smarter.</span>
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#8750FF] via-[#A855F7] to-[#6830E8]">
             Get Hired Faster.
           </span>
         </h1>
 
-        {/* Supporting Text — exactly 24–32px margin to CTAs */}
-        <p className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-slate-600 font-normal leading-relaxed mb-7 sm:mb-8 animate-fade-up stagger-2">
+        {/* Supporting Text — step 3 in coordinated sequence */}
+        <p className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-slate-600 font-normal leading-relaxed mb-7 sm:mb-8 animate-hero-desc">
           Practice real interview scenarios, get instant AI feedback, build a standout resume, and move closer to your dream career — all in one place.
         </p>
 
-        {/* Action CTAs & Interactive Demo Link neatly aligned */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full sm:w-auto mb-8 sm:mb-9 animate-fade-up stagger-3">
+        {/* Action CTAs & Interactive Demo Link — step 4 in coordinated sequence */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full sm:w-auto mb-8 sm:mb-9 animate-hero-cta">
           <Button
             label="Start Practicing"
             icon="pi pi-arrow-right"
             iconPos="right"
             onClick={handleStartPracticing}
-            className="w-full sm:w-auto !rounded-full !bg-[#8750FF] !border-[#8750FF] !text-white !font-bold !px-7 !py-3.5 !text-sm sm:!text-base hover:!bg-[#723DE8] hover:!border-[#723DE8] !shadow-[0_10px_25px_rgba(135,80,255,0.35)] hover:!shadow-[0_14px_30px_rgba(135,80,255,0.45)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+            className="w-full sm:w-auto !rounded-full !bg-[#8750FF] !border-[#8750FF] !text-white !font-bold !px-7 !py-3.5 !text-sm sm:!text-base hover:!bg-[#723DE8] hover:!border-[#723DE8] !shadow-[0_8px_20px_rgba(135,80,255,0.3)] hover:!shadow-[0_12px_28px_rgba(135,80,255,0.4)] hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] transition-all duration-200"
           />
 
           <Button
@@ -79,14 +79,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
             icon="pi pi-compass"
             iconPos="left"
             onClick={handleExplore}
-            className="w-full sm:w-auto !rounded-full !bg-white !border-slate-200 !text-slate-700 !font-semibold !px-6 !py-3.5 !text-sm sm:!text-base hover:!bg-slate-50 hover:!border-slate-300 hover:!text-slate-900 !shadow-sm transition-all duration-200"
+            className="w-full sm:w-auto !rounded-full !bg-white !border-slate-200 !text-slate-700 !font-semibold !px-6 !py-3.5 !text-sm sm:!text-base hover:!bg-slate-50 hover:!border-slate-300 hover:!text-slate-900 !shadow-sm hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] transition-all duration-200"
           />
 
           {onOpenDemo && (
             <button
               type="button"
               onClick={onOpenDemo}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-[#8750FF] hover:text-[#723DE8] px-5 py-3.5 rounded-full bg-purple-50 hover:bg-purple-100/80 border border-purple-200/60 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-[#8750FF] hover:text-[#723DE8] px-5 py-3.5 rounded-full bg-purple-50 hover:bg-purple-100/80 border border-purple-200/60 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98]"
             >
               <i className="pi pi-play text-xs" />
               <span>Try Interactive Demo</span>
@@ -94,23 +94,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick, onOpen
           )}
         </div>
 
-        {/* Compact Trust Indicators — placed at comfortable distance below CTAs */}
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm text-slate-600 animate-fade-up stagger-4">
-          <div className="flex items-center gap-2">
+        {/* Compact Trust Indicators / Feature Highlights — step 5 in coordinated sequence */}
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm text-slate-600">
+          <div className="flex items-center gap-2 animate-hero-trust-1">
             <span className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center text-[#8750FF]">
               <i className="pi pi-check text-[11px] font-bold" />
             </span>
             <span className="font-medium text-slate-700">3 free mock interviews</span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 animate-hero-trust-2">
             <span className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center text-[#8750FF]">
               <i className="pi pi-check text-[11px] font-bold" />
             </span>
             <span className="font-medium text-slate-700">AI-powered interview feedback</span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 animate-hero-trust-3">
             <span className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center text-[#8750FF]">
               <i className="pi pi-check text-[11px] font-bold" />
             </span>

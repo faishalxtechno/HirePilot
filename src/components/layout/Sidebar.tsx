@@ -98,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
           <div className="w-full h-1.5 bg-black rounded-full overflow-hidden">
             <div
-              className="h-full bg-white rounded-full transition-all duration-500"
+              className="h-full bg-white rounded-full transition-all duration-500 ease-[cubic-bezier(0.27,1.06,0.18,1.00)]"
               style={{ width: `${Math.min(100, Math.max(0, (monthlyRemaining / monthlyMax) * 100))}%` }}
             />
           </div>

@@ -58,7 +58,7 @@ export const MobileBottomNav: React.FC = () => {
               key={item.path}
               to={item.path}
               className={cn(
-                'group flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all duration-300 relative select-none',
+                'group flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-all duration-200 relative select-none',
                 item.isActive
                   ? 'text-white font-medium'
                   : 'text-brand-muted hover:text-brand-secondary'
@@ -66,12 +66,12 @@ export const MobileBottomNav: React.FC = () => {
             >
               {/* Active indicator */}
               {item.isActive && (
-                <span className="absolute -top-1.5 w-6 h-[2px] bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                <span className="absolute -top-1.5 w-6 h-[2px] bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all duration-200" />
               )}
 
               <div
                 className={cn(
-                  'w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300',
+                  'w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200',
                   item.isActive
                     ? 'bg-white/10 scale-105'
                     : 'group-hover:bg-white/5'
@@ -79,7 +79,7 @@ export const MobileBottomNav: React.FC = () => {
               >
                 <Icon
                   className={cn(
-                    'w-5 h-5 transition-transform',
+                    'w-5 h-5 transition-transform duration-200',
                     item.isActive ? 'text-white' : 'text-brand-muted group-hover:text-brand-secondary'
                   )}
                 />

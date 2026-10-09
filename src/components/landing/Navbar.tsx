@@ -74,7 +74,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 sm:pt-5 transition-all duration-300">
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 sm:pt-5 animate-navbar-enter transition-all duration-300">
       <div className="max-w-6xl mx-auto">
         <nav
           className={`flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3 rounded-full transition-all duration-300 ${
@@ -94,7 +94,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <img
               src="/assets/hirepilot-logo.png"
               alt="HirePilot"
-              className="h-9 sm:h-10 md:h-11 w-auto max-h-11 object-contain transition-transform duration-300 group-hover:scale-105"
+              className="h-9 sm:h-10 md:h-11 w-auto max-h-11 object-contain transition-transform duration-standard-fast-effects ease-standard-spatial group-hover:scale-105"
             />
           </a>
 
@@ -105,7 +105,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Link
                   key={item.label}
                   to={item.href}
-                  className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-medium text-slate-600 hover:text-[#8750FF] hover:bg-white transition-all duration-200"
+                  className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-medium text-slate-600 hover:text-[#8750FF] hover:bg-white transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
                 >
                   {item.label}
                 </Link>
@@ -114,7 +114,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={item.label}
                   href={item.href}
                   onClick={(e) => handleLinkClick(e, item)}
-                  className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-medium text-slate-600 hover:text-[#8750FF] hover:bg-white transition-all duration-200 cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-medium text-slate-600 hover:text-[#8750FF] hover:bg-white transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                 >
                   {item.label}
                 </a>
@@ -130,16 +130,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={onToggleTheme}
               title={isDarkTheme ? 'Switch to Light Theme' : 'Clean Light SaaS Mode'}
               aria-label="Toggle Theme"
-              className="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:text-[#8750FF] hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#8750FF]/40"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:text-[#8750FF] hover:bg-slate-100 transition-all duration-300 hover:rotate-12 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#8750FF]/40 cursor-pointer"
             >
-              <i className={`pi ${isDarkTheme ? 'pi-moon text-[#8750FF]' : 'pi-sun text-amber-500'} text-sm`} />
+              <i className={`pi ${isDarkTheme ? 'pi-moon text-[#8750FF]' : 'pi-sun text-amber-500'} text-sm transition-transform duration-300`} />
             </button>
 
             {/* Sign In Button */}
             <button
               type="button"
               onClick={handleSignIn}
-              className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none"
+              className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0.5 focus:outline-none cursor-pointer"
             >
               {user ? 'Dashboard' : 'Sign In'}
             </button>
@@ -150,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               icon="pi pi-arrow-right"
               iconPos="right"
               onClick={handleGetStarted}
-              className="p-button-sm !rounded-full !bg-[#8750FF] !border-[#8750FF] !text-white !font-semibold !px-4 !py-2 !text-xs sm:!text-[13px] hover:!bg-[#723DE8] hover:!border-[#723DE8] !shadow-[0_4px_14px_rgba(135,80,255,0.35)] transition-all duration-200 hover:!shadow-[0_6px_20px_rgba(135,80,255,0.45)] hover:scale-[1.02]"
+              className="p-button-sm !rounded-full !bg-[#8750FF] !border-[#8750FF] !text-white !font-semibold !px-4 !py-2 !text-xs sm:!text-[13px] hover:!bg-[#723DE8] hover:!border-[#723DE8] !shadow-[0_4px_14px_rgba(135,80,255,0.35)] transition-all duration-200 hover:!shadow-[0_6px_20px_rgba(135,80,255,0.45)] hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98]"
             />
           </div>
 
@@ -161,16 +161,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle Mobile Menu"
               aria-expanded={mobileMenuOpen}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-slate-700 hover:bg-slate-100 focus:outline-none"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-slate-700 hover:bg-slate-100 active:scale-95 transition-all duration-200 focus:outline-none"
             >
-              <i className={`pi ${mobileMenuOpen ? 'pi-times' : 'pi-bars'} text-base`} />
+              <i className={`pi ${mobileMenuOpen ? 'pi-times' : 'pi-bars'} text-base transition-transform duration-200`} />
             </button>
           </div>
         </nav>
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="sm:hidden mt-2 p-4 rounded-3xl bg-white/95 backdrop-blur-2xl border border-slate-200 shadow-2xl animate-fade-up">
+          <div className="sm:hidden mt-2 p-4 rounded-3xl bg-white/95 backdrop-blur-2xl border border-slate-200 shadow-2xl animate-slideDown">
             <div className="flex flex-col gap-1.5">
               {navItems.map((item) => (
                 item.isRoute ? (

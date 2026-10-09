@@ -3,6 +3,8 @@ import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 import { useNavigate } from 'react-router-dom';
 
+import { ScrollReveal } from '../ui/ScrollReveal';
+
 interface InterviewPreviewProps {
   onTestDemo?: () => void;
 }
@@ -63,8 +65,8 @@ export const InterviewPreview: React.FC<InterviewPreviewProps> = ({ onTestDemo }
     <section id="product" className="relative w-full pt-4 sm:pt-6 pb-16 sm:pb-24 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         
-        {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+        {/* Section Heading — Step 6 in coordinated narrative */}
+        <ScrollReveal className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-[#8750FF] text-xs font-mono font-semibold tracking-wide uppercase mb-3">
             <i className="pi pi-desktop text-xs" />
             <span>Interactive Practice Studio</span>
@@ -75,14 +77,14 @@ export const InterviewPreview: React.FC<InterviewPreviewProps> = ({ onTestDemo }
           <p className="mt-2 text-slate-600 text-sm sm:text-base">
             Experience our adaptive workspace with live audio analysis, dynamic questioning, and immediate rubric evaluations.
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* Ambient Glowing Rim behind Preview */}
-        <div className="relative">
+        <ScrollReveal delayMs={100} className="relative">
           <div className="absolute -inset-2 sm:-inset-4 rounded-[36px] bg-gradient-to-r from-[#8750FF]/15 via-purple-300/10 to-[#38BDF8]/15 blur-2xl -z-10" />
 
           {/* Main Product Container */}
-          <div className="rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 shadow-[0_25px_70px_rgba(135,80,255,0.08)] overflow-hidden">
+          <div className="rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 shadow-[0_20px_50px_rgba(135,80,255,0.06)] overflow-hidden">
             
             {/* Top Workspace Header Bar */}
             <div className="flex flex-wrap items-center justify-between px-4 sm:px-6 py-3.5 bg-slate-50/90 border-b border-slate-200/80 gap-3">
@@ -362,7 +364,7 @@ export const InterviewPreview: React.FC<InterviewPreviewProps> = ({ onTestDemo }
             </div>
 
           </div>
-        </div>
+        </ScrollReveal>
 
       </div>
     </section>
