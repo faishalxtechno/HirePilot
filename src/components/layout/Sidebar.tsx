@@ -10,7 +10,6 @@ import {
   LogOut,
   Zap,
   FileText,
-  Briefcase,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -33,7 +32,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Start Interview', path: '/interview/setup', icon: PlayCircle },
     { label: 'Resume Analyzer', path: '/resume', icon: FileText },
-    { label: 'Jobs', path: '/jobs', icon: Briefcase },
     { label: 'History', path: '/history', icon: History },
     { label: 'Profile', path: '/profile', icon: User },
   ];
