@@ -74,38 +74,43 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 sm:pt-5 animate-navbar-enter transition-all duration-300">
-      <div className="max-w-6xl mx-auto">
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-3 sm:pt-4 animate-navbar-enter transition-all duration-300">
+      <div className="max-w-7xl mx-auto">
         <nav
           className={`flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3 rounded-full transition-all duration-300 ${
             scrolled
-              ? 'bg-white/90 backdrop-blur-xl border border-slate-200/90 shadow-[0_8px_30px_rgb(0,0,0,0.06)]'
-              : 'bg-white/80 backdrop-blur-lg border border-slate-200/70 shadow-[0_4px_20px_rgb(0,0,0,0.03)]'
+              ? 'bg-[#080B14]/80 backdrop-blur-2xl border border-white/[0.12] shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.12)]'
+              : 'bg-[#080B14]/60 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)]'
           }`}
           aria-label="Main Navigation"
         >
-          {/* Left: Brand Logo */}
-          <a
-            href="#home"
-            onClick={(e) => handleLinkClick(e, { label: 'Home', href: '#home', isRoute: false })}
-            className="flex items-center group cursor-pointer focus:outline-none shrink-0"
-            aria-label="HirePilot Home"
-          >
-            <img
-              src="/assets/hirepilot-logo.png"
-              alt="HirePilot"
-              className="h-9 sm:h-10 md:h-11 w-auto max-h-11 object-contain transition-transform duration-standard-fast-effects ease-standard-spatial group-hover:scale-105"
-            />
-          </a>
+          {/* Left: Brand Logo & Glass Pill */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            <a
+              href="#home"
+              onClick={(e) => handleLinkClick(e, { label: 'Home', href: '#home', isRoute: false })}
+              className="flex items-center group cursor-pointer focus:outline-none shrink-0"
+              aria-label="HirePilot Home"
+            >
+              <img
+                src="/assets/hirepilot-logo.png"
+                alt="HirePilot"
+                className="h-8 sm:h-9 md:h-9 w-auto max-h-9 object-contain transition-transform duration-standard-fast-effects ease-standard-spatial group-hover:scale-105"
+              />
+            </a>
+            <span className="hidden md:inline-flex text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-[#36D6FF] border border-white/10 shadow-inner">
+              Copilot 2.0
+            </span>
+          </div>
 
-          {/* Center: Desktop Navigation Links */}
-          <div className="hidden lg:flex items-center gap-1 px-3 py-1 rounded-full bg-slate-50/80 border border-slate-200/50">
+          {/* Center: Segmented iOS Glass Navbar Pill */}
+          <div className="hidden lg:flex items-center gap-1 px-1.5 py-1 rounded-full bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] shadow-inner">
             {navItems.map((item) => (
               item.isRoute ? (
                 <Link
                   key={item.label}
                   to={item.href}
-                  className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-medium text-slate-600 hover:text-[#8750FF] hover:bg-white transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+                  className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-medium text-[#9AA4B7] hover:text-[#F7F8FC] hover:bg-white/[0.08] transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
                 >
                   {item.label}
                 </Link>
@@ -114,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={item.label}
                   href={item.href}
                   onClick={(e) => handleLinkClick(e, item)}
-                  className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-medium text-slate-600 hover:text-[#8750FF] hover:bg-white transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-medium text-[#9AA4B7] hover:text-[#F7F8FC] hover:bg-white/[0.08] transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                 >
                   {item.label}
                 </a>
@@ -128,30 +133,31 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={onToggleTheme}
-              title={isDarkTheme ? 'Switch to Light Theme' : 'Clean Light SaaS Mode'}
+              title={isDarkTheme ? 'Clean Dark Glass Mode' : 'Toggle Mode'}
               aria-label="Toggle Theme"
-              className="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:text-[#8750FF] hover:bg-slate-100 transition-all duration-300 hover:rotate-12 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#8750FF]/40 cursor-pointer"
+              className="w-9 h-9 rounded-full glass-pill flex items-center justify-center text-[#9AA4B7] hover:text-white hover:bg-white/10 transition-all duration-300 hover:rotate-12 active:scale-95 focus:outline-none cursor-pointer"
             >
-              <i className={`pi ${isDarkTheme ? 'pi-moon text-[#8750FF]' : 'pi-sun text-amber-500'} text-sm transition-transform duration-300`} />
+              <i className={`pi ${isDarkTheme ? 'pi-moon text-[#7657FF]' : 'pi-sun text-[#36D6FF]'} text-xs transition-transform duration-300`} />
             </button>
 
             {/* Sign In Button */}
             <button
               type="button"
               onClick={handleSignIn}
-              className="px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0.5 focus:outline-none cursor-pointer"
+              className="px-4 py-1.5 rounded-full text-xs sm:text-[13px] font-medium text-[#9AA4B7] hover:text-white glass-pill hover:bg-white/10 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0.5 focus:outline-none cursor-pointer"
             >
               {user ? 'Dashboard' : 'Sign In'}
             </button>
 
-            {/* Get Started Primary CTA */}
-            <Button
-              label={user ? 'Practice Now' : 'Get Started'}
-              icon="pi pi-arrow-right"
-              iconPos="right"
+            {/* Get Started Primary CTA (Apple Glass Specular Button) */}
+            <button
+              type="button"
               onClick={handleGetStarted}
-              className="p-button-sm !rounded-full !bg-[#8750FF] !border-[#8750FF] !text-white !font-semibold !px-4 !py-2 !text-xs sm:!text-[13px] hover:!bg-[#723DE8] hover:!border-[#723DE8] !shadow-[0_4px_14px_rgba(135,80,255,0.35)] transition-all duration-200 hover:!shadow-[0_6px_20px_rgba(135,80,255,0.45)] hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98]"
-            />
+              className="relative inline-flex items-center justify-center gap-1.5 font-medium text-xs sm:text-[13px] bg-gradient-to-b from-[#8367FF] to-[#6340F5] text-white px-4 sm:px-5 py-2 rounded-full border border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_16px_rgba(118,87,255,0.3)] hover:brightness-110 active:scale-[0.98] transition-all cursor-pointer"
+            >
+              <span>{user ? 'Practice Now' : 'Get Started Free'}</span>
+              <i className="pi pi-arrow-right text-[11px]" />
+            </button>
           </div>
 
           {/* Mobile Hamburger Button */}
@@ -161,16 +167,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle Mobile Menu"
               aria-expanded={mobileMenuOpen}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-slate-700 hover:bg-slate-100 active:scale-95 transition-all duration-200 focus:outline-none"
+              className="w-9 h-9 rounded-full glass-pill flex items-center justify-center text-[#9AA4B7] hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-200 focus:outline-none"
             >
-              <i className={`pi ${mobileMenuOpen ? 'pi-times' : 'pi-bars'} text-base transition-transform duration-200`} />
+              <i className={`pi ${mobileMenuOpen ? 'pi-times' : 'pi-bars'} text-sm transition-transform duration-200`} />
             </button>
           </div>
         </nav>
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="sm:hidden mt-2 p-4 rounded-3xl bg-white/95 backdrop-blur-2xl border border-slate-200 shadow-2xl animate-slideDown">
+          <div className="sm:hidden mt-2 p-4 rounded-3xl glass-panel border border-white/15 shadow-2xl animate-slideDown">
             <div className="flex flex-col gap-1.5">
               {navItems.map((item) => (
                 item.isRoute ? (
@@ -178,7 +184,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     key={item.label}
                     to={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="px-4 py-2.5 rounded-2xl text-sm font-medium text-slate-700 hover:text-[#8750FF] hover:bg-[#F5EFFF] transition-colors"
+                    className="px-4 py-2.5 rounded-2xl text-sm font-medium text-[#9AA4B7] hover:text-white hover:bg-white/10 transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -187,43 +193,31 @@ export const Navbar: React.FC<NavbarProps> = ({
                     key={item.label}
                     href={item.href}
                     onClick={(e) => handleLinkClick(e, item)}
-                    className="px-4 py-2.5 rounded-2xl text-sm font-medium text-slate-700 hover:text-[#8750FF] hover:bg-[#F5EFFF] transition-colors"
+                    className="px-4 py-2.5 rounded-2xl text-sm font-medium text-[#9AA4B7] hover:text-white hover:bg-white/10 transition-colors"
                   >
                     {item.label}
                   </a>
                 )
               ))}
 
-              <div className="h-px bg-slate-100 my-2" />
+              <div className="h-px bg-white/10 my-2" />
 
               <div className="flex flex-col gap-2 pt-1">
-                <div className="flex items-center justify-between px-2">
-                  <span className="text-xs text-slate-500 font-medium">Display Mode</span>
-                  <button
-                    type="button"
-                    onClick={onToggleTheme}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-xs font-semibold text-slate-700"
-                  >
-                    <i className={`pi ${isDarkTheme ? 'pi-moon' : 'pi-sun text-amber-500'} text-xs`} />
-                    <span>{isDarkTheme ? 'Dark' : 'Light'}</span>
-                  </button>
-                </div>
-
                 <button
                   type="button"
                   onClick={handleSignIn}
-                  className="w-full text-center py-2.5 rounded-2xl text-sm font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 transition-colors"
+                  className="w-full text-center py-2.5 rounded-2xl text-sm font-semibold text-white glass-pill hover:bg-white/15 transition-colors"
                 >
                   {user ? 'Go to Dashboard' : 'Sign In'}
                 </button>
 
-                <Button
-                  label={user ? 'Practice Now' : 'Get Started Free'}
-                  icon="pi pi-arrow-right"
-                  iconPos="right"
+                <button
+                  type="button"
                   onClick={handleGetStarted}
-                  className="w-full !rounded-2xl !bg-[#8750FF] !border-[#8750FF] !text-white !font-semibold !py-2.5 hover:!bg-[#723DE8]"
-                />
+                  className="w-full text-center py-2.5 rounded-2xl text-sm font-semibold bg-gradient-to-b from-[#8367FF] to-[#6340F5] text-white border border-white/20 shadow-md hover:brightness-110 transition-all"
+                >
+                  {user ? 'Practice Now' : 'Get Started Free'}
+                </button>
               </div>
             </div>
           </div>

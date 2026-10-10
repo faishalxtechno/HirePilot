@@ -8,18 +8,31 @@ export default {
     extend: {
       colors: {
         brand: {
-          background: "#000000",
+          background: "#080B14",
           primary: "#ffffff",
-          muted: "#8e8e8e",
-          dark: "#141417",
+          muted: "#9AA4B7",
+          dark: "#0D1220",
           secondary: "#c8c8c8",
-          obsidian: "#070709",
-          card: "#0d0d12",
-          cardBorder: "rgba(255, 255, 255, 0.08)",
-          accent: "#38bdf8",
-          emerald: "#10b981",
-          violet: "#a855f7"
-        }
+          obsidian: "#080B14",
+          card: "#121827",
+          cardBorder: "#1E2638",
+          accent: "#36D6FF",
+          emerald: "#36D399",
+          violet: "#7657FF"
+        },
+        surface: {
+          DEFAULT: "#080B14",
+          secondary: "#0D1220",
+          card: "#121827",
+          overlay: "#171F33",
+          subdued: "#181B25",
+          highlight: "#272A34",
+          border: "#1E2638",
+          borderStrong: "#2D374E",
+        },
+        'primary-container': "#7657FF",
+        'secondary-container': "#00c3eb",
+        'tertiary-container': "#00865d",
       },
       fontFamily: {
         sans: ["Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],

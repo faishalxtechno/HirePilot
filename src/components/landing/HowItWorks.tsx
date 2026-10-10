@@ -1,126 +1,137 @@
 import React from 'react';
-import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
-
 import { ScrollReveal } from '../ui/ScrollReveal';
 
 export const HowItWorks: React.FC = () => {
   const navigate = useNavigate();
 
-  const steps = [
-    {
-      step: '01',
-      title: 'Choose your interview role',
-      desc: 'Select from Frontend, Backend, Fullstack, System Design, DSA, or Behavioral tracks. Tailor difficulty to your career level.',
-      icon: 'pi-sliders-h',
-      tag: 'Targeted Roles',
-      preview: [
-        { label: 'Role', value: 'Full Stack Engineer' },
-        { label: 'Difficulty', value: 'Senior Level' },
-        { label: 'Format', value: 'Adaptive Voice & Tech' },
-      ],
-    },
-    {
-      step: '02',
-      title: 'Practice with AI-generated questions',
-      desc: 'Engage with dynamic questions generated specifically for your target domain, with simulated speech, real-time pacing, and audio transcription.',
-      icon: 'pi-bolt',
-      tag: 'Gemini Engine',
-      preview: [
-        { label: 'Interviewer', value: 'Google Gemini Pro' },
-        { label: 'Speech Pacing', value: '135 WPM (Live Analysis)' },
-        { label: 'Adaptability', value: 'Follow-ups based on your reply' },
-      ],
-    },
-    {
-      step: '03',
-      title: 'Review your feedback and improve',
-      desc: 'Receive immediate, objective feedback with deep scores on technical accuracy, structure, trade-off analysis, and targeted next steps.',
-      icon: 'pi-chart-line',
-      tag: 'Instant Scorecard',
-      preview: [
-        { label: 'Overall Score', value: '92 / 100 (Certified)' },
-        { label: 'Strengths', value: 'System Scalability & Clarity' },
-        { label: 'Growth Area', value: 'Clock drift edge case handling' },
-      ],
-    },
-  ];
-
   return (
-    <section id="how-it-works" className="py-20 sm:py-28 px-4 sm:px-6 bg-slate-50/60 border-y border-slate-200/70">
-      <div className="max-w-6xl mx-auto">
-        
-        {/* Section Header */}
-        <ScrollReveal className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-[#8750FF] text-xs font-mono font-semibold tracking-wide uppercase mb-3 border border-purple-200/50">
-            <i className="pi pi-compass text-xs" />
-            <span>Preparation Roadmap</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
-            How HirePilot Works
-          </h2>
-          <p className="mt-3 text-slate-600 text-base sm:text-lg">
-            A frictionless three-step workflow engineered to take you from initial practice to confident offers.
-          </p>
-        </ScrollReveal>
+    <section id="how-it-works" className="w-full py-16 sm:py-24 relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Section Header */}
+      <ScrollReveal className="flex flex-col items-center text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+        <span className="glass-pill px-3.5 py-1.5 rounded-full text-[#7657FF] font-semibold uppercase tracking-widest text-xs mb-3 border border-white/10">
+          How It Works
+        </span>
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          From Zero to Offer in Three Precise Steps
+        </h2>
+        <p className="text-sm sm:text-base text-[#9AA4B7] mt-3 leading-relaxed">
+          Experience frictionless career progression designed to replace guesswork with empirical preparation.
+        </p>
+      </ScrollReveal>
 
-        {/* 3 Step Process Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          {steps.map((item, idx) => (
-            <ScrollReveal key={item.step} delayMs={idx * 100} className="h-full">
-              <div
-                className="relative rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-7 shadow-[0_10px_30px_rgba(135,80,255,0.05)] hover:shadow-[0_16px_36px_rgba(135,80,255,0.09)] transition-all duration-200 hover:-translate-y-1 flex flex-col justify-between h-full"
-              >
-                <div>
-                  {/* Step pill & icon */}
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="font-mono text-3xl sm:text-4xl font-extrabold text-[#8750FF]/25">
-                      {item.step}
-                    </span>
-                    <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#8750FF] border border-purple-100 flex items-center justify-center">
-                      <i className={`pi ${item.icon} text-base`} />
-                    </div>
-                  </div>
-
-                  <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-[#8750FF] bg-purple-50 px-2.5 py-1 rounded-full inline-block mb-3">
-                    {item.tag}
-                  </span>
-
-                  <h3 className="text-xl font-bold text-slate-900 mb-2.5 tracking-tight">
-                    {item.title}
-                  </h3>
-
-                  <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                    {item.desc}
-                  </p>
-                </div>
-
-                {/* Realistic Mock Snippet */}
-                <div className="rounded-2xl bg-slate-50 border border-slate-200/80 p-3.5 space-y-2 mt-auto">
-                  {item.preview.map((p, pIdx) => (
-                    <div key={pIdx} className="flex items-center justify-between text-xs">
-                      <span className="text-slate-500 font-medium">{p.label}:</span>
-                      <span className="font-semibold text-slate-800 text-right truncate max-w-[160px]">{p.value}</span>
-                    </div>
-                  ))}
-                </div>
+      {/* 3 Step Process Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
+        {/* Step 1 */}
+        <ScrollReveal delayMs={0} className="h-full">
+          <div className="glass-card glass-card-interactive p-6 rounded-3xl flex flex-col justify-between h-full gap-5">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="w-10 h-10 rounded-2xl bg-gradient-to-b from-[#7657FF] to-[#5e3be7] text-white font-bold text-lg flex items-center justify-center border border-white/20 shadow-md">
+                  1
+                </span>
+                <span className="px-2.5 py-1 rounded-full glass-pill font-mono text-xs text-[#9AA4B7]">
+                  Setup • 60s
+                </span>
               </div>
-            </ScrollReveal>
-          ))}
-        </div>
+              <h3 className="text-xl font-bold text-white mb-2 tracking-tight">
+                Choose Your Target Role
+              </h3>
+              <p className="text-xs sm:text-sm text-[#9AA4B7] leading-relaxed">
+                Select your targeted industry, engineering track, seniority level (Junior to Staff), and paste relevant JD requirements.
+              </p>
+            </div>
 
-        {/* Bottom CTA */}
-        <ScrollReveal delayMs={200} className="mt-14 text-center">
-          <Button
-            label="Select Your Role and Begin"
-            icon="pi pi-arrow-right"
-            iconPos="right"
-            onClick={() => navigate('/interview/setup')}
-            className="!rounded-full !bg-[#8750FF] !border-[#8750FF] !text-white !font-bold !px-8 !py-3.5 !text-sm sm:!text-base hover:!bg-[#723DE8] !shadow-[0_8px_25px_rgba(135,80,255,0.3)] transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98]"
-          />
+            {/* Workflow preview */}
+            <div className="glass-inset p-4 rounded-2xl space-y-2.5 border border-white/5 mt-auto">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-white font-medium">Target: Staff Backend Architect</span>
+                <span className="text-[#36D399] font-mono text-[11px] bg-[#36D399]/15 px-2 py-0.5 rounded-full border border-[#36D399]/25">
+                  Ready
+                </span>
+              </div>
+              <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden shadow-inner">
+                <div className="w-full h-full bg-gradient-to-r from-[#7657FF] to-[#36D6FF]" />
+              </div>
+            </div>
+          </div>
         </ScrollReveal>
 
+        {/* Step 2 */}
+        <ScrollReveal delayMs={100} className="h-full">
+          <div className="glass-card glass-card-interactive p-6 rounded-3xl flex flex-col justify-between h-full gap-5">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="w-10 h-10 rounded-2xl bg-gradient-to-b from-[#36D6FF] to-[#009ac2] text-black font-bold text-lg flex items-center justify-center border border-white/20 shadow-md">
+                  2
+                </span>
+                <span className="px-2.5 py-1 rounded-full glass-pill font-mono text-xs text-[#36D6FF]">
+                  Real-Time Simulation
+                </span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2 tracking-tight">
+                Start AI Mock Interview
+              </h3>
+              <p className="text-xs sm:text-sm text-[#9AA4B7] leading-relaxed">
+                Engage with intelligent conversational agents that press deeper into your answers, challenge edge cases, and evaluate poise.
+              </p>
+            </div>
+
+            {/* Audio simulation */}
+            <div className="glass-inset p-4 rounded-2xl flex items-center justify-between border border-white/5 mt-auto">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#36D399] animate-ping" />
+                <span className="font-mono text-xs text-white font-medium">Speech Frequency Analysis</span>
+              </div>
+              <span className="text-xs text-[#36D6FF] font-mono px-2 py-0.5 rounded-full bg-[#36D6FF]/15">
+                142 WPM
+              </span>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Step 3 */}
+        <ScrollReveal delayMs={200} className="h-full">
+          <div className="glass-card glass-card-interactive p-6 rounded-3xl flex flex-col justify-between h-full gap-5">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="w-10 h-10 rounded-2xl bg-gradient-to-b from-[#36D399] to-[#00865d] text-white font-bold text-lg flex items-center justify-center border border-white/20 shadow-md">
+                  3
+                </span>
+                <span className="px-2.5 py-1 rounded-full glass-pill font-mono text-xs text-[#36D399]">
+                  Action Plan
+                </span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2 tracking-tight">
+                Receive Granular Report
+              </h3>
+              <p className="text-xs sm:text-sm text-[#9AA4B7] leading-relaxed">
+                Obtain an immediate breakdown: answer quality, technical accuracy, missing keywords, and follow-up recommended study drills.
+              </p>
+            </div>
+
+            {/* Report visual tag */}
+            <div className="glass-inset p-4 rounded-2xl flex items-center justify-between border border-white/5 mt-auto">
+              <span className="font-mono text-xs text-[#c9beff] font-medium">Report #993 Generated</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#36D399]/20 border border-[#36D399]/30 text-[#36D399] text-xs font-semibold">
+                Passed Benchmark
+              </span>
+            </div>
+          </div>
+        </ScrollReveal>
       </div>
+
+      {/* Bottom CTA */}
+      <ScrollReveal delayMs={200} className="mt-12 sm:mt-16 text-center">
+        <button
+          type="button"
+          onClick={() => navigate('/interview/setup')}
+          className="relative inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm sm:text-base bg-gradient-to-b from-[#8367FF] to-[#6340F5] text-white border border-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_12px_24px_-6px_rgba(118,87,255,0.45)] hover:brightness-110 active:scale-[0.98] transition-all cursor-pointer"
+        >
+          <span>Select Your Role and Begin</span>
+          <i className="pi pi-arrow-right text-xs" />
+        </button>
+      </ScrollReveal>
     </section>
   );
 };

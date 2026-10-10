@@ -234,6 +234,118 @@ html {
   }
 }
 
+/* ============================================================
+   Apple Glassmorphism & Executive Dark SaaS Core System
+   ============================================================ */
+:root {
+  --color-canvas: #080B14;
+  --color-surface-secondary: #0D1220;
+  --color-surface-card: #121827;
+  --color-surface-overlay: #171F33;
+  --color-border-subdued: #1E2638;
+  --color-border-strong: #2D374E;
+  --color-primary-violet: #7657FF;
+  --color-secondary-cyan: #36D6FF;
+  --color-success: #36D399;
+}
+
+.glass-panel {
+  background: rgba(18, 24, 39, 0.7);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.glass-panel-subtle {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.45), inset 0 1px 0.5px rgba(255, 255, 255, 0.14);
+}
+
+.glass-card-interactive {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.015) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.3), inset 0 1px 0.5px rgba(255, 255, 255, 0.1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-interactive:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.18);
+}
+
+.glass-card-prominent {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 30px 60px -12px rgba(0, 0, 0, 0.75), 0 0 30px rgba(118, 87, 255, 0.15);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.glass-inset {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.glass-dock {
+  background: rgba(18, 24, 39, 0.85);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 20px 48px -8px rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.glass-btn {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-btn:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.glass-primary-btn {
+  background: linear-gradient(135deg, #7657FF 0%, #5e3be7 100%);
+  box-shadow: 0 4px 18px rgba(118, 87, 255, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-primary-btn:hover {
+  background: linear-gradient(135deg, #8767ff 0%, #6b47fa 100%);
+  box-shadow: 0 6px 24px rgba(118, 87, 255, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+.siri-glow {
+  filter: drop-shadow(0 0 12px rgba(54, 214, 255, 0.45)) drop-shadow(0 0 24px rgba(118, 87, 255, 0.35));
+}
+
 /* Micro-interaction Utilities */
 .interactive {
   transition: transform var(--duration-standard-fast-spatial) var(--motion-standard-spatial),
@@ -772,37 +884,46 @@ html.lenis, html.lenis body {
   color: #8750FF !important;
 }
 
-/* PrimeReact Accordion Styling */
+/* PrimeReact Accordion Styling - Apple Glassmorphism */
 .remasto-accordion .p-accordion-header .p-accordion-header-link {
-  background: #FFFFFF !important;
-  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  background: rgba(18, 24, 39, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 1rem !important;
   padding: 1.25rem 1.5rem !important;
-  color: #0F172A !important;
+  color: #F7F8FC !important;
   font-weight: 600 !important;
   font-size: 1rem !important;
-  transition: all 0.25s ease !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+.remasto-accordion .p-accordion-header .p-accordion-header-link:hover {
+  background: rgba(23, 31, 51, 0.85) !important;
+  border-color: rgba(118, 87, 255, 0.35) !important;
 }
 
 .remasto-accordion .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
-  background: #FAF7FF !important;
-  border-color: rgba(135, 80, 255, 0.3) !important;
-  color: #8750FF !important;
+  background: rgba(23, 31, 51, 0.9) !important;
+  border-color: rgba(118, 87, 255, 0.4) !important;
+  color: #A78BFA !important;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
 
 .remasto-accordion .p-accordion-content {
-  background: #FAF7FF !important;
-  border: 1px solid rgba(135, 80, 255, 0.25) !important;
+  background: rgba(13, 18, 32, 0.85) !important;
+  border: 1px solid rgba(118, 87, 255, 0.25) !important;
   border-top: none !important;
   border-bottom-left-radius: 1rem !important;
   border-bottom-right-radius: 1rem !important;
   padding: 1.25rem 1.5rem !important;
-  color: #475569 !important;
+  color: #9AA4B7 !important;
   font-size: 0.9375rem !important;
   line-height: 1.6 !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
 }
 
 .remasto-accordion .p-accordion-tab {

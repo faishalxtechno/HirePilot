@@ -4,18 +4,21 @@ import { cn } from '../../lib/utils';
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   hoverable?: boolean;
   elevation?: 'none' | 'sm' | 'md' | 'lg';
+  glass?: boolean;
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, hoverable = false, elevation = 'sm', children, ...props }, ref) => {
+  ({ className, hoverable = false, elevation = 'sm', glass = false, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cn(
           'rounded-2xl',
-          'bg-[#121212] border border-white/10 shadow-sm',
+          glass
+            ? 'glass-card'
+            : 'bg-[#121827] border border-[#1E2638] shadow-sm',
           hoverable &&
-            'card-hover cursor-pointer will-change-transform',
+            (glass ? 'glass-card-interactive cursor-pointer will-change-transform' : 'card-hover cursor-pointer will-change-transform'),
           className
         )}
         {...props}

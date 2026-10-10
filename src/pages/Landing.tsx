@@ -64,14 +64,16 @@ export const Landing: React.FC = () => {
   };
 
   return (
-    <div
-      className={`min-h-screen w-full font-sans relative overflow-x-hidden transition-colors duration-300 ${
-        isDarkTheme
-          ? 'bg-[#0B0F19] text-slate-100 selection:bg-[#8750FF] selection:text-white'
-          : 'bg-[#FAFAFC] text-[#0F172A] selection:bg-purple-200 selection:text-purple-900 bg-remasto-grid'
-      }`}
-    >
-      {/* Floating Pill Top Navbar */}
+    <div className="min-h-screen w-full font-sans relative overflow-x-hidden bg-[#080B14] text-[#F7F8FC] selection:bg-[#7657FF] selection:text-white">
+      {/* Ambient Specular Fluid Glow Orbs (Apple iOS Background depth) */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute -top-40 left-1/4 w-[650px] h-[650px] bg-[#7657FF]/15 rounded-full blur-[140px] mix-blend-screen transform-gpu pointer-events-none" />
+        <div className="absolute top-1/4 -right-20 w-[500px] h-[500px] bg-[#00c3eb]/10 rounded-full blur-[130px] mix-blend-screen transform-gpu pointer-events-none" />
+        <div className="absolute top-2/3 left-10 w-[550px] h-[550px] bg-[#00865d]/10 rounded-full blur-[150px] mix-blend-screen transform-gpu pointer-events-none" />
+        <div className="absolute -bottom-20 right-1/4 w-[600px] h-[600px] bg-[#7657FF]/15 rounded-full blur-[160px] mix-blend-screen transform-gpu pointer-events-none" />
+      </div>
+
+      {/* Floating Segmented Apple Glass Navbar */}
       <Navbar
         onNavigateSection={handleNavigateSection}
         isDarkTheme={isDarkTheme}
@@ -79,7 +81,7 @@ export const Landing: React.FC = () => {
       />
 
       {/* Main Landing Page Content Narrative */}
-      <main>
+      <main className="relative z-10">
         {/* 1. Remasto-Inspired Centered Hero */}
         <HeroSection
           onExploreClick={() => handleNavigateSection('features')}

@@ -3,7 +3,7 @@ import { cn } from '../../lib/utils';
 import { Loader2 } from 'lucide-react';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'glass' | 'glassPrimary';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
@@ -26,19 +26,23 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8750FF]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer group button-lift active:scale-[0.98] active:translate-y-0.5 transition-all duration-150';
+      'inline-flex items-center justify-center font-medium rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7657FF]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer group button-lift active:scale-[0.98] active:translate-y-0.5 transition-all duration-150';
 
     const variants = {
       primary:
-        'bg-white text-black border border-white/20 shadow-sm hover:bg-white/90 hover:shadow-md hover:-translate-y-0.5',
+        'bg-gradient-to-b from-[#8367FF] to-[#6340F5] text-white border border-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_16px_rgba(118,87,255,0.3)] hover:brightness-110 hover:-translate-y-0.5',
       secondary:
-        'bg-brand-dark text-brand-secondary hover:bg-[#323234] hover:text-white border border-transparent hover:-translate-y-0.5',
+        'bg-[#121827] text-[#F7F8FC] hover:bg-[#171F33] hover:text-white border border-[#1E2638] hover:border-[#2D374E] hover:-translate-y-0.5',
       outline:
-        'border border-white/20 bg-transparent hover:bg-white/5 text-brand-secondary hover:text-white hover:-translate-y-0.5',
+        'border border-white/15 bg-white/[0.04] backdrop-blur-md hover:bg-white/10 text-white hover:-translate-y-0.5',
       ghost:
-        'bg-transparent hover:bg-white/5 text-brand-secondary hover:text-white border border-transparent hover:-translate-y-0.5',
+        'bg-transparent hover:bg-white/5 text-[#9AA4B7] hover:text-white border border-transparent hover:-translate-y-0.5',
       danger:
         'bg-[#1a0505] text-red-400 hover:bg-[#2a0505] border border-red-500/20 hover:border-red-500/40 hover:-translate-y-0.5',
+      glass:
+        'glass-btn text-white hover:text-white hover:-translate-y-0.5',
+      glassPrimary:
+        'glass-primary-btn text-white hover:-translate-y-0.5',
     };
 
     const sizes = {

@@ -84,119 +84,115 @@ export const PricingSection: React.FC = () => {
   ];
 
   return (
-    <section id="pricing" className="py-20 sm:py-28 px-4 sm:px-6 bg-slate-50/60 border-t border-slate-200/70">
-      <div className="max-w-6xl mx-auto">
-        
-        {/* Section Header */}
-        <ScrollReveal className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-[#8750FF] text-xs font-mono font-semibold tracking-wide uppercase mb-3 border border-purple-200/50">
-            <i className="pi pi-tag text-xs" />
-            <span>Transparent Pricing</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
-            Simple, Transparent Plans
-          </h2>
-          <p className="mt-3 text-slate-600 text-base sm:text-lg">
-            Start for free with 3 full mock interviews. Upgrade when you need deeper practice and unlimited repetitions.
-          </p>
-        </ScrollReveal>
+    <section id="pricing" className="py-20 sm:py-28 px-4 sm:px-6 relative max-w-7xl mx-auto">
+      {/* Section Header */}
+      <ScrollReveal className="flex flex-col items-center text-center max-w-2xl mx-auto mb-16 sm:mb-20">
+        <span className="glass-pill px-3.5 py-1.5 rounded-full text-[#36D6FF] font-semibold uppercase tracking-widest text-xs mb-3 border border-white/10">
+          Transparent Investment
+        </span>
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          Flexible Plans For Every Career Phase
+        </h2>
+        <p className="text-sm sm:text-base text-[#9AA4B7] mt-3 leading-relaxed">
+          Upgrade, pause, or switch at any time. Transparent Indian Rupee billing with immediate access.
+        </p>
+      </ScrollReveal>
 
-        {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-          {plans.map((plan, pIdx) => (
-            <ScrollReveal key={plan.name} delayMs={pIdx * 80} className="h-full">
-              <div
-                className={`relative rounded-3xl bg-white p-7 sm:p-8 flex flex-col justify-between h-full transition-all duration-200 hover:-translate-y-1 ${
-                  plan.popular
-                    ? 'border-2 border-[#8750FF] shadow-[0_16px_36px_rgba(135,80,255,0.12)] hover:shadow-[0_20px_44px_rgba(135,80,255,0.18)]'
-                    : 'border border-slate-200/90 shadow-sm hover:shadow-md'
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1 rounded-full bg-[#8750FF] text-white text-xs font-bold shadow-md tracking-wide uppercase font-mono">
-                      Most Popular
+      {/* Pricing Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+        {plans.map((plan, pIdx) => (
+          <ScrollReveal key={plan.name} delayMs={pIdx * 80} className="h-full">
+            <div
+              className={`relative rounded-3xl p-6 sm:p-8 flex flex-col justify-between h-full transition-all duration-200 ${
+                plan.popular
+                  ? 'glass-card-prominent border-2 border-[#7657FF]/80 shadow-[0_24px_50px_rgba(118,87,255,0.25),inset_0_1px_0_rgba(255,255,255,0.25)] -mt-2 lg:-mt-4'
+                  : 'glass-card glass-card-interactive border border-white/10'
+              }`}
+            >
+              {plan.popular && (
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                  <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-[#7657FF] to-[#36D6FF] text-white text-[11px] font-bold shadow-md tracking-wider uppercase font-mono border border-white/20">
+                    Most Popular
+                  </span>
+                </div>
+              )}
+
+              <div>
+                {/* Header info */}
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xl font-bold text-white tracking-tight">{plan.name}</h3>
+                  <span className="text-[10px] font-mono font-bold tracking-wider uppercase px-2.5 py-1 rounded-full glass-pill border border-white/10 text-[#36D6FF]">
+                    {plan.badge}
+                  </span>
+                </div>
+
+                <p className="text-xs sm:text-sm text-[#9AA4B7] min-h-[40px] leading-relaxed mb-6">
+                  {plan.description}
+                </p>
+
+                {/* Price block */}
+                <div className="p-4 rounded-2xl glass-inset border border-white/5 mb-6 space-y-1">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight font-sans">
+                      {plan.price}
                     </span>
+                    <span className="text-xs text-[#9AA4B7] font-medium">{plan.period}</span>
                   </div>
-                )}
-
-                <div>
-                  {/* Header info */}
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold text-slate-900 tracking-tight">{plan.name}</h3>
-                    <span className={`text-[11px] font-mono font-bold tracking-wider uppercase px-2.5 py-1 rounded-full border ${plan.badgeVariant}`}>
-                      {plan.badge}
-                    </span>
+                  
+                  {/* Tax Breakdown */}
+                  <div className="text-xs text-[#9AA4B7] font-mono pt-1">
+                    {plan.taxNote}
                   </div>
-
-                  <p className="text-xs sm:text-sm text-slate-500 min-h-[40px] leading-relaxed mb-6">
-                    {plan.description}
-                  </p>
-
-                  {/* Price block */}
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 mb-6 space-y-1">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight font-sans">
-                        {plan.price}
-                      </span>
-                      <span className="text-xs text-slate-500 font-medium">{plan.period}</span>
-                    </div>
-                    
-                    {/* Tax Breakdown */}
-                    <div className="text-xs text-slate-500 font-mono pt-1">
-                      {plan.taxNote}
-                    </div>
-                    
-                    {/* Total Amount Display */}
-                    <div className="text-xs font-semibold text-[#8750FF] pt-0.5">
-                      {plan.totalDisplay}
-                    </div>
-
-                    <div className="pt-2 border-t border-slate-200/60 mt-2 flex items-center gap-1.5 text-xs font-bold text-slate-800">
-                      <i className="pi pi-check-circle text-[#8750FF]" />
-                      <span>Includes {plan.interviews}</span>
-                    </div>
+                  
+                  {/* Total Amount Display */}
+                  <div className="text-xs font-semibold text-[#c9beff] pt-0.5">
+                    {plan.totalDisplay}
                   </div>
 
-                  {/* Features list */}
-                  <div className="space-y-3 mb-8">
-                    <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                      What's included:
-                    </span>
-                    {plan.features.map((feat, fIdx) => (
-                      <div key={fIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-600">
-                        <i className="pi pi-check text-[#8750FF] text-xs mt-1 shrink-0 font-bold" />
-                        <span>{feat}</span>
-                      </div>
-                    ))}
+                  <div className="pt-2 border-t border-white/10 mt-2 flex items-center gap-1.5 text-xs font-bold text-[#36D399]">
+                    <i className="pi pi-check-circle text-[#36D399]" />
+                    <span>Includes {plan.interviews}</span>
                   </div>
                 </div>
 
-                {/* Action Button */}
-                <div className="pt-2 mt-auto">
-                  <Button
-                    label={plan.ctaText}
-                    icon="pi pi-arrow-right"
-                    iconPos="right"
-                    onClick={handlePlanSelect}
-                    className={`w-full !rounded-2xl !py-3 !font-bold !text-sm transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] ${
-                      plan.popular
-                        ? '!bg-[#8750FF] !border-[#8750FF] !text-white hover:!bg-[#723DE8] !shadow-[0_4px_16px_rgba(135,80,255,0.35)]'
-                        : '!bg-slate-900 !border-slate-900 !text-white hover:!bg-slate-800'
-                    }`}
-                  />
+                {/* Features list */}
+                <div className="space-y-3 mb-8">
+                  <span className="text-xs font-mono uppercase tracking-wider text-[#9AA4B7] font-semibold block">
+                    What's included:
+                  </span>
+                  {plan.features.map((feat, fIdx) => (
+                    <div key={fIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#F7F8FC]">
+                      <i className="pi pi-check text-[#36D6FF] text-xs mt-1 shrink-0 font-bold" />
+                      <span>{feat}</span>
+                    </div>
+                  ))}
                 </div>
-
               </div>
-            </ScrollReveal>
-          ))}
-        </div>
 
-        {/* GST & Regulatory Notice */}
-        <div className="mt-12 text-center text-xs text-slate-500 font-mono">
-          Prices in INR. Applicable 18% GST is clearly displayed on all paid tiers. No recurring surprise charges.
-        </div>
+              {/* Action Button */}
+              <div className="pt-2 mt-auto">
+                <button
+                  type="button"
+                  onClick={handlePlanSelect}
+                  className={`w-full rounded-2xl py-3 font-semibold text-sm transition-all duration-150 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 ${
+                    plan.popular
+                      ? 'bg-gradient-to-b from-[#8367FF] to-[#6340F5] text-white shadow-[0_8px_20px_rgba(118,87,255,0.4)] border border-white/25 hover:brightness-110'
+                      : 'glass-pill text-white hover:bg-white/15 border border-white/15'
+                  }`}
+                >
+                  <span>{plan.ctaText}</span>
+                  <i className="pi pi-arrow-right text-xs" />
+                </button>
+              </div>
 
+            </div>
+          </ScrollReveal>
+        ))}
+      </div>
+
+      {/* GST & Regulatory Notice */}
+      <div className="mt-12 text-center text-xs text-[#9AA4B7] font-mono">
+        Prices in INR. Applicable 18% GST is clearly displayed on all paid tiers. No recurring surprise charges.
       </div>
     </section>
   );

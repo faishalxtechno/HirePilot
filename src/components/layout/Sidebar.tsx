@@ -41,27 +41,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       className={cn(
-        'h-full flex flex-col justify-between px-4 py-6 select-none transition-colors',
+        'h-full flex flex-col justify-between p-4 select-none transition-colors border-y-0 border-l-0 border-r border-white/10',
         isMobileDrawer
-          ? 'w-full bg-[#121212]'
-          : 'w-64 border-r border-white/10 bg-black'
+          ? 'w-full bg-[#0D1220]'
+          : 'w-64 glass-panel bg-[#080B14]/85 backdrop-blur-2xl'
       )}
     >
       {/* Top Brand & Navigation */}
-      <div className="space-y-8">
-        {/* Brand (only shown when not in mobile drawer) */}
-        {!isMobileDrawer && (
-          <Link to="/" className="px-3 flex items-center group focus:outline-none" aria-label="HirePilot Home">
+      <div className="flex flex-col gap-6">
+        {/* Brand */}
+        <div className="flex items-center gap-3 px-2 py-1">
+          <Link to="/" className="flex items-center gap-2.5 group focus:outline-none" aria-label="HirePilot Home">
             <img
               src="/assets/hirepilot-logo.png"
-              alt="HirePilot"
-              className="h-10 w-auto max-h-11 object-contain transition-transform duration-200 group-hover:scale-105"
+              alt="HirePilot Brand Logo"
+              className="h-8 w-auto object-contain drop-shadow-[0_2px_8px_rgba(118,87,255,0.4)] transition-transform duration-200 group-hover:scale-105"
             />
+            <span className="font-semibold text-lg tracking-tight text-white font-sans">
+              HirePilot
+            </span>
           </Link>
-        )}
+        </div>
 
         {/* Links */}
-        <nav className="space-y-1.5">
+        <nav className="flex flex-col gap-1.5">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
@@ -69,70 +72,85 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={onCloseMobile}
               className={({ isActive }) =>
                 cn(
-                  'sidebar-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 group',
+                  'flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-[13px] font-medium transition-all duration-200 group',
                   isActive
-                    ? 'active-link bg-white/10 text-white border border-white/10'
-                    : 'text-brand-secondary hover:bg-white/5 hover:text-white border border-transparent'
+                    ? 'glass-primary-btn text-white font-semibold shadow-[0_4px_18px_rgba(118,87,255,0.4)]'
+                    : 'text-slate-400 hover:bg-white/[0.06] hover:text-white'
                 )
               }
             >
-              <item.icon className="w-4 h-4 shrink-0 sidebar-icon transition-transform duration-300" />
-              <span className="sidebar-label transition-transform duration-300">{item.label}</span>
+              <item.icon className="w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110" />
+              <span>{item.label}</span>
             </NavLink>
           ))}
         </nav>
       </div>
 
-      {/* Bottom Profile, Quota & Logout */}
-      <div className="space-y-5 pt-5 border-t border-white/10">
-        {/* Monthly Quota Indicator */}
-        <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-medium text-brand-secondary flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-white" />
-              Monthly Quota
+      {/* Bottom Profile, Copilot Engine & Logout */}
+      <div className="flex flex-col gap-4 pt-4 border-t border-white/10">
+        {/* Copilot Engine Bento Tile */}
+        <div className="p-3.5 glass-card rounded-2xl border border-white/10 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
+              Copilot Engine
             </span>
-            <span className="font-mono text-xs font-medium text-white">
-              {monthlyRemaining} / {monthlyMax}
+            <span className="text-[11px] font-mono text-emerald-400 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+              v3.4 Active
             </span>
           </div>
-          <div className="w-full h-1.5 bg-black rounded-full overflow-hidden">
+
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-slate-300">
+              AI Mock credits: <strong className="text-white">{monthlyRemaining}</strong> / {monthlyMax}
+            </span>
+          </div>
+
+          <div className="w-full h-1.5 bg-black/40 rounded-full overflow-hidden p-[1px]">
             <div
-              className="h-full bg-white rounded-full transition-all duration-500 ease-[cubic-bezier(0.27,1.06,0.18,1.00)]"
+              className="h-full bg-gradient-to-r from-purple-500 to-cyan-400 rounded-full transition-all duration-500"
               style={{ width: `${Math.min(100, Math.max(0, (monthlyRemaining / monthlyMax) * 100))}%` }}
             />
           </div>
-          <p className="text-xs text-brand-muted">
-            {monthlyRemaining === 0 ? 'Monthly limit reached' : `${monthlyRemaining} free mock sessions left`}
-          </p>
+
+          <Link
+            to="/#pricing"
+            onClick={onCloseMobile}
+            className="block text-center text-xs font-medium glass-btn text-slate-200 hover:text-white py-1.5 rounded-xl transition-all"
+          >
+            Upgrade Tier
+          </Link>
         </div>
 
         {/* User Profile Card */}
         <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-xs font-bold text-black shrink-0 overflow-hidden border border-white/10">
+          <Link
+            to="/profile"
+            onClick={onCloseMobile}
+            className="flex items-center gap-3 min-w-0 group"
+          >
+            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden border border-white/20 shadow-[0_2px_8px_rgba(118,87,255,0.3)]">
               {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover" />
+                <img src={profile.avatar_url} alt={profile.name || 'User'} className="w-full h-full object-cover" />
               ) : (
                 profile?.name?.charAt(0).toUpperCase() || 'U'
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-white truncate">
+              <p className="text-sm font-semibold text-white truncate group-hover:text-purple-300 transition-colors">
                 {profile?.name || 'Candidate'}
               </p>
-              <p className="text-[11px] text-brand-secondary truncate">
+              <p className="text-[11px] text-slate-400 truncate">
                 {profile?.target_role || 'Software Engineer'}
               </p>
             </div>
-          </div>
+          </Link>
           <button
             onClick={() => {
               signOut();
               navigate('/');
             }}
             title="Logout"
-            className="p-2 text-brand-muted hover:text-white rounded-full hover:bg-white/5 transition-colors shrink-0 cursor-pointer icon-button"
+            className="p-2 text-slate-400 hover:text-white rounded-full hover:bg-white/5 transition-colors shrink-0 cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>
