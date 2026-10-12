@@ -67,6 +67,10 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview, userP
   const problemSolvingScore = report.problem_solving_score != null ? Math.round(report.problem_solving_score) : null;
 
   useEffect(() => {
+    if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+      console.log(`[HirePilot-Scoring] ReportView rendering final scores in UI: overall=${report.overall_score}%, technical=${technicalScore}%, communication=${communicationScore}%, problemSolving=${problemSolvingScore}%`);
+    }
+
     // Trigger celebratory confetti if candidate performed well
     if (report.overall_score >= 65) {
       try {
@@ -79,7 +83,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview, userP
         // Non-blocking fallback
       }
     }
-  }, [report.overall_score]);
+  }, [report.overall_score, technicalScore, communicationScore, problemSolvingScore]);
 
   const handleDownloadResultPdf = async () => {
     setIsDownloadingResult(true);

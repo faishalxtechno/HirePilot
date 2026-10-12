@@ -221,6 +221,11 @@ interviewRouter.post('/:id/answer', async (c) => {
 
   const questionScore = calculateQuestionScore(evaluation);
 
+  console.log(`[Worker-Scoring] Evaluated Interview: ${interviewId} | Question: ${question.id}`);
+  console.log(`[Worker-Scoring] Evaluator: AI (Gemini)`);
+  console.log(`[Worker-Scoring] Parsed dimensions: relevance=${evaluation.relevance}, accuracy=${evaluation.accuracy}, completeness=${evaluation.completeness}, clarity=${evaluation.clarity}`);
+  console.log(`[Worker-Scoring] Computed question score: ${questionScore}%`);
+
   // Save answer to Supabase
   const { data: answer, error: ansError } = await supabase
     .from('answers')
@@ -241,6 +246,8 @@ interviewRouter.post('/:id/answer', async (c) => {
 
   if (ansError) {
     console.error('Error saving answer:', ansError);
+  } else {
+    console.log(`[Worker-Scoring] Score successfully persisted to DB answers: ID ${answer?.id}`);
   }
 
   return c.json({
@@ -373,10 +380,6 @@ interviewRouter.post('/:id/complete', async (c) => {
     .eq('interview_id', interviewId)
     .maybeSingle();
 
-  if (existingReport) {
-    return c.json({ report: existingReport, interview });
-  }
-
   // Fetch all questions & answers
   const { data: questions } = await supabase
     .from('questions')
@@ -402,6 +405,13 @@ interviewRouter.post('/:id/complete', async (c) => {
     };
   });
 
+  if (existingReport) {
+    console.log(`[Worker-Scoring] Found existing report for Interview ${interviewId} with score: ${existingReport.overall_score}%`);
+    return c.json({ report: existingReport, interview });
+  }
+
+  console.log(`[Worker-Scoring] Generating final report for Interview ${interviewId} across ${sessionItems.length} questions`);
+
   // Call Gemini to generate full report
   const reportOutput = await generateFinalReport(c.env.GEMINI_API_KEY, {
     role: interview.role,
@@ -409,6 +419,8 @@ interviewRouter.post('/:id/complete', async (c) => {
     difficulty: interview.difficulty,
     items: sessionItems,
   });
+
+  console.log(`[Worker-Scoring] Final report overall score synthesized: ${reportOutput.overall_score}%`);
 
   // Generate unique Certificate ID (e.g. HP-CERT-8F29A1)
   const certHex = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -437,6 +449,8 @@ interviewRouter.post('/:id/complete', async (c) => {
 
   if (repError) {
     console.error('Error saving report:', repError);
+  } else {
+    console.log(`[Worker-Scoring] Report persisted to DB interview_reports: ID ${report?.id} | overall_score: ${report?.overall_score}%`);
   }
 
   // Update interview status
@@ -476,5 +490,6 @@ interviewRouter.get('/:id/report', async (c) => {
     return c.json({ error: 'Report not found' }, 404);
   }
 
+  console.log(`[Worker-Scoring] GET /report retrieved DB overall_score: ${report.overall_score}% for Interview: ${interviewId}`);
   return c.json({ report });
 });

@@ -39,6 +39,12 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
         clarity: evaluation.clarity,
       });
 
+  React.useEffect(() => {
+    if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+      console.log(`[HirePilot-Scoring] Question score displayed in UI: ${displayScore}% (Question ID: ${evaluation.question_id || 'active'})`);
+    }
+  }, [displayScore, evaluation.question_id]);
+
   return (
     <div className="glass-panel border border-white/10 shadow-2xl p-5 sm:p-7 rounded-3xl space-y-6 animate-slide-up text-slate-100 relative overflow-hidden">
       {/* Specular accent line */}

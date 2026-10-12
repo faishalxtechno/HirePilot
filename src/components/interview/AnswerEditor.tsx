@@ -250,11 +250,17 @@ export const AnswerEditor: React.FC<AnswerEditorProps> = ({
         <button
           type="button"
           onClick={onSubmit}
-          disabled={disabled || charCount < 10 || isSubmitting}
+          disabled={disabled || isSubmitting}
           className="flex items-center gap-2 px-6 py-2.5 rounded-full glass-primary-btn text-white text-xs font-semibold transition-all shadow-[0_4px_20px_rgba(118,87,255,0.45)] border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <Send className="w-4 h-4" />
-          <span>{isSubmitting ? 'Evaluating Answer...' : 'Submit Answer'}</span>
+          <span>
+            {isSubmitting
+              ? 'Evaluating Answer...'
+              : charCount === 0
+              ? 'Submit Empty Answer'
+              : 'Submit Answer'}
+          </span>
         </button>
       </div>
 

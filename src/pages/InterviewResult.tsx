@@ -29,12 +29,11 @@ export const InterviewResult: React.FC = () => {
       const data = await api.getInterview(interviewId);
       setInterview(data.interview);
 
-      if (data.report) {
-        setReport(data.report);
-      } else {
-        // If not completed yet, trigger completion
-        const completedData = await api.completeInterview(interviewId);
-        setReport(completedData.report);
+      const activeReport = data.report || (await api.completeInterview(interviewId)).report;
+      setReport(activeReport);
+
+      if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+        console.log(`[HirePilot-Scoring] Final score retrieved and displayed in UI: ${activeReport.overall_score}% | Technical: ${activeReport.technical_score}% | Problem Solving: ${activeReport.problem_solving_score}% (Interview ID: ${interviewId})`);
       }
     } catch (err: any) {
       console.error('Error fetching interview report:', err);

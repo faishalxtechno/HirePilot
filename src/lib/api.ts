@@ -19,7 +19,9 @@ import {
 
 const WORKER_URL =
   (typeof import.meta !== 'undefined' && import.meta.env?.VITE_WORKER_API_URL) ||
-  'https://hirepilot-api.hirepilotapp.workers.dev/api';
+  (typeof import.meta !== 'undefined' && import.meta.env?.DEV
+    ? '/api'
+    : 'https://hirepilot-api.hirepilotapp.workers.dev/api');
 
 async function getAuthHeader(): Promise<HeadersInit> {
   const { data: { session } } = await supabase.auth.getSession();
@@ -66,6 +68,14 @@ export const api = {
 
   // 2. Submit Answer & Receive AI Evaluation
   async submitAnswer(interviewId: string, payload: { question_id: string; user_answer: string }): Promise<AnswerEvaluation> {
+    const isDev = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
+    const trimmed = (payload.user_answer || '').trim();
+
+    if (isDev) {
+      console.log(`[HirePilot-Scoring] SubmitAnswer invoked | Interview ID: ${interviewId} | Question ID: ${payload.question_id}`);
+      console.log(`[HirePilot-Scoring] Target API endpoint: ${WORKER_URL}/interviews/${interviewId}/answer`);
+    }
+
     try {
       const headers = await getAuthHeader();
       const res = await fetch(`${WORKER_URL}/interviews/${interviewId}/answer`, {
@@ -80,13 +90,44 @@ export const api = {
       }
 
       const data = await res.json();
-      return data.evaluation;
+      const evaluation: AnswerEvaluation = data.evaluation;
+
+      // Detect stale unpatched remote worker fallback (relevance 7, accuracy 7, completeness 6, clarity 7)
+      const isStaleWorkerFallback =
+        evaluation &&
+        evaluation.relevance === 7 &&
+        evaluation.accuracy === 7 &&
+        evaluation.completeness === 6 &&
+        evaluation.clarity === 7 &&
+        (trimmed.length === 0 || evaluation.feedback?.includes('good baseline understanding'));
+
+      if (isStaleWorkerFallback) {
+        if (isDev) {
+          console.warn('[HirePilot-Scoring] Detected stale unpatched remote worker fallback (7/7/6/7 -> 68%). Intercepting and re-evaluating via local deterministic rubric.');
+        }
+        return fallbackSubmitAnswer(interviewId, payload);
+      }
+
+      const questionScore = evaluation.score ?? calculateQuestionScore(evaluation);
+
+      if (isDev) {
+        console.log(`[HirePilot-Scoring] Evaluator selected: AI (Worker API: ${WORKER_URL})`);
+        console.log(`[HirePilot-Scoring] Parsed dimensions: relevance=${evaluation.relevance}, accuracy=${evaluation.accuracy}, completeness=${evaluation.completeness}, clarity=${evaluation.clarity}`);
+        console.log(`[HirePilot-Scoring] Computed question score: ${questionScore}%`);
+      }
+
+      return {
+        ...evaluation,
+        score: questionScore,
+      };
     } catch (err: any) {
-      if (err.message && !isNetworkFetchError(err)) {
-        // Backend HTTP error or specific validation error — rethrow so UI can display it & retry
+      if (err.message && !isNetworkFetchError(err) && (err as any).code === 'EVALUATION_FAILED') {
+        // Backend AI evaluation error — rethrow so UI can display specific message & retry
         throw err;
       }
-      console.warn('Backend worker offline, using client-side fallback:', err.message);
+      if (isDev) {
+        console.warn(`[HirePilot-Scoring] Backend worker unavailable (${err.message}). Using local rubric evaluator.`);
+      }
       return fallbackSubmitAnswer(interviewId, payload);
     }
   },
@@ -117,6 +158,11 @@ export const api = {
 
   // 4. Complete Interview & Generate Report
   async completeInterview(interviewId: string): Promise<{ report: InterviewReport; interview?: Interview }> {
+    const isDev = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
+    if (isDev) {
+      console.log(`[HirePilot-Scoring] CompleteInterview invoked | Interview ID: ${interviewId}`);
+    }
+
     try {
       const headers = await getAuthHeader();
       const res = await fetch(`${WORKER_URL}/interviews/${interviewId}/complete`, {
@@ -129,12 +175,18 @@ export const api = {
         throw new Error(err.error || `Failed to complete interview (${res.status})`);
       }
 
-      return await res.json();
+      const data = await res.json();
+      if (isDev) {
+        console.log(`[HirePilot-Scoring] Overall score after report generation (Worker): ${data.report?.overall_score}%`);
+      }
+      return data;
     } catch (err: any) {
       if (err.message && !isNetworkFetchError(err)) {
         throw err;
       }
-      console.warn('Backend worker offline, using client-side fallback:', err.message);
+      if (isDev) {
+        console.warn(`[HirePilot-Scoring] Backend worker offline for complete (${err.message}). Using local report synthesis.`);
+      }
       return fallbackCompleteInterview(interviewId);
     }
   },
@@ -358,11 +410,16 @@ function isNetworkFetchError(err: any): boolean {
     msg.includes('networkerror') ||
     msg.includes('load failed') ||
     msg.includes('fetch failed') ||
-    msg.includes('network request failed')
+    msg.includes('network request failed') ||
+    msg.includes('econnrefused') ||
+    msg.includes('504') ||
+    msg.includes('unauthorized') ||
+    msg.includes('invalid token')
   );
 }
 
 function fallbackSubmitAnswer(interviewId: string, payload: { question_id: string; user_answer: string }): AnswerEvaluation {
+  const isDev = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
   const interviews = getLocalData<Interview[]>(LOCAL_STORAGE_KEY_INTERVIEWS, []);
   const interview = interviews.find((i) => i.id === interviewId);
   const questions = getLocalData<Question[]>(LOCAL_STORAGE_KEY_QUESTIONS, []).filter(
@@ -377,13 +434,21 @@ function fallbackSubmitAnswer(interviewId: string, payload: { question_id: strin
     role: interview?.role,
   });
 
+  const questionScore = evalResult.score ?? calculateQuestionScore(evalResult);
+
+  if (isDev) {
+    console.log(`[HirePilot-Scoring] Evaluator selected: Deterministic Rubric (Local Engine)`);
+    console.log(`[HirePilot-Scoring] Parsed dimensions: relevance=${evalResult.relevance}, accuracy=${evalResult.accuracy}, completeness=${evalResult.completeness}, clarity=${evalResult.clarity}`);
+    console.log(`[HirePilot-Scoring] Computed question score: ${questionScore}%`);
+  }
+
   const evaluation: AnswerEvaluation = {
     ...evalResult,
     id: 'eval-' + Math.random().toString(36).substring(2, 9),
     question_id: payload.question_id,
     question_text: currentQ?.question_text,
     user_answer: payload.user_answer,
-    score: evalResult.score ?? calculateQuestionScore(evalResult),
+    score: questionScore,
   };
 
   const answers = getLocalData<any[]>(LOCAL_STORAGE_KEY_ANSWERS, []);
@@ -394,6 +459,10 @@ function fallbackSubmitAnswer(interviewId: string, payload: { question_id: strin
     created_at: new Date().toISOString(),
   });
   saveLocalData(LOCAL_STORAGE_KEY_ANSWERS, answers);
+
+  if (isDev) {
+    console.log(`[HirePilot-Scoring] Score saved to persistence (localStorage answers): ${questionScore}%`);
+  }
 
   return evaluation;
 }
@@ -437,20 +506,41 @@ function fallbackNextQuestion(interviewId: string): { question?: Question; finis
 }
 
 function fallbackCompleteInterview(interviewId: string): { report: InterviewReport; interview?: Interview } {
+  const isDev = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
   const interviews = getLocalData<Interview[]>(LOCAL_STORAGE_KEY_INTERVIEWS, []);
   const interview = interviews.find((i) => i.id === interviewId);
 
   const answers = getLocalData<any[]>(LOCAL_STORAGE_KEY_ANSWERS, []).filter((a) => a.interview_id === interviewId);
   const calculatedScores = calculateInterviewScores(answers);
 
+  if (isDev) {
+    console.log(`[HirePilot-Scoring] Overall score before report generation (from ${answers.length} answers): ${calculatedScores.overall_score}%`);
+  }
+
   // Check if report already exists for this interview
   const reports = getLocalData<InterviewReport[]>(LOCAL_STORAGE_KEY_REPORTS, []);
-  const existingReport = reports.find((r) => r.interview_id === interviewId);
+  let existingReport = reports.find((r) => r.interview_id === interviewId);
   if (existingReport) {
+    // Keep report score in sync with actual evaluated answers to eliminate stale 68% reports
+    if (answers.length > 0) {
+      existingReport.overall_score = calculatedScores.overall_score;
+      existingReport.technical_score = calculatedScores.technical_score;
+      existingReport.problem_solving_score = calculatedScores.problem_solving_score;
+      existingReport.communication_score = calculatedScores.communication_score;
+      existingReport.confidence_score = calculatedScores.communication_score;
+      existingReport.answer_quality_score = calculatedScores.answer_quality_score;
+    }
     if (!existingReport.certificate_id) {
       existingReport.certificate_id = generateCertificateId(interviewId);
       existingReport.result_id = generateResultId(interviewId);
-      saveLocalData(LOCAL_STORAGE_KEY_REPORTS, reports);
+    }
+    saveLocalData(LOCAL_STORAGE_KEY_REPORTS, reports);
+    if (interview) {
+      interview.score = existingReport.overall_score;
+      saveLocalData(LOCAL_STORAGE_KEY_INTERVIEWS, interviews);
+    }
+    if (isDev) {
+      console.log(`[HirePilot-Scoring] Overall score after report generation (Synchronized existing): ${existingReport.overall_score}%`);
     }
     return { report: existingReport, interview };
   }
@@ -499,10 +589,16 @@ function fallbackCompleteInterview(interviewId: string): { report: InterviewRepo
   reports.push(report);
   saveLocalData(LOCAL_STORAGE_KEY_REPORTS, reports);
 
+  if (isDev) {
+    console.log(`[HirePilot-Scoring] Overall score after report generation (New local report): ${report.overall_score}%`);
+    console.log(`[HirePilot-Scoring] Score saved to persistence (localStorage): ${report.overall_score}%`);
+  }
+
   return { report, interview };
 }
 
 function fallbackGetInterview(interviewId: string) {
+  const isDev = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
   const interviews = getLocalData<Interview[]>(LOCAL_STORAGE_KEY_INTERVIEWS, []);
   const interview = interviews.find(i => i.id === interviewId);
   if (!interview) throw new Error('Interview not found');
@@ -512,24 +608,59 @@ function fallbackGetInterview(interviewId: string) {
   const reports = getLocalData<InterviewReport[]>(LOCAL_STORAGE_KEY_REPORTS, []);
   let report = reports.find(r => r.interview_id === interviewId) || null;
 
-  if (report && !report.certificate_id) {
-    report.certificate_id = generateCertificateId(interviewId);
-    report.result_id = generateResultId(interviewId);
+  if (report) {
+    if (answers.length > 0) {
+      const freshScores = calculateInterviewScores(answers);
+      report.overall_score = freshScores.overall_score;
+      report.technical_score = freshScores.technical_score;
+      report.problem_solving_score = freshScores.problem_solving_score;
+      report.communication_score = freshScores.communication_score;
+      report.confidence_score = freshScores.communication_score;
+      report.answer_quality_score = freshScores.answer_quality_score;
+      if (interview) {
+        interview.score = freshScores.overall_score;
+        saveLocalData(LOCAL_STORAGE_KEY_INTERVIEWS, interviews);
+      }
+    }
+    if (!report.certificate_id) {
+      report.certificate_id = generateCertificateId(interviewId);
+      report.result_id = generateResultId(interviewId);
+    }
     saveLocalData(LOCAL_STORAGE_KEY_REPORTS, reports);
+
+    if (isDev) {
+      console.log(`[HirePilot-Scoring] Score retrieved from database/storage (Interview ${interviewId}): ${report.overall_score}%`);
+    }
   }
 
   return { interview, questions, answers, report };
 }
 
 function fallbackGetReport(interviewId: string) {
+  const isDev = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
   const reports = getLocalData<InterviewReport[]>(LOCAL_STORAGE_KEY_REPORTS, []);
   let report = reports.find(r => r.interview_id === interviewId);
   if (!report) throw new Error('Report not found');
 
+  const answers = getLocalData<any[]>(LOCAL_STORAGE_KEY_ANSWERS, []).filter(a => a.interview_id === interviewId);
+  if (answers.length > 0) {
+    const freshScores = calculateInterviewScores(answers);
+    report.overall_score = freshScores.overall_score;
+    report.technical_score = freshScores.technical_score;
+    report.problem_solving_score = freshScores.problem_solving_score;
+    report.communication_score = freshScores.communication_score;
+    report.confidence_score = freshScores.communication_score;
+    report.answer_quality_score = freshScores.answer_quality_score;
+  }
+
   if (!report.certificate_id) {
     report.certificate_id = generateCertificateId(interviewId);
     report.result_id = generateResultId(interviewId);
-    saveLocalData(LOCAL_STORAGE_KEY_REPORTS, reports);
+  }
+  saveLocalData(LOCAL_STORAGE_KEY_REPORTS, reports);
+
+  if (isDev) {
+    console.log(`[HirePilot-Scoring] Score retrieved from database/storage (Report ${interviewId}): ${report.overall_score}%`);
   }
 
   return { report };

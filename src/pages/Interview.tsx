@@ -85,7 +85,7 @@ export const Interview: React.FC = () => {
   };
 
   const handleSubmitAnswer = async () => {
-    if (!id || !currentQuestion || !userAnswer.trim() || isSubmitting) return;
+    if (!id || !currentQuestion || isSubmitting) return;
 
     setIsSubmitting(true);
     setError(null);
