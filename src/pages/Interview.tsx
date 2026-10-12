@@ -210,11 +210,23 @@ export const Interview: React.FC = () => {
           />
         )}
 
-        {/* Global Error Notice */}
+        {/* Global Error Notice with Safe Retry */}
         {error && (
-          <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 text-xs text-rose-300 flex items-center gap-2 backdrop-blur-md">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-            <span>{error}</span>
+          <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 text-xs text-rose-300 flex items-center justify-between gap-3 backdrop-blur-md">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+              <span>{error}</span>
+            </div>
+            {!evaluation && (
+              <button
+                type="button"
+                onClick={handleSubmitAnswer}
+                disabled={isSubmitting}
+                className="px-3 py-1 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 rounded-lg text-rose-200 text-xs font-semibold transition-colors cursor-pointer shrink-0"
+              >
+                {isSubmitting ? 'Retrying...' : 'Retry'}
+              </button>
+            )}
           </div>
         )}
 

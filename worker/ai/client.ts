@@ -76,14 +76,26 @@ export async function callGemini(options: GeminiRequestOptions, retries = 2): Pr
 
 export function parseJsonFromAi<T>(rawText: string, fallback: T): T {
   try {
-    // Strip markdown code fences if present
-    const cleaned = rawText
-      .replace(/```json\s*/gi, '')
-      .replace(/```\s*$/gi, '')
-      .trim();
-    return JSON.parse(cleaned) as T;
+    return parseJsonOrThrow<T>(rawText);
   } catch (err) {
     console.error('Failed to parse JSON from AI response:', err, 'Raw:', rawText);
     return fallback;
+  }
+}
+
+export function parseJsonOrThrow<T>(rawText: string): T {
+  if (!rawText || !rawText.trim()) {
+    throw new Error('AI evaluator returned an empty response.');
+  }
+  const cleaned = rawText
+    .replace(/^```json\s*/gim, '')
+    .replace(/^```\s*/gim, '')
+    .replace(/```\s*$/gim, '')
+    .trim();
+
+  try {
+    return JSON.parse(cleaned) as T;
+  } catch (err: any) {
+    throw new Error(`AI evaluator returned malformed JSON: ${err.message}`);
   }
 }

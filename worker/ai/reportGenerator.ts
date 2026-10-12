@@ -1,6 +1,7 @@
-import { callGemini, parseJsonFromAi } from './client';
+import { callGemini, parseJsonOrThrow } from './client';
 import { SYSTEM_PROMPT_REPORT } from './prompts';
 import { FinalReportOutput, RoleType, InterviewType, DifficultyLevel } from '../types';
+import { calculateInterviewScores, calculateQuestionScore } from './scoringRubric';
 
 export interface InterviewSessionData {
   role: RoleType;
@@ -16,64 +17,80 @@ export interface InterviewSessionData {
     completeness: number;
     clarity: number;
     feedback?: string;
+    what_went_well?: string[];
+    missing_points?: string[];
+    how_to_improve?: string[];
   }>;
 }
 
 export async function generateFinalReport(apiKey: string, session: InterviewSessionData): Promise<FinalReportOutput> {
   const { role, interviewType, difficulty, items } = session;
 
-  const transcript = items.map((item, idx) => `
+  // Calculate ground-truth mathematical scores from evaluated question items
+  const aggregatedScores = calculateInterviewScores(items);
+
+  if (!items || items.length === 0) {
+    return {
+      overall_score: 0,
+      technical_score: 0,
+      problem_solving_score: 0,
+      communication_score: 0,
+      answer_quality_score: 0,
+      strengths: [],
+      weaknesses: ['No questions were completed during this session.'],
+      recommendations: ['Complete full interview session to receive personalized recommendations.'],
+      ai_summary: 'Interview session ended without recorded answers.',
+    };
+  }
+
+  // Format transcript including real scores for Gemini synthesis
+  const transcript = items.map((item, idx) => {
+    const qScore = calculateQuestionScore(item);
+    return `
 Question ${idx + 1} (${item.category || 'General'}): "${item.questionText}"
 Candidate Answer: "${item.userAnswer}"
-Scores - Relevance: ${item.relevance}/10, Accuracy: ${item.accuracy}/10, Completeness: ${item.completeness}/10, Clarity: ${item.clarity}/10
+Scores - Relevance: ${item.relevance}/10, Accuracy: ${item.accuracy}/10, Completeness: ${item.completeness}/10, Clarity: ${item.clarity}/10 (Question Score: ${qScore}/100)
 Feedback: ${item.feedback || 'None'}
----
-`).join('\n');
+---`;
+  }).join('\n');
 
   const userPrompt = `
 Synthesize this complete mock interview transcript for a candidate interviewing for:
 - Role: ${role}
 - Interview Type: ${interviewType.toUpperCase()}
 - Level: ${difficulty}
+- Overall Evaluated Score: ${aggregatedScores.overall_score}/100
+- Technical Accuracy Score: ${aggregatedScores.technical_score}/100
 
 Transcript:
 ${transcript}
 
-Compute weighted realistic scores between 0 and 100 for each performance category:
-- overall_score (0-100)
-- technical_score (0-100)
-- problem_solving_score (0-100)
-- communication_score (0-100)
-- answer_quality_score (0-100)
-
-Highlight key strengths, clear constructive weaknesses, 3 targeted learning topics/areas to practice next, and a brief executive AI summary.
+Highlight 3-5 concrete strengths demonstrated during the interview, 2-4 clear constructive weaknesses, 3 targeted learning topics/areas to practice next, and a brief executive AI summary.
 
 Return ONLY a JSON object adhering to this schema:
 {
-  "overall_score": 78,
-  "technical_score": 82,
-  "problem_solving_score": 76,
-  "communication_score": 80,
-  "answer_quality_score": 75,
   "strengths": [
-    "Strong fundamental domain knowledge",
-    "Clear and structured explanations",
-    "Good attention to best practices"
+    "Specific technical or conceptual strength 1",
+    "Specific strength 2"
   ],
   "weaknesses": [
-    "Could discuss more concrete edge cases",
-    "Time complexity analysis could be sharper"
+    "Specific technical gap or missing detail 1",
+    "Specific gap 2"
   ],
   "recommendations": [
-    "System Design & Scalability Patterns",
-    "Data Structure Optimization",
-    "Asynchronous Processing Models"
+    "Topic 1 to study",
+    "Topic 2 to study",
+    "Topic 3 to study"
   ],
-  "ai_summary": "Overall solid performance demonstrating good readiness for the role, with a clear path to master advanced problem-solving."
+  "ai_summary": "Executive summary paragraph evaluating readiness for the target role based on their actual performance."
 }
 `;
 
   try {
+    if (!apiKey || apiKey === 'offline-deterministic') {
+      throw new Error('API key not provided for Gemini report generation');
+    }
+
     const responseText = await callGemini({
       apiKey,
       systemInstruction: SYSTEM_PROMPT_REPORT,
@@ -82,46 +99,83 @@ Return ONLY a JSON object adhering to this schema:
       responseMimeType: 'application/json',
     });
 
-    const parsed = parseJsonFromAi<FinalReportOutput>(responseText, {
-      overall_score: calculateFallbackScore(items),
-      technical_score: 75,
-      problem_solving_score: 72,
-      communication_score: 78,
-      answer_quality_score: 74,
-      strengths: ['Good foundational knowledge', 'Clear articulation of ideas'],
-      weaknesses: ['Provide more concrete architectural examples', 'Cover edge cases systematically'],
-      recommendations: ['Algorithm efficiency', 'System architecture basics', 'Domain patterns'],
-      ai_summary: 'Solid performance across the board. Focus on building real-world practical examples to elevate answers to senior levels.',
-    });
+    const parsed = parseJsonOrThrow<Partial<FinalReportOutput>>(responseText);
 
-    // Score sanitation
-    parsed.overall_score = Math.min(100, Math.max(0, Math.round(Number(parsed.overall_score) || 75)));
-    parsed.technical_score = Math.min(100, Math.max(0, Math.round(Number(parsed.technical_score) || 75)));
-    parsed.problem_solving_score = Math.min(100, Math.max(0, Math.round(Number(parsed.problem_solving_score) || 75)));
-    parsed.communication_score = Math.min(100, Math.max(0, Math.round(Number(parsed.communication_score) || 75)));
-    parsed.answer_quality_score = Math.min(100, Math.max(0, Math.round(Number(parsed.answer_quality_score) || 75)));
+    const report: FinalReportOutput = {
+      // Ground-truth scores calculated directly from question evaluations
+      overall_score: aggregatedScores.overall_score,
+      technical_score: aggregatedScores.technical_score,
+      problem_solving_score: aggregatedScores.problem_solving_score,
+      communication_score: aggregatedScores.communication_score,
+      answer_quality_score: aggregatedScores.answer_quality_score,
+      strengths: Array.isArray(parsed.strengths) && parsed.strengths.length > 0
+        ? parsed.strengths.filter(Boolean)
+        : deriveStrengthsFromItems(items),
+      weaknesses: Array.isArray(parsed.weaknesses) && parsed.weaknesses.length > 0
+        ? parsed.weaknesses.filter(Boolean)
+        : deriveWeaknessesFromItems(items),
+      recommendations: Array.isArray(parsed.recommendations) && parsed.recommendations.length > 0
+        ? parsed.recommendations.filter(Boolean)
+        : ['System Architecture & Edge Cases', 'Data Structures & Algorithms', 'Communication Structure'],
+      ai_summary: typeof parsed.ai_summary === 'string' && parsed.ai_summary.trim()
+        ? parsed.ai_summary.trim()
+        : `Candidate completed ${items.length} questions for the ${role} position, achieving an overall evaluated score of ${aggregatedScores.overall_score}/100.`,
+    };
 
-    return parsed;
+    return report;
   } catch (error) {
-    console.error('Error in generateFinalReport AI call:', error);
-    const calculated = calculateFallbackScore(items);
+    console.warn('AI report generation fallback to deterministic synthesis:', error);
+    // Deterministic factual synthesis without fabricating feedback or defaulting to 68%
     return {
-      overall_score: calculated,
-      technical_score: Math.min(100, calculated + 2),
-      problem_solving_score: Math.max(0, calculated - 3),
-      communication_score: calculated,
-      answer_quality_score: calculated,
-      strengths: ['Demonstrated clear familiarity with core role concepts', 'Structured response style'],
-      weaknesses: ['Add deeper depth on operational edge cases', 'Include concrete metrics and trade-offs'],
-      recommendations: ['Core Role Deep Dive', 'Scenario-based Problem Solving', 'Interview Communication Mastery'],
-      ai_summary: 'You have shown good baseline competence. Continuing targeted practice will help you perform with high confidence in actual interviews.',
+      overall_score: aggregatedScores.overall_score,
+      technical_score: aggregatedScores.technical_score,
+      problem_solving_score: aggregatedScores.problem_solving_score,
+      communication_score: aggregatedScores.communication_score,
+      answer_quality_score: aggregatedScores.answer_quality_score,
+      strengths: deriveStrengthsFromItems(items),
+      weaknesses: deriveWeaknessesFromItems(items),
+      recommendations: deriveRecommendationsFromItems(items, role),
+      ai_summary: `Candidate completed ${items.length} interview questions for the ${role} position with an overall evaluated performance score of ${aggregatedScores.overall_score}/100.`,
     };
   }
 }
 
-function calculateFallbackScore(items: InterviewSessionData['items']): number {
-  if (!items.length) return 75;
-  const totals = items.map(i => ((i.relevance + i.accuracy + i.completeness + i.clarity) / 4) * 10);
-  const avg = totals.reduce((a, b) => a + b, 0) / totals.length;
-  return Math.round(avg);
+function deriveStrengthsFromItems(items: InterviewSessionData['items']): string[] {
+  const gathered: string[] = [];
+  for (const item of items) {
+    if (item.what_went_well && item.what_went_well.length) {
+      gathered.push(...item.what_went_well);
+    }
+  }
+  const unique = Array.from(new Set(gathered)).slice(0, 4);
+  if (unique.length > 0) return unique;
+  return ['Demonstrated foundational knowledge during technical questioning.'];
+}
+
+function deriveWeaknessesFromItems(items: InterviewSessionData['items']): string[] {
+  const gathered: string[] = [];
+  for (const item of items) {
+    if (item.missing_points && item.missing_points.length) {
+      gathered.push(...item.missing_points);
+    }
+  }
+  const unique = Array.from(new Set(gathered)).slice(0, 4);
+  if (unique.length > 0) return unique;
+  return ['Could provide deeper elaboration on operational edge cases and performance trade-offs.'];
+}
+
+function deriveRecommendationsFromItems(items: InterviewSessionData['items'], role: string): string[] {
+  const gathered: string[] = [];
+  for (const item of items) {
+    if (item.how_to_improve && item.how_to_improve.length) {
+      gathered.push(...item.how_to_improve);
+    }
+  }
+  const unique = Array.from(new Set(gathered)).slice(0, 3);
+  if (unique.length > 0) return unique;
+  return [
+    `${role} Architecture & Trade-Offs`,
+    'Performance Optimization & Concurrency',
+    'Structured STAR Technical Communication',
+  ];
 }

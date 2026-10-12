@@ -1,6 +1,11 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 import { generateCertificateId, generateResultId } from './storage';
 import {
+  calculateQuestionScore,
+  calculateInterviewScores,
+  evaluateAnswerDeterministically,
+} from './scoringRubric';
+import {
   CreateInterviewPayload,
   Interview,
   Question,
@@ -12,7 +17,9 @@ import {
   DifficultyLevel,
 } from '../types';
 
-const WORKER_URL = 'https://hirepilot-api.hirepilotapp.workers.dev/api';
+const WORKER_URL =
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_WORKER_API_URL) ||
+  'https://hirepilot-api.hirepilotapp.workers.dev/api';
 
 async function getAuthHeader(): Promise<HeadersInit> {
   const { data: { session } } = await supabase.auth.getSession();
@@ -75,7 +82,11 @@ export const api = {
       const data = await res.json();
       return data.evaluation;
     } catch (err: any) {
-      console.warn('Backend worker unavailable, using client-side fallback:', err.message);
+      if (err.message && !isNetworkFetchError(err)) {
+        // Backend HTTP error or specific validation error — rethrow so UI can display it & retry
+        throw err;
+      }
+      console.warn('Backend worker offline, using client-side fallback:', err.message);
       return fallbackSubmitAnswer(interviewId, payload);
     }
   },
@@ -96,7 +107,10 @@ export const api = {
 
       return await res.json();
     } catch (err: any) {
-      console.warn('Backend worker unavailable, using client-side fallback:', err.message);
+      if (err.message && !isNetworkFetchError(err)) {
+        throw err;
+      }
+      console.warn('Backend worker offline, using client-side fallback:', err.message);
       return fallbackNextQuestion(interviewId);
     }
   },
@@ -117,7 +131,10 @@ export const api = {
 
       return await res.json();
     } catch (err: any) {
-      console.warn('Backend worker unavailable, using client-side fallback:', err.message);
+      if (err.message && !isNetworkFetchError(err)) {
+        throw err;
+      }
+      console.warn('Backend worker offline, using client-side fallback:', err.message);
       return fallbackCompleteInterview(interviewId);
     }
   },
@@ -333,34 +350,40 @@ function fallbackCreateInterview(payload: CreateInterviewPayload): { interview: 
   return { interview: newInterview, firstQuestion: newQuestion };
 }
 
+function isNetworkFetchError(err: any): boolean {
+  if (!err) return false;
+  const msg = (err.message || '').toLowerCase();
+  return (
+    msg.includes('failed to fetch') ||
+    msg.includes('networkerror') ||
+    msg.includes('load failed') ||
+    msg.includes('fetch failed') ||
+    msg.includes('network request failed')
+  );
+}
+
 function fallbackSubmitAnswer(interviewId: string, payload: { question_id: string; user_answer: string }): AnswerEvaluation {
-  const ansLen = payload.user_answer.trim().length;
-  
-  // Calculate dynamic scores based on answer quality & length
-  const relevance = Math.min(10, Math.max(5, Math.floor(ansLen / 60) + 5));
-  const accuracy = Math.min(10, Math.max(4, Math.floor(ansLen / 70) + 5));
-  const completeness = Math.min(10, Math.max(4, Math.floor(ansLen / 80) + 4));
-  const clarity = Math.min(10, Math.max(5, Math.floor(ansLen / 65) + 5));
+  const interviews = getLocalData<Interview[]>(LOCAL_STORAGE_KEY_INTERVIEWS, []);
+  const interview = interviews.find((i) => i.id === interviewId);
+  const questions = getLocalData<Question[]>(LOCAL_STORAGE_KEY_QUESTIONS, []).filter(
+    (q) => q.interview_id === interviewId
+  );
+  const currentQ = questions.find((q) => q.id === payload.question_id) || questions[questions.length - 1];
+
+  const evalResult = evaluateAnswerDeterministically({
+    questionText: currentQ?.question_text || 'Explain the core system architecture and technical trade-offs.',
+    userAnswer: payload.user_answer,
+    category: currentQ?.category,
+    role: interview?.role,
+  });
 
   const evaluation: AnswerEvaluation = {
+    ...evalResult,
     id: 'eval-' + Math.random().toString(36).substring(2, 9),
     question_id: payload.question_id,
-    relevance,
-    accuracy,
-    completeness,
-    clarity,
-    feedback: `Your response shows clear understanding of the core concept. To further strengthen your answer, consider walking through concrete edge-case trade-offs and real-world system constraints.`,
-    what_went_well: [
-      'Directly addressed the primary mechanism in question',
-      'Articulated the answer with clear, structured technical terminology',
-    ],
-    missing_points: [
-      'Mention of specific runtime performance characteristics or space/time complexity trade-offs',
-      'Consideration of failure scenarios and mitigation strategies',
-    ],
-    how_to_improve: [
-      'Use concrete real-world numbers and code structure examples to reinforce your technical explanations.',
-    ],
+    question_text: currentQ?.question_text,
+    user_answer: payload.user_answer,
+    score: evalResult.score ?? calculateQuestionScore(evalResult),
   };
 
   const answers = getLocalData<any[]>(LOCAL_STORAGE_KEY_ANSWERS, []);
@@ -415,16 +438,14 @@ function fallbackNextQuestion(interviewId: string): { question?: Question; finis
 
 function fallbackCompleteInterview(interviewId: string): { report: InterviewReport; interview?: Interview } {
   const interviews = getLocalData<Interview[]>(LOCAL_STORAGE_KEY_INTERVIEWS, []);
-  const interview = interviews.find(i => i.id === interviewId);
+  const interview = interviews.find((i) => i.id === interviewId);
 
-  const answers = getLocalData<any[]>(LOCAL_STORAGE_KEY_ANSWERS, []).filter(a => a.interview_id === interviewId);
-  const avg = answers.length > 0
-    ? Math.round(answers.reduce((acc, a) => acc + ((a.relevance + a.accuracy + a.completeness + a.clarity) / 4) * 10, 0) / answers.length)
-    : 78;
+  const answers = getLocalData<any[]>(LOCAL_STORAGE_KEY_ANSWERS, []).filter((a) => a.interview_id === interviewId);
+  const calculatedScores = calculateInterviewScores(answers);
 
   // Check if report already exists for this interview
   const reports = getLocalData<InterviewReport[]>(LOCAL_STORAGE_KEY_REPORTS, []);
-  const existingReport = reports.find(r => r.interview_id === interviewId);
+  const existingReport = reports.find((r) => r.interview_id === interviewId);
   if (existingReport) {
     if (!existingReport.certificate_id) {
       existingReport.certificate_id = generateCertificateId(interviewId);
@@ -441,30 +462,30 @@ function fallbackCompleteInterview(interviewId: string): { report: InterviewRepo
     id: 'rep-' + Math.random().toString(36).substring(2, 9),
     interview_id: interviewId,
     user_id: 'local-user',
-    overall_score: avg,
-    technical_score: avg,
-    problem_solving_score: avg,
-    communication_score: avg,
-    confidence_score: avg,
-    answer_quality_score: avg,
+    overall_score: calculatedScores.overall_score,
+    technical_score: calculatedScores.technical_score,
+    problem_solving_score: calculatedScores.problem_solving_score,
+    communication_score: calculatedScores.communication_score,
+    confidence_score: calculatedScores.communication_score,
+    answer_quality_score: calculatedScores.answer_quality_score,
     certificate_id: certificateId,
     result_id: resultId,
     strengths: [
-      `Strong foundational understanding of ${interview?.role || 'software engineering'} principles`,
-      'Clear, logical explanations and good technical terminology',
-      'Consistent attention to code quality and maintainability',
+      `Foundational understanding in technical concepts evaluated`,
+      'Demonstrated structured problem-solving approach',
+      'Clear communication of technical ideas',
     ],
     weaknesses: [
-      'Could dive deeper into asymptotic time & space complexities',
+      'Further practice with asymptotic time & space complexities',
       'Elaborate more on operational trade-offs and edge failure handling',
       'Provide more concrete real-world metrics from past experience',
     ],
     recommendations: [
       'Distributed Systems & Caching Strategies',
-      'Deep Dive into Asynchronous Concurrency',
+      'Deep Dive into Concurrency & Race Conditions',
       'Behavioral STAR Method for Architectural Leadership',
     ],
-    ai_summary: `Overall solid performance demonstrating good baseline competence for a ${interview?.role || 'Developer'} role. Continuing deliberate practice on edge cases will take your interview performance to the next level.`,
+    ai_summary: `Candidate completed ${answers.length} questions for the ${interview?.role || 'Developer'} role with an evaluated score of ${calculatedScores.overall_score}/100.`,
     created_at: new Date().toISOString(),
   };
 

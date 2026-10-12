@@ -31,10 +31,15 @@ export interface SubmitAnswerPayload {
 }
 
 export interface AnswerEvaluation {
-  relevance: number; // 1-10
-  accuracy: number; // 1-10
-  completeness: number; // 1-10
-  clarity: number; // 1-10
+  id?: string;
+  question_id?: string;
+  question_text?: string;
+  user_answer?: string;
+  score?: number; // 0-100 overall question score
+  relevance: number; // 0-10
+  accuracy: number; // 0-10
+  completeness: number; // 0-10
+  clarity: number; // 0-10
   feedback: string;
   what_went_well: string[];
   missing_points: string[];

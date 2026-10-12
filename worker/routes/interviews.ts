@@ -6,6 +6,7 @@ import { checkMonthlyInterviewQuota } from '../middleware/rateLimit';
 import { generateQuestion } from '../ai/questionGenerator';
 import { evaluateAnswer } from '../ai/answerEvaluator';
 import { generateFinalReport } from '../ai/reportGenerator';
+import { calculateQuestionScore } from '../ai/scoringRubric';
 
 export const interviewRouter = new Hono<{ Bindings: Env; Variables: { user: AuthenticatedContext } }>();
 
@@ -173,10 +174,7 @@ interviewRouter.post('/:id/answer', async (c) => {
   const body: SubmitAnswerPayload = await c.req.json();
 
   const { question_id, user_answer } = body;
-
-  if (!user_answer || !user_answer.trim()) {
-    return c.json({ error: 'Answer cannot be empty' }, 400);
-  }
+  const trimmedAnswer = typeof user_answer === 'string' ? user_answer.trim() : '';
 
   // Verify interview ownership
   const { data: interview, error: intError } = await supabase
@@ -202,14 +200,26 @@ interviewRouter.post('/:id/answer', async (c) => {
     return c.json({ error: 'Question not found' }, 404);
   }
 
-  // Evaluate with Gemini
-  const evaluation = await evaluateAnswer(c.env.GEMINI_API_KEY, {
-    role: interview.role,
-    questionText: question.question_text,
-    category: question.category,
-    difficulty: question.difficulty,
-    userAnswer: user_answer.trim(),
-  });
+  // Evaluate with Gemini / rubric
+  let evaluation;
+  try {
+    evaluation = await evaluateAnswer(c.env.GEMINI_API_KEY, {
+      role: interview.role,
+      questionText: question.question_text,
+      category: question.category,
+      difficulty: question.difficulty,
+      userAnswer: trimmedAnswer,
+    });
+  } catch (evalErr: any) {
+    console.error('AI evaluation failed in router:', evalErr);
+    return c.json({
+      error: evalErr.message || 'AI evaluation failed. Please verify AI API configuration and retry.',
+      code: 'EVALUATION_FAILED',
+      canRetry: true,
+    }, 502);
+  }
+
+  const questionScore = calculateQuestionScore(evaluation);
 
   // Save answer to Supabase
   const { data: answer, error: ansError } = await supabase
@@ -218,7 +228,7 @@ interviewRouter.post('/:id/answer', async (c) => {
       question_id: question.id,
       interview_id: interviewId,
       user_id: user.userId,
-      user_answer: user_answer.trim(),
+      user_answer: trimmedAnswer,
       relevance_score: evaluation.relevance,
       accuracy_score: evaluation.accuracy,
       completeness_score: evaluation.completeness,
@@ -238,6 +248,9 @@ interviewRouter.post('/:id/answer', async (c) => {
       ...evaluation,
       id: answer?.id,
       question_id: question.id,
+      question_text: question.question_text,
+      user_answer: trimmedAnswer,
+      score: questionScore,
     },
   });
 });
@@ -280,8 +293,13 @@ interviewRouter.post('/:id/next-question', async (c) => {
   const history = (questions || []).map((q: any) => {
     const ans = q.answers?.[0];
     const avg = ans
-      ? (Number(ans.relevance_score) + Number(ans.accuracy_score) + Number(ans.completeness_score) + Number(ans.clarity_score)) / 4
-      : 7;
+      ? calculateQuestionScore({
+          relevance: ans.relevance_score != null ? Number(ans.relevance_score) : 0,
+          accuracy: ans.accuracy_score != null ? Number(ans.accuracy_score) : 0,
+          completeness: ans.completeness_score != null ? Number(ans.completeness_score) : 0,
+          clarity: ans.clarity_score != null ? Number(ans.clarity_score) : 0,
+        }) / 10
+      : 5;
     return {
       question: q.question_text,
       answer: ans?.user_answer || '',
@@ -373,11 +391,14 @@ interviewRouter.post('/:id/complete', async (c) => {
       questionText: q.question_text,
       category: q.category,
       userAnswer: ans.user_answer || '(No answer recorded)',
-      relevance: Number(ans.relevance_score) || 7,
-      accuracy: Number(ans.accuracy_score) || 7,
-      completeness: Number(ans.completeness_score) || 6,
-      clarity: Number(ans.clarity_score) || 7,
+      relevance: ans.relevance_score != null ? Number(ans.relevance_score) : 0,
+      accuracy: ans.accuracy_score != null ? Number(ans.accuracy_score) : 0,
+      completeness: ans.completeness_score != null ? Number(ans.completeness_score) : 0,
+      clarity: ans.clarity_score != null ? Number(ans.clarity_score) : 0,
       feedback: ans.feedback,
+      what_went_well: Array.isArray(ans.what_went_well) ? ans.what_went_well : [],
+      missing_points: Array.isArray(ans.missing_points) ? ans.missing_points : [],
+      how_to_improve: Array.isArray(ans.how_to_improve) ? ans.how_to_improve : [],
     };
   });
 

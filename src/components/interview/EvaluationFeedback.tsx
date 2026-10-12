@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '../ui/Button';
 import { AnswerEvaluation } from '../../types';
+import { calculateQuestionScore } from '../../lib/scoringRubric';
 import {
   CheckCircle2,
   AlertTriangle,
@@ -29,9 +30,14 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
     { label: 'Clarity', value: evaluation.clarity },
   ];
 
-  const avgScore = Math.round(
-    ((evaluation.relevance + evaluation.accuracy + evaluation.completeness + evaluation.clarity) / 4) * 10
-  );
+  const displayScore = evaluation.score != null
+    ? Math.min(100, Math.max(0, Math.round(evaluation.score)))
+    : calculateQuestionScore({
+        relevance: evaluation.relevance,
+        accuracy: evaluation.accuracy,
+        completeness: evaluation.completeness,
+        clarity: evaluation.clarity,
+      });
 
   return (
     <div className="glass-panel border border-white/10 shadow-2xl p-5 sm:p-7 rounded-3xl space-y-6 animate-slide-up text-slate-100 relative overflow-hidden">
@@ -55,7 +61,7 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
         <div className="flex items-center gap-2">
           <span className="text-xs text-slate-400 font-medium">Question Score:</span>
           <span className="font-mono text-sm font-bold px-3 py-1 rounded-xl glass-primary-btn text-white border border-white/20 shadow-[0_0_12px_rgba(118,87,255,0.4)]">
-            {avgScore}%
+            {displayScore}%
           </span>
         </div>
       </div>

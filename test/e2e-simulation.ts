@@ -18,9 +18,26 @@ async function runTests() {
   console.log('   ✅ Question 1 generated:', q1.question_text.substring(0, 70) + '...');
   console.log('   ✅ Category:', q1.category, '| Difficulty:', q1.difficulty);
 
-  // Test 2: Answer Evaluator
+  // Test 2: Answer Evaluator - Missing API key must throw, deterministic mode evaluates
   console.log('\n2. Testing Answer Evaluator...');
-  const evalResult = await evaluateAnswer('', {
+  let correctlyRejectedMissingKey = false;
+  try {
+    await evaluateAnswer('', {
+      role: 'Software Engineer',
+      questionText: q1.question_text,
+      category: q1.category,
+      difficulty: q1.difficulty,
+      userAnswer: 'In our microservices architecture, we use Redis for caching frequent read queries with TTL expiration. For race conditions in financial transactions, we implement distributed Redis locks with Redlock algorithm and PostgreSQL SELECT FOR UPDATE row-level locks.',
+    });
+  } catch (err: any) {
+    correctlyRejectedMissingKey = true;
+    console.log('   ✅ Missing API key correctly caught without silent 68 fallback:', err.message);
+  }
+  if (!correctlyRejectedMissingKey) {
+    throw new Error('evaluateAnswer failed to throw when API key was missing');
+  }
+
+  const evalResult = await evaluateAnswer('offline-deterministic', {
     role: 'Software Engineer',
     questionText: q1.question_text,
     category: q1.category,
