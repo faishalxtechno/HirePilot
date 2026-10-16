@@ -69,9 +69,17 @@ export const Dashboard: React.FC = () => {
   const monthlyRemaining = data?.stats.monthlyRemaining ?? 3;
   const monthlyMax = data?.stats.monthlyMax ?? 3;
   const allowancePercent = Math.min(100, Math.round((monthlyRemaining / (monthlyMax || 1)) * 100));
-  const careerScore = data?.stats.averageScore ? Math.min(100, Math.max(65, data.stats.averageScore)) : 87;
-  const precisionScore = data?.stats.averageScore ? `${data.stats.averageScore}%` : '91.4%';
-  const atsScore = resumeData?.atsScore ?? 94;
+  const hasCompletedInterviews = (data?.stats.interviewsCompleted || 0) > 0;
+  const careerScore = hasCompletedInterviews ? (data?.stats.averageScore ?? 0) : 0;
+  const precisionScore = hasCompletedInterviews ? `${data?.stats.averageScore}%` : 'N/A';
+  const atsScore = resumeData?.atsScore ?? 0;
+  const percentileDisplay = hasCompletedInterviews
+    ? careerScore >= 85
+      ? 'Cohort Percentile: Top 5%'
+      : careerScore >= 70
+      ? 'Cohort Percentile: Top 25%'
+      : 'Cohort Percentile: Active Track'
+    : 'Complete mock to rank';
 
   const quickActions = [
     {
@@ -136,7 +144,7 @@ export const Dashboard: React.FC = () => {
               <span className="text-slate-600 hidden sm:inline">•</span>
               <span className="text-emerald-400 font-medium flex items-center gap-1 text-xs sm:text-sm">
                 <TrendingUp className="w-3.5 h-3.5" />
-                <span>Cohort Percentile: Top 4%</span>
+                <span>{percentileDisplay}</span>
               </span>
             </div>
           </div>
@@ -459,7 +467,7 @@ export const Dashboard: React.FC = () => {
               {data?.recentInterviews && data.recentInterviews.length > 0 ? (
                 <div className="flex flex-col gap-3">
                   {data.recentInterviews.slice(0, 4).map((session) => {
-                    const score = session.score ?? session.interview_reports?.[0]?.overall_score ?? 85;
+                    const score = session.score ?? session.interview_reports?.[0]?.overall_score;
                     return (
                       <div
                         key={session.id}
@@ -474,8 +482,8 @@ export const Dashboard: React.FC = () => {
                               <h3 className="text-sm font-semibold text-white group-hover:text-purple-300 transition-colors">
                                 {session.role}
                               </h3>
-                              <span className="font-mono text-[11px] px-2 py-0.5 rounded-full glass-pill text-emerald-400 border border-emerald-500/20 font-bold">
-                                {score}%
+                              <span className={`font-mono text-[11px] px-2 py-0.5 rounded-full glass-pill border font-bold ${score != null ? 'text-emerald-400 border-emerald-500/20' : 'text-amber-400 border-amber-500/20'}`}>
+                                {score != null ? `${score}%` : 'In Progress'}
                               </span>
                             </div>
                             <div className="flex items-center gap-2 text-slate-400 text-xs mt-0.5 flex-wrap">

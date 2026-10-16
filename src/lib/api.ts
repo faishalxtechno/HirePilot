@@ -668,11 +668,6 @@ function fallbackGetReport(interviewId: string) {
 
 function fallbackGetInterviews(filters?: any) {
   let interviews = getLocalData<Interview[]>(LOCAL_STORAGE_KEY_INTERVIEWS, []);
-  if (interviews.length === 0) {
-    // Seed initial mock data if empty
-    interviews = seedMockInterviews();
-    saveLocalData(LOCAL_STORAGE_KEY_INTERVIEWS, interviews);
-  }
 
   if (filters?.role) {
     interviews = interviews.filter(i => i.role.toLowerCase().includes(filters.role.toLowerCase()));
@@ -695,42 +690,63 @@ function fallbackGetDashboardData(): DashboardData {
   const completed = interviews.filter(i => i.status === 'completed' && i.score != null);
 
   const scores = completed.map(i => Number(i.score));
-  const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 78;
-  const bestScore = scores.length > 0 ? Math.max(...scores) : 91;
+  const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  const bestScore = scores.length > 0 ? Math.max(...scores) : 0;
 
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
   const monthlyUsed = interviews.filter(i => {
-  const d = new Date(i.started_at);
+    const d = new Date(i.started_at);
+    return (
+      i.status === 'completed' &&
+      d.getMonth() === currentMonth &&
+      d.getFullYear() === currentYear
+    );
+  }).length;
 
-  return (
-    i.status === 'completed' &&
-    d.getMonth() === currentMonth &&
-    d.getFullYear() === currentYear
-  );
-}).length;
+  // Retrieve local reports to compute authentic performance breakdown
+  const reports = getLocalData<InterviewReport[]>(LOCAL_STORAGE_KEY_REPORTS, []);
+  let technical = 0;
+  let problemSolving = 0;
+  let communication = 0;
+  let answerQuality = 0;
+
+  if (reports.length > 0) {
+    technical = Math.round(reports.reduce((acc, r) => acc + (Number(r.technical_score) || 0), 0) / reports.length);
+    problemSolving = Math.round(reports.reduce((acc, r) => acc + (Number(r.problem_solving_score) || 0), 0) / reports.length);
+    communication = Math.round(reports.reduce((acc, r) => acc + (Number(r.communication_score) || 0), 0) / reports.length);
+    answerQuality = Math.round(reports.reduce((acc, r) => acc + (Number(r.answer_quality_score) || 0), 0) / reports.length);
+  } else if (scores.length > 0) {
+    technical = avgScore;
+    problemSolving = Math.max(0, avgScore - 4);
+    communication = avgScore;
+    answerQuality = avgScore;
+  }
+
   return {
     stats: {
       interviewsCompleted: completed.length,
       averageScore: avgScore,
       bestScore: bestScore,
-      currentStreak: 5,
+      currentStreak: completed.length > 0 ? 1 : 0,
       monthlyUsed: Math.min(3, monthlyUsed),
       monthlyMax: 3,
       monthlyRemaining: Math.max(0, 3 - monthlyUsed),
     },
     performance: {
-      technicalKnowledge: 82,
-      problemSolving: 74,
-      communication: 80,
-      answerQuality: 76,
+      technicalKnowledge: technical,
+      problemSolving: problemSolving,
+      communication: communication,
+      answerQuality: answerQuality,
     },
     recommendation: {
-      title: 'Practice Data Structures & Algorithms',
-      description: 'Your DSA performance is slightly lower than your technical average. Try a DSA-focused interview next.',
-      targetType: 'dsa',
-      targetRole: 'Software Engineer',
+      title: completed.length === 0 ? 'Start your interview journey' : 'Practice Data Structures & Algorithms',
+      description: completed.length === 0
+        ? 'Begin your first AI mock interview to analyze your core technical and behavioral strengths.'
+        : 'Your DSA performance is slightly lower than your technical average. Try a DSA-focused interview next.',
+      targetType: 'technical',
+      targetRole: completed[0]?.role || 'Software Engineer',
     },
     recentInterviews: interviews.slice(0, 5),
   };

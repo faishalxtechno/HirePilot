@@ -17,7 +17,23 @@ export interface Job {
   featured?: boolean;
 }
 
-export type ApplicationStage = 'saved' | 'applied' | 'interviewing' | 'offer' | 'rejected';
+export type ApplicationStage = 'saved' | 'applied' | 'assessment' | 'interviewing' | 'offer' | 'rejected';
+
+export interface JobMatchBreakdown {
+  matchScore: number;
+  overallScore: number;
+  criteria: {
+    roleAlignment: number; // 0-40
+    skillOverlap: number;  // 0-40
+    skillsMatch: number;   // 0-40
+    experienceLevel: number; // 0-20
+  };
+  matchedSkills: string[];
+  missingSkills: string[];
+  atsKeywords: string[];
+  recommendations: string[];
+  disclaimer: string;
+}
 
 export interface JobApplication {
   id: string;
@@ -32,6 +48,35 @@ export interface JobApplication {
   lastUpdated: string;
   interviewDate?: string;
   notes?: string;
+}
+
+const LOCAL_STORAGE_KEY_APPLICATIONS = 'hirepilot_job_applications';
+const LOCAL_STORAGE_KEY_SAVED_JOBS = 'hirepilot_saved_job_ids';
+
+const inMemoryStore = new Map<string, any>();
+
+function getLocalStore<T>(key: string, defaultValue: T): T {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const raw = window.localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : defaultValue;
+    }
+    return inMemoryStore.has(key) ? inMemoryStore.get(key) : defaultValue;
+  } catch {
+    return defaultValue;
+  }
+}
+
+function setLocalStore<T>(key: string, value: T): void {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } else {
+      inMemoryStore.set(key, value);
+    }
+  } catch (e) {
+    console.warn(`Failed to write ${key} to localStorage:`, e);
+  }
 }
 
 export const INITIAL_JOBS: Job[] = [
@@ -157,24 +202,75 @@ export const jobsService = {
     return result;
   },
 
+  /**
+   * Transparent Job Match Breakdown comparing candidate role and evidenced skills
+   */
+  getJobMatchBreakdown(job: Job, candidateRole = 'Software Engineer', candidateSkills: string[] = []): JobMatchBreakdown {
+    const roleLower = candidateRole.toLowerCase();
+    
+    // 1. Role Alignment (0 - 40 points)
+    let roleAlignment = 20;
+    if (job.targetRoles.some((r) => r.toLowerCase() === roleLower)) {
+      roleAlignment = 40;
+    } else if (job.targetRoles.some((r) => r.toLowerCase().includes(roleLower) || roleLower.includes(r.toLowerCase()))) {
+      roleAlignment = 30;
+    }
+
+    // 2. Skill Overlap (0 - 40 points)
+    const effectiveSkills = candidateSkills.length > 0 
+      ? candidateSkills 
+      : ['TypeScript', 'React', 'Node.js', 'PostgreSQL', 'Git', 'REST APIs'];
+    
+    const matchedSkills = job.skills.filter((reqSkill) =>
+      effectiveSkills.some((s) => s.toLowerCase() === reqSkill.toLowerCase() || reqSkill.toLowerCase().includes(s.toLowerCase()))
+    );
+
+    const missingSkills = job.skills.filter(
+      (reqSkill) => !matchedSkills.includes(reqSkill)
+    );
+
+    const skillRatio = job.skills.length > 0 ? matchedSkills.length / job.skills.length : 1;
+    const skillOverlap = Math.round(skillRatio * 40);
+
+    // 3. Experience Level Baseline (0 - 20 points)
+    const experienceLevel = 18;
+
+    const totalScore = Math.min(98, Math.max(40, roleAlignment + skillOverlap + experienceLevel));
+
+    const recommendations: string[] = [];
+    if (missingSkills.length > 0) {
+      recommendations.push(`Highlight experience with ${missingSkills.slice(0, 2).join(' and ')} in your resume bullet points.`);
+    }
+    recommendations.push(`Complete a ${job.targetRoles[0] || 'Technical'} mock interview focused on ${job.company}'s core stack.`);
+
+    return {
+      matchScore: totalScore,
+      overallScore: totalScore,
+      criteria: {
+        roleAlignment,
+        skillOverlap,
+        skillsMatch: skillOverlap,
+        experienceLevel,
+      },
+      matchedSkills,
+      missingSkills,
+      atsKeywords: job.skills,
+      recommendations,
+      disclaimer: 'Estimated match score based on technical keyword matching and role alignment. Does not guarantee hiring outcome.',
+    };
+  },
+
   calculateMatchScore(job: Job, candidateRole = 'Software Engineer'): number {
-    let score = 75;
-
-    if (job.targetRoles.some((r) => r.toLowerCase() === candidateRole.toLowerCase())) {
-      score += 15;
-    } else if (job.targetRoles.some((r) => candidateRole.toLowerCase().includes(r.toLowerCase()) || r.toLowerCase().includes(candidateRole.toLowerCase()))) {
-      score += 10;
-    }
-
-    if (job.featured) {
-      score += 5;
-    }
-
-    return Math.min(98, score + (job.id.charCodeAt(job.id.length - 1) % 7));
+    return this.getJobMatchBreakdown(job, candidateRole).matchScore;
   },
 
   async getApplications(userId: string): Promise<JobApplication[]> {
-    if (!isSupabaseConfigured) return [];
+    const localApps = getLocalStore<JobApplication[]>(`${LOCAL_STORAGE_KEY_APPLICATIONS}_${userId}`, []);
+
+    if (!isSupabaseConfigured) {
+      return localApps;
+    }
+
     try {
       const { data, error } = await supabase
         .from('applications')
@@ -183,11 +279,11 @@ export const jobsService = {
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Failed to fetch applications', error);
-        return [];
+        // Table may not exist yet in database, gracefully fall back to local storage
+        return localApps;
       }
-      if (data) {
-        return data.map(row => ({
+      if (data && data.length > 0) {
+        const mapped = data.map((row) => ({
           id: row.id,
           jobId: row.job_id,
           jobTitle: row.job_title,
@@ -201,17 +297,30 @@ export const jobsService = {
           interviewDate: row.interview_date,
           notes: row.notes,
         }));
+        setLocalStore(`${LOCAL_STORAGE_KEY_APPLICATIONS}_${userId}`, mapped);
+        return mapped;
       }
     } catch (err) {
-      console.error('Exception fetching applications', err);
+      console.warn('Notice fetching applications from Supabase, using local fallback:', err);
     }
-    return [];
+    return localApps;
   },
 
   async saveApplication(userId: string, app: JobApplication): Promise<void> {
+    // 1. Update local cache immediately
+    const localApps = getLocalStore<JobApplication[]>(`${LOCAL_STORAGE_KEY_APPLICATIONS}_${userId}`, []);
+    const existingIndex = localApps.findIndex((a) => a.id === app.id);
+    if (existingIndex >= 0) {
+      localApps[existingIndex] = app;
+    } else {
+      localApps.unshift(app);
+    }
+    setLocalStore(`${LOCAL_STORAGE_KEY_APPLICATIONS}_${userId}`, localApps);
+
+    // 2. Persist to Supabase if configured
     if (!isSupabaseConfigured) return;
     try {
-      const { error } = await supabase.from('applications').upsert({
+      await supabase.from('applications').upsert({
         id: app.id,
         user_id: userId,
         job_id: app.jobId,
@@ -226,12 +335,8 @@ export const jobsService = {
         interview_date: app.interviewDate,
         notes: app.notes,
       });
-
-      if (error) {
-        console.error('Error saving application:', error);
-      }
     } catch (err) {
-      console.error('Exception saving application', err);
+      console.warn('Notice saving application to Supabase:', err);
     }
   },
 
@@ -254,6 +359,14 @@ export const jobsService = {
   },
 
   async updateStage(userId: string, applicationId: string, stage: ApplicationStage): Promise<void> {
+    const localApps = getLocalStore<JobApplication[]>(`${LOCAL_STORAGE_KEY_APPLICATIONS}_${userId}`, []);
+    const target = localApps.find((a) => a.id === applicationId);
+    if (target) {
+      target.stage = stage;
+      target.lastUpdated = 'Just now';
+      setLocalStore(`${LOCAL_STORAGE_KEY_APPLICATIONS}_${userId}`, localApps);
+    }
+
     if (!isSupabaseConfigured) return;
     try {
       await supabase.from('applications')
@@ -261,31 +374,76 @@ export const jobsService = {
         .eq('id', applicationId)
         .eq('user_id', userId);
     } catch (e) {
-      console.error('Error updating stage:', e);
+      console.warn('Notice updating application stage in Supabase:', e);
+    }
+  },
+
+  async updateNotes(userId: string, applicationId: string, notes: string): Promise<void> {
+    const localApps = getLocalStore<JobApplication[]>(`${LOCAL_STORAGE_KEY_APPLICATIONS}_${userId}`, []);
+    const target = localApps.find((a) => a.id === applicationId);
+    if (target) {
+      target.notes = notes;
+      target.lastUpdated = 'Just now';
+      setLocalStore(`${LOCAL_STORAGE_KEY_APPLICATIONS}_${userId}`, localApps);
+    }
+
+    if (!isSupabaseConfigured) return;
+    try {
+      await supabase.from('applications')
+        .update({ notes, last_updated: 'Just now' })
+        .eq('id', applicationId)
+        .eq('user_id', userId);
+    } catch (e) {
+      console.warn('Notice updating application notes in Supabase:', e);
+    }
+  },
+
+  async deleteApplication(userId: string, applicationId: string): Promise<void> {
+    const localApps = getLocalStore<JobApplication[]>(`${LOCAL_STORAGE_KEY_APPLICATIONS}_${userId}`, []);
+    const filtered = localApps.filter((a) => a.id !== applicationId);
+    setLocalStore(`${LOCAL_STORAGE_KEY_APPLICATIONS}_${userId}`, filtered);
+
+    if (!isSupabaseConfigured) return;
+    try {
+      await supabase.from('applications')
+        .delete()
+        .eq('id', applicationId)
+        .eq('user_id', userId);
+    } catch (e) {
+      console.warn('Notice deleting application in Supabase:', e);
     }
   },
 
   async getSavedJobIds(userId: string): Promise<string[]> {
-    if (!isSupabaseConfigured) return [];
+    const localSaved = getLocalStore<string[]>(`${LOCAL_STORAGE_KEY_SAVED_JOBS}_${userId}`, []);
+    if (!isSupabaseConfigured) return localSaved;
+
     try {
       const { data, error } = await supabase
         .from('saved_jobs')
         .select('job_id')
         .eq('user_id', userId);
       
-      if (!error && data) {
-        return data.map(r => r.job_id);
+      if (!error && data && data.length > 0) {
+        const ids = data.map((r) => r.job_id);
+        setLocalStore(`${LOCAL_STORAGE_KEY_SAVED_JOBS}_${userId}`, ids);
+        return ids;
       }
     } catch (err) {
-      console.error('Exception fetching saved jobs', err);
+      console.warn('Notice fetching saved jobs from Supabase:', err);
     }
-    return [];
+    return localSaved;
   },
 
   async toggleSaveJob(userId: string, jobId: string): Promise<void> {
+    const localSaved = getLocalStore<string[]>(`${LOCAL_STORAGE_KEY_SAVED_JOBS}_${userId}`, []);
+    const isSaved = localSaved.includes(jobId);
+    const updated = isSaved ? localSaved.filter((id) => id !== jobId) : [...localSaved, jobId];
+    setLocalStore(`${LOCAL_STORAGE_KEY_SAVED_JOBS}_${userId}`, updated);
+
     if (!isSupabaseConfigured) return;
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('saved_jobs')
         .select('id')
         .eq('user_id', userId)
@@ -298,7 +456,7 @@ export const jobsService = {
         await supabase.from('saved_jobs').insert({ user_id: userId, job_id: jobId });
       }
     } catch (e) {
-      console.error('Error saving job:', e);
+      console.warn('Notice saving job to Supabase:', e);
     }
   },
 };

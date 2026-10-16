@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { jobsService, Job, JobApplication, ApplicationStage } from '../lib/jobsService';
+import { jobsService, Job, JobApplication, ApplicationStage, JobMatchBreakdown } from '../lib/jobsService';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { TiltCard } from '../components/ui/TiltCard';
 import { Badge } from '../components/ui/Badge';
+import { Modal } from '../components/ui/Modal';
 import { Link } from 'react-router-dom';
 import {
   Briefcase,
@@ -20,6 +21,11 @@ import {
   Calendar,
   ChevronRight,
   Play,
+  Trash2,
+  Info,
+  Edit2,
+  AlertTriangle,
+  Target,
 } from 'lucide-react';
 
 export const JobsPage: React.FC = () => {
@@ -33,6 +39,13 @@ export const JobsPage: React.FC = () => {
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [savedJobIds, setSavedJobIds] = useState<string[]>([]);
   const [applySuccessMsg, setApplySuccessMsg] = useState<string | null>(null);
+
+  // Match details modal state
+  const [inspectingMatch, setInspectingMatch] = useState<{ job: Job; breakdown: JobMatchBreakdown } | null>(null);
+
+  // Note editing state
+  const [editingNotesAppId, setEditingNotesAppId] = useState<string | null>(null);
+  const [notesDraft, setNotesDraft] = useState<string>('');
 
   const targetRole = profile?.target_role || 'Software Engineer';
 
@@ -82,11 +95,28 @@ export const JobsPage: React.FC = () => {
     setApplications(updatedApps);
   };
 
+  const handleDeleteApplication = async (appId: string) => {
+    if (!profile?.id) return;
+    await jobsService.deleteApplication(profile.id, appId);
+    const updatedApps = await jobsService.getApplications(profile.id);
+    setApplications(updatedApps);
+  };
+
+  const handleSaveNotes = async (appId: string) => {
+    if (!profile?.id) return;
+    await jobsService.updateNotes(profile.id, appId, notesDraft);
+    setEditingNotesAppId(null);
+    const updatedApps = await jobsService.getApplications(profile.id);
+    setApplications(updatedApps);
+  };
+
   const roleChips = ['All', 'Frontend', 'Backend', 'Full Stack', 'Software Engineer', 'Machine Learning'];
   const workplaceChips = ['All', 'Remote', 'Hybrid'];
 
   const stageCounts = {
+    saved: applications.filter((a) => a.stage === 'saved').length,
     applied: applications.filter((a) => a.stage === 'applied').length,
+    assessment: applications.filter((a) => a.stage === 'assessment').length,
     interviewing: applications.filter((a) => a.stage === 'interviewing').length,
     offer: applications.filter((a) => a.stage === 'offer').length,
     rejected: applications.filter((a) => a.stage === 'rejected').length,
@@ -246,9 +276,15 @@ export const JobsPage: React.FC = () => {
 
                         {/* Match score & Bookmark */}
                         <div className="flex items-center gap-2 shrink-0 self-start">
-                          <span className="px-2.5 py-1 rounded-xl bg-white/5 border border-white/10 text-white text-xs font-mono font-medium layer-title">
-                            {matchScore}% Match
-                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setInspectingMatch({ job, breakdown: jobsService.getJobMatchBreakdown(job, targetRole) })}
+                            className="px-2.5 py-1 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 text-white text-xs font-mono font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+                            title="Click for transparent match breakdown"
+                          >
+                            <span>{matchScore}% Match</span>
+                            <Info className="w-3 h-3 text-brand-muted" />
+                          </button>
                           <button
                             onClick={() => handleToggleSave(job.id)}
                             className={`p-2 rounded-xl border transition-colors cursor-pointer ${
@@ -315,23 +351,31 @@ export const JobsPage: React.FC = () => {
         {/* ========================================================================= */}
         {activeTab === 'applications' && (
           <div className="space-y-6 animate-fade-in">
-            {/* Pipeline Stage Summary Counters */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <Card className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
-                <span className="text-[11px] font-medium text-brand-muted uppercase tracking-wider">Applied</span>
-                <div className="font-mono text-xl sm:text-2xl font-bold text-white">{stageCounts.applied}</div>
+            {/* Pipeline Stage Summary Counters (6 Stages) */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              <Card className="p-3.5 space-y-1 bg-[#121212] border-white/10">
+                <span className="text-[10px] font-medium text-brand-muted uppercase tracking-wider">Saved</span>
+                <div className="font-mono text-xl font-bold text-white">{stageCounts.saved}</div>
               </Card>
-              <Card className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
-                <span className="text-[11px] font-medium text-brand-muted uppercase tracking-wider">Interviewing</span>
-                <div className="font-mono text-xl sm:text-2xl font-bold text-white">{stageCounts.interviewing}</div>
+              <Card className="p-3.5 space-y-1 bg-[#121212] border-white/10">
+                <span className="text-[10px] font-medium text-brand-muted uppercase tracking-wider">Applied</span>
+                <div className="font-mono text-xl font-bold text-white">{stageCounts.applied}</div>
               </Card>
-              <Card className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
-                <span className="text-[11px] font-medium text-brand-muted uppercase tracking-wider">Offer</span>
-                <div className="font-mono text-xl sm:text-2xl font-bold text-brand-secondary">{stageCounts.offer}</div>
+              <Card className="p-3.5 space-y-1 bg-[#121212] border-white/10">
+                <span className="text-[10px] font-medium text-brand-muted uppercase tracking-wider">Assessment</span>
+                <div className="font-mono text-xl font-bold text-sky-400">{stageCounts.assessment}</div>
               </Card>
-              <Card className="p-3.5 sm:p-4 space-y-1 bg-[#121212] border-white/10">
-                <span className="text-[11px] font-medium text-brand-muted uppercase tracking-wider">Archived</span>
-                <div className="font-mono text-xl sm:text-2xl font-bold text-brand-muted">{stageCounts.rejected}</div>
+              <Card className="p-3.5 space-y-1 bg-[#121212] border-white/10">
+                <span className="text-[10px] font-medium text-brand-muted uppercase tracking-wider">Interviewing</span>
+                <div className="font-mono text-xl font-bold text-amber-400">{stageCounts.interviewing}</div>
+              </Card>
+              <Card className="p-3.5 space-y-1 bg-[#121212] border-white/10">
+                <span className="text-[10px] font-medium text-brand-muted uppercase tracking-wider">Offer</span>
+                <div className="font-mono text-xl font-bold text-emerald-400">{stageCounts.offer}</div>
+              </Card>
+              <Card className="p-3.5 space-y-1 bg-[#121212] border-white/10">
+                <span className="text-[10px] font-medium text-brand-muted uppercase tracking-wider">Archived</span>
+                <div className="font-mono text-xl font-bold text-brand-muted">{stageCounts.rejected}</div>
               </Card>
             </div>
 
@@ -341,7 +385,7 @@ export const JobsPage: React.FC = () => {
                 <Card className="p-8 text-center space-y-3 bg-[#121212] border-white/10">
                   <Briefcase className="w-8 h-8 text-brand-muted mx-auto" />
                   <h3 className="text-sm font-medium text-white">No active applications tracked</h3>
-                  <p className="text-xs text-brand-muted">Apply to jobs in the Explore tab to track them here.</p>
+                  <p className="text-xs text-brand-muted">Apply to jobs in the Explore tab or save roles to track them across all 6 pipeline stages.</p>
                   <Button variant="primary" size="sm" onClick={() => setActiveTab('jobs')}>
                     Explore Jobs
                   </Button>
@@ -356,23 +400,34 @@ export const JobsPage: React.FC = () => {
                           <span className="text-xs text-brand-muted">• {app.company}</span>
                         </div>
                         <p className="text-xs text-brand-muted mt-0.5">
-                          {app.location} • {app.salary} • Applied {app.appliedDate}
+                          {app.location} • {app.salary} • Added {app.appliedDate}
                         </p>
                       </div>
 
-                      {/* Stage dropdown selector */}
-                      <div className="flex items-center gap-2">
+                      {/* Stage dropdown selector & Actions */}
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-xs text-brand-muted">Stage:</span>
                         <select
                           value={app.stage}
                           onChange={(e) => handleStageChange(app.id, e.target.value as ApplicationStage)}
                           className="bg-black border border-white/10 rounded-xl px-3 py-1.5 text-xs font-medium text-white focus:outline-none focus:border-white/30"
                         >
+                          <option value="saved">Saved</option>
                           <option value="applied">Applied</option>
+                          <option value="assessment">Online Assessment</option>
                           <option value="interviewing">Interviewing</option>
-                          <option value="offer">Offer Received</option>
+                          <option value="offer">Offer Received 🎉</option>
                           <option value="rejected">Archived / Rejected</option>
                         </select>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteApplication(app.id)}
+                          className="p-1.5 rounded-lg border border-white/10 hover:border-red-500/30 text-brand-muted hover:text-red-400 transition-colors"
+                          title="Delete application record"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     </div>
 
@@ -391,17 +446,208 @@ export const JobsPage: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Notes */}
-                    {app.notes && (
-                      <p className="text-xs text-brand-muted bg-black p-3 rounded-xl border border-white/10">
-                        <strong className="text-white">Notes:</strong> {app.notes}
-                      </p>
-                    )}
+                    {/* Notes Section with In-place Editing */}
+                    <div className="bg-black/60 p-3 rounded-xl border border-white/10 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium text-white flex items-center gap-1.5">
+                          <Edit2 className="w-3 h-3 text-brand-muted" /> Application Notes
+                        </span>
+                        {editingNotesAppId !== app.id && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingNotesAppId(app.id);
+                              setNotesDraft(app.notes || '');
+                            }}
+                            className="text-[11px] text-brand-muted hover:text-white transition-colors"
+                          >
+                            {app.notes ? 'Edit' : '+ Add Note'}
+                          </button>
+                        )}
+                      </div>
+
+                      {editingNotesAppId === app.id ? (
+                        <div className="space-y-2">
+                          <textarea
+                            value={notesDraft}
+                            onChange={(e) => setNotesDraft(e.target.value)}
+                            placeholder="Recruiter contact, referral details, salary range, interview rounds..."
+                            className="w-full text-xs p-2 rounded-lg bg-black border border-white/20 text-white placeholder:text-brand-muted focus:outline-none focus:border-white/40 resize-none h-20"
+                          />
+                          <div className="flex items-center gap-2 justify-end">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-xs h-7 px-2"
+                              onClick={() => setEditingNotesAppId(null)}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              className="text-xs h-7 px-3"
+                              onClick={() => handleSaveNotes(app.id)}
+                            >
+                              Save Notes
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-brand-muted">
+                          {app.notes || <span className="italic text-white/40">No notes added yet. Record referral names, salary notes, or round schedules.</span>}
+                        </p>
+                      )}
+                    </div>
                   </Card>
                 ))
               )}
             </div>
           </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* MODAL: TRANSPARENT AI JOB MATCH BREAKDOWN                                 */}
+        {/* ========================================================================= */}
+        {inspectingMatch && (
+          <Modal
+            isOpen={true}
+            onClose={() => setInspectingMatch(null)}
+            title={`Match Breakdown: ${inspectingMatch.job.title}`}
+          >
+            <div className="space-y-5 text-left">
+              {/* Header Score Overview */}
+              <div className="p-4 rounded-2xl bg-black border border-white/10 flex items-center justify-between">
+                <div>
+                  <div className="text-xs text-brand-muted">{inspectingMatch.job.company}</div>
+                  <div className="text-sm font-semibold text-white">{inspectingMatch.job.location}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-mono text-2xl font-bold text-white">
+                    {inspectingMatch.breakdown.overallScore}%
+                  </div>
+                  <div className="text-[10px] text-brand-muted uppercase tracking-wider">Overall Match</div>
+                </div>
+              </div>
+
+              {/* Criteria Breakdown */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-brand-muted">
+                  Scoring Criteria (Transparent Rubric)
+                </h4>
+                <div className="space-y-2">
+                  <div>
+                    <div className="flex justify-between text-xs text-white mb-1">
+                      <span>Target Role Alignment</span>
+                      <span className="font-mono">{inspectingMatch.breakdown.criteria.roleAlignment}%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-white rounded-full"
+                        style={{ width: `${inspectingMatch.breakdown.criteria.roleAlignment}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs text-white mb-1">
+                      <span>Technical Skills Overlap</span>
+                      <span className="font-mono">{inspectingMatch.breakdown.criteria.skillsMatch}%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-emerald-400 rounded-full"
+                        style={{ width: `${inspectingMatch.breakdown.criteria.skillsMatch}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs text-white mb-1">
+                      <span>Experience Level Fit</span>
+                      <span className="font-mono">{inspectingMatch.breakdown.criteria.experienceLevel}%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-sky-400 rounded-full"
+                        style={{ width: `${inspectingMatch.breakdown.criteria.experienceLevel}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Matched vs Missing Skills */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/20 space-y-1.5">
+                  <span className="text-xs font-medium text-emerald-400 flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5" /> Matched Skills ({inspectingMatch.breakdown.matchedSkills.length})
+                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {inspectingMatch.breakdown.matchedSkills.length > 0 ? (
+                      inspectingMatch.breakdown.matchedSkills.map((s) => (
+                        <span key={s} className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-[10px] text-emerald-300 font-mono">
+                          {s}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-[11px] text-brand-muted italic">Add profile skills to match.</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-amber-950/20 border border-amber-500/20 space-y-1.5">
+                  <span className="text-xs font-medium text-amber-400 flex items-center gap-1">
+                    <Target className="w-3.5 h-3.5" /> Target Skills to Highlight ({inspectingMatch.breakdown.missingSkills.length})
+                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {inspectingMatch.breakdown.missingSkills.map((s) => (
+                      <span key={s} className="px-1.5 py-0.5 rounded bg-amber-500/10 text-[10px] text-amber-300 font-mono">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* ATS Keywords & Recommendations */}
+              <div className="space-y-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-brand-muted">
+                  Actionable Recommendations
+                </span>
+                <ul className="space-y-1.5 text-xs text-brand-muted">
+                  {inspectingMatch.breakdown.recommendations.map((rec, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="text-white font-bold">•</span>
+                      <span>{rec}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Transparent Disclaimer */}
+              <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-[11px] text-brand-muted flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <span>{inspectingMatch.breakdown.disclaimer}</span>
+              </div>
+
+              {/* Footer Actions */}
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setInspectingMatch(null)}
+                >
+                  Close
+                </Button>
+                <Link to={`/interview/setup?role=${encodeURIComponent(inspectingMatch.job.targetRoles[0] || targetRole)}&type=technical`}>
+                  <Button variant="primary" size="sm" leftIcon={<Play className="w-3.5 h-3.5" />}>
+                    Practice for this Role
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </Modal>
         )}
       </div>
     </DashboardLayout>

@@ -93,7 +93,9 @@ export const resumeService = {
    */
   saveAnalysis(analysis: ResumeAnalysis): void {
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY_RESUME, JSON.stringify(analysis));
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem(LOCAL_STORAGE_KEY_RESUME, JSON.stringify(analysis));
+      }
     } catch (e) {
       console.error('Error saving resume analysis:', e);
     }
@@ -102,27 +104,39 @@ export const resumeService = {
   /**
    * Simulates AI Resume parsing and evaluation from uploaded file or text
    */
-  async analyzeResume(file: File, targetRole = 'Software Engineer'): Promise<ResumeAnalysis> {
-    // Simulate AI extraction delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+  async analyzeResume(file: { name?: string; size?: number } = {}, targetRole = 'Software Engineer'): Promise<ResumeAnalysis> {
+    const fileName = file?.name || 'resume.pdf';
+    const fileSize = typeof file?.size === 'number' ? file.size : 120000;
+    const fileSizeStr = fileSize > 1024 * 1024
+      ? `${(fileSize / (1024 * 1024)).toFixed(1)} MB`
+      : `${Math.round(fileSize / 1024)} KB`;
 
-    const fileSizeStr = file.size > 1024 * 1024
-      ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
-      : `${Math.round(file.size / 1024)} KB`;
+    // Deterministic ATS Scoring based on file format, size, role matching, and structural compliance
+    // 1. Formatting Score (max 100): PDF/DOCX standard format, clean naming, sensible file size
+    const isPdf = fileName.toLowerCase().endsWith('.pdf');
+    const isDocx = fileName.toLowerCase().endsWith('.docx');
+    let formattingScore = isPdf ? 92 : isDocx ? 88 : 74;
+    if (fileSize > 2 * 1024 * 1024) formattingScore -= 10; // Large files penalized for ATS parser speed
 
-    // Dynamic calculated score with slight variation based on file name/role
-    const baseScore = 80 + Math.floor(Math.random() * 12);
-    const keywordsScore = Math.min(96, baseScore + Math.floor(Math.random() * 8));
-    const impactScore = Math.min(94, baseScore - 2 + Math.floor(Math.random() * 6));
-    const formattingScore = Math.min(98, 88 + Math.floor(Math.random() * 10));
-    const actionVerbsScore = Math.min(90, 75 + Math.floor(Math.random() * 12));
+    // 2. Keywords Score: Role-based alignment
+    const roleLower = targetRole.toLowerCase();
+    let keywordsScore = 82;
+    if (roleLower.includes('frontend') || roleLower.includes('software')) keywordsScore = 86;
+    if (roleLower.includes('backend') || roleLower.includes('full stack')) keywordsScore = 88;
+    if (roleLower.includes('machine learning') || roleLower.includes('data')) keywordsScore = 84;
+
+    // 3. Impact & Action Verbs standard rubric baselines
+    const impactScore = 80;
+    const actionVerbsScore = 78;
+
+    const atsScore = Math.round((keywordsScore * 0.35) + (impactScore * 0.25) + (formattingScore * 0.25) + (actionVerbsScore * 0.15));
 
     const result: ResumeAnalysis = {
       id: `resume-${Date.now()}`,
-      fileName: file.name,
+      fileName: fileName,
       fileSize: fileSizeStr,
       uploadedAt: new Date().toISOString(),
-      atsScore: Math.round((keywordsScore + impactScore + formattingScore + actionVerbsScore) / 4),
+      atsScore,
       categoryScores: {
         keywords: keywordsScore,
         impact: impactScore,
@@ -130,14 +144,14 @@ export const resumeService = {
         actionVerbs: actionVerbsScore,
       },
       strengths: [
-        `Well-tailored for ${targetRole} positions with concise structure.`,
-        'High density of modern technology keywords and relevant tooling.',
-        'Proper date hierarchy and standard section headers recognized by major ATS systems.',
+        `Formatted as ${isPdf ? 'ATS-standard PDF' : 'document'} with single-column linear parsing hierarchy.`,
+        `Includes relevant technology terminology suitable for ${targetRole} positions.`,
+        'Clean section chronology with standard headers recognized by Workday, Greenhouse, and Lever.',
       ],
       improvements: [
         `Increase keyword alignment for specific ${targetRole} job descriptions.`,
-        'Add more quantifiable percentage gains and operational metrics.',
-        'Consolidate single-line bullet points into high-impact impact statements.',
+        'Add more quantifiable percentage gains, latency reductions, and operational scale metrics.',
+        'Convert passive task statements into active outcome statements (Accomplished [X] by doing [Z]).',
       ],
       missingKeywords: ['System Design', 'Microservices', 'Distributed Caching', 'Cloud Monitoring (Datadog/CloudWatch)', 'Terraform / IaC'],
       detectedKeywords: ['TypeScript', 'React', 'Node.js', 'SQL', 'Git', 'REST APIs', 'State Management', 'Testing'],

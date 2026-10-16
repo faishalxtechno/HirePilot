@@ -436,7 +436,7 @@ interviewRouter.post('/:id/complete', async (c) => {
       technical_score: reportOutput.technical_score,
       problem_solving_score: reportOutput.problem_solving_score,
       communication_score: reportOutput.communication_score,
-      confidence_score: reportOutput.answer_quality_score || reportOutput.communication_score || 80,
+      confidence_score: reportOutput.answer_quality_score ?? reportOutput.communication_score ?? 0,
       answer_quality_score: reportOutput.answer_quality_score,
       strengths: reportOutput.strengths,
       weaknesses: reportOutput.weaknesses,

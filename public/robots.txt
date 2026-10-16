@@ -1,0 +1,21 @@
+# HirePilot Robots.txt
+# https://hire-pilot-dusky.vercel.app/
+
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /signup
+Allow: /privacy
+Allow: /terms
+Allow: /contact
+
+# Disallow private user authenticated application surfaces
+Disallow: /dashboard
+Disallow: /interview/
+Disallow: /resume
+Disallow: /jobs
+Disallow: /profile
+Disallow: /reset-password
+Disallow: /api/
+
+Sitemap: https://hire-pilot-dusky.vercel.app/sitemap.xml
