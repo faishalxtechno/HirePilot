@@ -33,6 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { label: 'How It Works', href: '#how-it-works', isRoute: false },
     { label: 'Pricing', href: '#pricing', isRoute: false },
     { label: 'Founder', href: '#founder', isRoute: false },
+    { label: 'Design System', href: '/design-system', isRoute: true },
     { label: 'Contact', href: '/contact', isRoute: true },
   ];
 

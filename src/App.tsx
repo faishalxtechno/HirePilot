@@ -22,6 +22,7 @@ const JobsPage = React.lazy(() => import('./pages/Jobs').then((m) => ({ default:
 const Privacy = React.lazy(() => import('./pages/Privacy').then((m) => ({ default: m.Privacy })));
 const Terms = React.lazy(() => import('./pages/Terms').then((m) => ({ default: m.Terms })));
 const Contact = React.lazy(() => import('./pages/Contact').then((m) => ({ default: m.Contact })));
+const FigmaDesignSystem = React.lazy(() => import('./pages/FigmaDesignSystem').then((m) => ({ default: m.FigmaDesignSystem })));
 const NotFound = React.lazy(() => import('./pages/NotFound').then((m) => ({ default: m.NotFound })));
 
 import { PageTransition } from './components/layout/PageTransition';
@@ -47,6 +48,8 @@ const AppContent: React.FC = () => {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/design-system" element={<FigmaDesignSystem />} />
+          <Route path="/figma" element={<FigmaDesignSystem />} />
 
           {/* Protected Routes */}
           <Route

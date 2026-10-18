@@ -21,6 +21,101 @@ html {
 }
 
 :root {
+  /* Figma Design System Tokens — Colors */
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-soft-mist: #e2e2e2;
+  --color-graphite: #595959;
+  --color-electric-indigo: #4d49fc;
+  --color-figma-cyan: #00b6ff;
+  --color-figma-green: #24cb71;
+  --color-figma-orange: #ff7237;
+  --color-lime-wash: #e4ff97;
+  --color-lilac: #c4baff;
+  --color-blush: #ffc9c1;
+  --color-aqua-mist: #c7f8fb;
+  --color-earworm-teal: #33dfdf;
+  --color-mustard: #b98e01;
+
+  /* Figma Design System Tokens — Typography */
+  --font-figmasans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-figmamono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Typography — Scale */
+  --text-caption: 12px;
+  --leading-caption: 1.3;
+  --tracking-caption: 0.48px;
+  --text-body-sm: 16px;
+  --leading-body-sm: 1.45;
+  --tracking-body-sm: -0.11px;
+  --text-body: 18px;
+  --leading-body: 1.4;
+  --tracking-body: -0.18px;
+  --text-heading: 24px;
+  --leading-heading: 1.35;
+  --tracking-heading: -0.24px;
+  --text-heading-lg: 56px;
+  --leading-heading-lg: 1.1;
+  --tracking-heading-lg: -0.84px;
+  --text-display: 72px;
+  --leading-display: 1.1;
+  --tracking-display: -1.44px;
+
+  /* Typography — Weights */
+  --font-weight-w320: 320;
+  --font-weight-w330: 330;
+  --font-weight-w340: 340;
+  --font-weight-regular: 400;
+  --font-weight-w450: 450;
+  --font-weight-w480: 480;
+  --font-weight-w520: 520;
+  --font-weight-bold: 700;
+
+  /* Spacing */
+  --spacing-unit: 4px;
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-60: 60px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-120: 120px;
+  --spacing-180: 180px;
+
+  /* Layout */
+  --page-max-width: 1200px;
+  --section-gap: 80px;
+  --card-padding: 24px;
+  --element-gap: 16px;
+
+  /* Border Radius */
+  --radius-sm: 2px;
+  --radius-lg: 8px;
+  --radius-2xl: 16px;
+  --radius-full: 50px;
+
+  /* Named Radii */
+  --radius-tags: 8px;
+  --radius-cards: 16px;
+  --radius-icons: 2px;
+  --radius-small: 8px;
+  --radius-buttons: 50px;
+
+  /* Shadows */
+  --shadow-xl: rgba(0, 0, 0, 0.1) 0px 24px 70px 0px;
+
+  /* Surfaces */
+  --surface-canvas: #ffffff;
+  --surface-card: #ffffff;
+  --surface-soft-panel: #e2e2e2;
+
   /* Expressive spatial motion */
   --motion-expressive-fast-spatial:
     cubic-bezier(0.42, 1.67, 0.21, 0.90);
@@ -947,4 +1042,152 @@ html.lenis, html.lenis body {
   padding: 1.25rem 1.5rem !important;
   background: #FFFFFF !important;
 }
+
+/* ==========================================================================
+   Figma Design System Utilities & Presets
+   "White gallery wall with a single indigo spotlight"
+   ========================================================================== */
+
+/* Hero Floating Card: White surface (#ffffff), 16px radius, 24px padding, shadow rgba(0,0,0,0.1) 0px 24px 70px 0px */
+.figma-hero-floating-card {
+  background: var(--surface-card);
+  border-radius: var(--radius-cards);
+  padding: var(--card-padding);
+  box-shadow: var(--shadow-xl);
+  border: none;
+}
+
+/* Primary CTA Button: Electric Indigo (#4d49fc) fill, white text, 50px pill radius */
+.figma-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-electric-indigo);
+  color: #ffffff;
+  font-family: var(--font-figmasans);
+  font-weight: 480;
+  font-size: 16px;
+  line-height: 1.45;
+  letter-spacing: -0.11px;
+  border-radius: var(--radius-buttons);
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+.figma-btn-primary:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.figma-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Ghost Nav Button: Transparent fill, 1px black border, ink black text, 8px radius */
+.figma-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: transparent;
+  border: 1px solid var(--color-ink-black);
+  color: var(--color-ink-black);
+  font-family: var(--font-figmasans);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.45;
+  letter-spacing: -0.11px;
+  border-radius: var(--radius-small);
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+.figma-btn-ghost:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Pill Black Nav Button: Black fill (#000000), white text, 50px pill radius */
+.figma-btn-pill-black {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-ink-black);
+  color: #ffffff;
+  font-family: var(--font-figmasans);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.45;
+  border-radius: var(--radius-buttons);
+  padding: 8px 18px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+.figma-btn-pill-black:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* Community / Grid Card: 16px radius, white surface, no shadow, subtle mist border */
+.figma-card {
+  background-color: var(--surface-card);
+  border-radius: var(--radius-cards);
+  border: 1px solid var(--color-soft-mist);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.figma-card:hover {
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+/* Section Display Headline: 56px-72px, weight 320, ink black, negative tracking */
+.figma-headline-display {
+  font-family: var(--font-figmasans);
+  font-weight: 320;
+  font-size: 72px;
+  line-height: 1.1;
+  letter-spacing: -1.44px;
+  color: var(--color-ink-black);
+}
+
+.figma-headline-lg {
+  font-family: var(--font-figmasans);
+  font-weight: 320;
+  font-size: 56px;
+  line-height: 1.1;
+  letter-spacing: -0.84px;
+  color: var(--color-ink-black);
+}
+
+/* Monospace technical annotation with positive tracking */
+.figma-mono-tag {
+  font-family: var(--font-figmamono);
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  font-weight: 400;
+  color: var(--color-graphite);
+}
+
+/* Branded Conic Ring Accent: teal (#33dfdf) and mustard (#b98e01) */
+.figma-decorative-ring {
+  display: inline-block;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  padding: 2px;
+  background: conic-gradient(from 18deg at 50% 50%, #33dfdf 0deg, #b98e01 180deg, #33dfdf 360deg);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #fff calc(100% - 2px));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #fff calc(100% - 2px));
+}
+
 

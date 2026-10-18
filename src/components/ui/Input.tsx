@@ -7,22 +7,33 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   helperText?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  variant?: 'default' | 'figma';
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, helperText, leftIcon, rightIcon, id, ...props }, ref) => {
+  ({ className, label, error, helperText, leftIcon, rightIcon, id, variant = 'default', ...props }, ref) => {
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+    const isFigma = variant === 'figma';
 
     return (
       <div className="w-full space-y-1.5">
         {label && (
-          <label htmlFor={inputId} className="block text-xs font-medium text-brand-secondary">
+          <label
+            htmlFor={inputId}
+            className={cn(
+              "block text-xs font-medium",
+              isFigma ? "text-[#595959]" : "text-brand-secondary"
+            )}
+          >
             {label}
           </label>
         )}
         <div className="relative">
           {leftIcon && (
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-brand-muted">
+            <div className={cn(
+              "absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none",
+              isFigma ? "text-[#595959]" : "text-brand-muted"
+            )}>
               {leftIcon}
             </div>
           )}
@@ -30,8 +41,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             className={cn(
-              'block w-full rounded-lg border border-white/10 bg-transparent px-3.5 py-2.5 text-sm text-white placeholder-brand-muted transition-all duration-200',
-              'focus:border-white/30 focus:outline-none focus:bg-white/5 focus:ring-1 focus:ring-white/20',
+              'block w-full rounded-lg transition-all duration-200 px-3.5 py-2.5 text-sm',
+              isFigma
+                ? 'border border-[#e2e2e2] bg-white text-black placeholder-[#595959] focus:border-black focus:outline-none focus:ring-1 focus:ring-black'
+                : 'border border-white/10 bg-transparent text-white placeholder-brand-muted focus:border-white/30 focus:outline-none focus:bg-white/5 focus:ring-1 focus:ring-white/20',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',

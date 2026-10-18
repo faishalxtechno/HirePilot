@@ -3,8 +3,8 @@ import { cn } from '../../lib/utils';
 import { Loader2 } from 'lucide-react';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'glass' | 'glassPrimary';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'glass' | 'glassPrimary' | 'figmaPrimary' | 'figmaGhost' | 'figmaBlack';
+  size?: 'sm' | 'md' | 'lg' | 'figmaPill';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -26,7 +26,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7657FF]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer group button-lift active:scale-[0.98] active:translate-y-0.5 transition-all duration-150';
+      'inline-flex items-center justify-center font-medium rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4d49fc]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer group active:scale-[0.98] transition-all duration-150';
 
     const variants = {
       primary:
@@ -43,12 +43,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         'glass-btn text-white hover:text-white hover:-translate-y-0.5',
       glassPrimary:
         'glass-primary-btn text-white hover:-translate-y-0.5',
+      figmaPrimary:
+        'bg-[#4d49fc] text-white rounded-[50px] font-figmaSans font-[480] hover:bg-[#433ff0] border-none shadow-none text-base px-5 py-2.5',
+      figmaGhost:
+        'bg-transparent text-black border border-black rounded-lg font-figmaSans font-normal hover:bg-black/5 text-base px-[18px] py-2',
+      figmaBlack:
+        'bg-black text-white rounded-[50px] font-figmaSans font-normal hover:bg-black/90 text-base px-[18px] py-2',
     };
 
     const sizes = {
       sm: 'text-xs px-4 py-2 min-h-[36px] gap-1.5',
       md: 'text-sm px-5 py-2.5 min-h-[42px] gap-2',
       lg: 'text-base px-8 py-4 min-h-[52px] gap-2 font-semibold',
+      figmaPill: 'text-base px-5 py-2.5 min-h-[42px] gap-2 rounded-[50px]',
     };
 
     return (

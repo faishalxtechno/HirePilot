@@ -3,22 +3,44 @@ import { cn } from '../../lib/utils';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   hoverable?: boolean;
-  elevation?: 'none' | 'sm' | 'md' | 'lg';
+  elevation?: 'none' | 'sm' | 'md' | 'lg' | 'figmaHero' | 'figmaGrid';
+  variant?: 'default' | 'glass' | 'figma' | 'figmaHero' | 'figmaSoft';
   glass?: boolean;
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, hoverable = false, elevation = 'sm', glass = false, children, ...props }, ref) => {
+  ({ className, hoverable = false, elevation = 'sm', variant = 'default', glass = false, children, ...props }, ref) => {
+    const isFigmaHero = variant === 'figmaHero' || elevation === 'figmaHero';
+    const isFigmaGrid = variant === 'figma' || elevation === 'figmaGrid';
+    const isFigmaSoft = variant === 'figmaSoft';
+
+    const getSurfaceClasses = () => {
+      if (isFigmaHero) {
+        return 'bg-white rounded-[16px] shadow-[0px_24px_70px_0px_rgba(0,0,0,0.1)] border-0 text-black';
+      }
+      if (isFigmaGrid) {
+        return 'bg-white rounded-[16px] border border-[#e2e2e2] shadow-none text-black';
+      }
+      if (isFigmaSoft) {
+        return 'bg-[#e2e2e2] rounded-[16px] border-0 text-black';
+      }
+      if (glass || variant === 'glass') {
+        return 'rounded-2xl glass-card';
+      }
+      return 'rounded-2xl bg-[#121827] border border-[#1E2638] shadow-sm';
+    };
+
     return (
       <div
         ref={ref}
         className={cn(
-          'rounded-2xl',
-          glass
-            ? 'glass-card'
-            : 'bg-[#121827] border border-[#1E2638] shadow-sm',
+          getSurfaceClasses(),
           hoverable &&
-            (glass ? 'glass-card-interactive cursor-pointer will-change-transform' : 'card-hover cursor-pointer will-change-transform'),
+            (glass
+              ? 'glass-card-interactive cursor-pointer will-change-transform'
+              : isFigmaGrid
+              ? 'hover:border-black/30 transition-colors cursor-pointer'
+              : 'card-hover cursor-pointer will-change-transform'),
           className
         )}
         {...props}
