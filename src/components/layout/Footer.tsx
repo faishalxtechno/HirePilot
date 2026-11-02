@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Shield, Heart } from 'lucide-react';
+import { HirePilotLogo } from '../ui/HirePilotLogo';
+import { Shield, Heart } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
@@ -9,14 +10,7 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-100 dark:border-slate-800">
           {/* Col 1: Brand */}
           <div className="space-y-3 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight">
-                Hire<span className="text-brand-600">Pilot</span>
-              </span>
-            </Link>
+            <HirePilotLogo variant="footer" asLink to="/" />
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               Practice Smarter. Interview Better. Get Hired. An AI-powered mock interview platform for developers and job seekers.
             </p>

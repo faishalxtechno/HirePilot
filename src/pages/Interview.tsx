@@ -7,6 +7,7 @@ import { QuestionCard } from '../components/interview/QuestionCard';
 import { AnswerEditor } from '../components/interview/AnswerEditor';
 import { EvaluationFeedback } from '../components/interview/EvaluationFeedback';
 import { Skeleton } from '../components/ui/Skeleton';
+import { HirePilotLogo } from '../components/ui/HirePilotLogo';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
@@ -118,10 +119,11 @@ export const Interview: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 sm:p-8 flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="w-8 h-8 animate-spin text-brand-600" />
-        <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
-          Preparing your AI mock interview room...
-        </p>
+        <HirePilotLogo variant="loading" />
+        <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400">
+          <Loader2 className="w-4 h-4 animate-spin text-brand-600" />
+          <span>Preparing your AI mock interview room...</span>
+        </div>
       </div>
     );
   }

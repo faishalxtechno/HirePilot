@@ -4,7 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import { Sparkles, Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
+import { HirePilotLogo } from '../components/ui/HirePilotLogo';
+import { Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const { signIn, signInWithGoogle, isConfigured } = useAuth();
@@ -72,19 +73,14 @@ export const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12">
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <Link to="/" className="inline-flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-sm shadow-brand-500/20">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <span className="font-bold text-2xl text-slate-900 dark:text-white tracking-tight">
-              Hire<span className="text-brand-600">Pilot</span>
-            </span>
-          </Link>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Sign in to continue your interview practice sessions
-          </p>
+        <div className="text-center space-y-3">
+          <HirePilotLogo variant="auth" asLink to="/" />
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Sign in to continue your interview practice sessions
+            </p>
+          </div>
         </div>
 
         <Card className="p-6 sm:p-8 space-y-5 shadow-xl border-slate-200 dark:border-slate-800">

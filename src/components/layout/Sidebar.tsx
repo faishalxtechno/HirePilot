@@ -2,13 +2,13 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { cn } from '../../lib/utils';
+import { HirePilotLogo } from '../ui/HirePilotLogo';
 import {
   LayoutDashboard,
   PlayCircle,
   History,
   User,
   LogOut,
-  Sparkles,
   Zap,
 } from 'lucide-react';
 
@@ -38,13 +38,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Top Brand & Navigation */}
       <div className="space-y-6">
         {/* Brand */}
-        <div className="px-3 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-sm shadow-brand-500/20">
-            <Sparkles className="w-4 h-4" />
-          </div>
-          <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight">
-            Hire<span className="text-brand-600">Pilot</span>
-          </span>
+        <div className="px-2">
+          <HirePilotLogo variant="sidebar" asLink to="/dashboard" />
         </div>
 
         {/* Links */}

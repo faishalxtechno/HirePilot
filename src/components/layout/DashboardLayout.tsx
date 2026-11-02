@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
-import { Menu, X, Sparkles, AlertCircle } from 'lucide-react';
+import { HirePilotLogo } from '../ui/HirePilotLogo';
+import { Menu, X, AlertCircle } from 'lucide-react';
 import { api } from '../../lib/api';
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -57,14 +58,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
           >
             <Menu className="w-5 h-5" />
           </button>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-brand-600 flex items-center justify-center text-white">
-              <Sparkles className="w-3.5 h-3.5" />
-            </div>
-            <span className="font-bold text-sm text-slate-900 dark:text-white">
-              Hire<span className="text-brand-600">Pilot</span>
-            </span>
-          </div>
+          <HirePilotLogo variant="mobile" asLink to="/dashboard" />
           <div className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
             {quotaInfo.remaining} Left
           </div>

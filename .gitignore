@@ -39,5 +39,6 @@ lerna-debug.log*
 # TypeScript
 *.tsbuildinfo
 
-# TypeScript
-*.tsbuildinfo
+# Mobile local files
+mobile/
+
