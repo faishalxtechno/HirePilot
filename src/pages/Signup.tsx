@@ -5,9 +5,11 @@ import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { HirePilotLogo } from '../components/ui/HirePilotLogo';
+import { useRobotsMeta } from '../hooks/useRobotsMeta';
 import { Mail, Lock, User, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const Signup: React.FC = () => {
+  useRobotsMeta('noindex, follow');
   const { signUp, signInWithGoogle, isConfigured } = useAuth();
   const navigate = useNavigate();
 
