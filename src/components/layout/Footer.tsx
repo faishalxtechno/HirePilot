@@ -42,10 +42,11 @@ export const Footer: React.FC = () => {
               Platform
             </h4>
             <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
-              <li><a href="/#how-it-works" className="hover:text-brand-600">How It Works</a></li>
-              <li><a href="/#features" className="hover:text-brand-600">Features</a></li>
-              <li><a href="/#pricing" className="hover:text-brand-600">Pricing & Limits</a></li>
-              <li><a href="/#faq" className="hover:text-brand-600">FAQ</a></li>
+              <li><a href="/#how-it-works" className="hover:text-brand-600 dark:hover:text-brand-400">How It Works</a></li>
+              <li><a href="/#features" className="hover:text-brand-600 dark:hover:text-brand-400">Features</a></li>
+              <li><a href="/#pricing" className="hover:text-brand-600 dark:hover:text-brand-400">Pricing & Limits</a></li>
+              <li><Link to="/founder" className="hover:text-brand-600 dark:hover:text-brand-400 font-medium text-slate-700 dark:text-slate-300">Meet the Founder</Link></li>
+              <li><a href="/#faq" className="hover:text-brand-600 dark:hover:text-brand-400">FAQ</a></li>
             </ul>
           </div>
 
@@ -68,7 +69,22 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Credits */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} HirePilot. Built for career excellence.</p>
+          <p className="flex items-center gap-1.5 flex-wrap">
+            <span>© {new Date().getFullYear()} HirePilot.</span>
+            <span>•</span>
+            <span>
+              Built with passion by{' '}
+              <Link
+                to="/founder"
+                className="font-semibold text-slate-800 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-colors underline-offset-2 hover:underline"
+              >
+                Faishal Naushad
+              </Link>{' '}
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 font-normal">
+                (Founder & Developer)
+              </span>
+            </span>
+          </p>
           <div className="flex items-center gap-1 text-[11px]">
             <span>Powered by</span>
             <span className="font-semibold text-slate-700 dark:text-slate-300">Gemini AI</span>

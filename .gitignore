@@ -29,8 +29,9 @@ lerna-debug.log*
 .vscode/
 .idea/
 
-# Cloudflare
+# Cloudflare & Vercel
 .wrangler/
+.vercel/
 
 # Temporary files
 *.tmp

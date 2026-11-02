@@ -14,6 +14,7 @@ import { Interview } from './pages/Interview';
 import { InterviewResult } from './pages/InterviewResult';
 import { HistoryPage } from './pages/History';
 import { Profile } from './pages/Profile';
+import { Founder } from './pages/Founder';
 
 export const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ export const App: React.FC = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Landing />} />
+          <Route path="/founder" element={<Founder />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />

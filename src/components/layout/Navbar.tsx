@@ -42,6 +42,9 @@ export const Navbar: React.FC = () => {
           <a href="/#pricing" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
             Pricing
           </a>
+          <Link to="/founder" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+            Founder
+          </Link>
           <a href="/#faq" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
             FAQ
           </a>
@@ -141,10 +144,13 @@ export const Navbar: React.FC = () => {
             <a href="/#interview-types" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50">
               Interview Types
             </a>
-            <a href="/#pricing" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50">
+            <a href="/#pricing" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
               Pricing
             </a>
-            <a href="/#faq" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50">
+            <Link to="/founder" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+              Founder
+            </Link>
+            <a href="/#faq" onClick={() => setMobileMenuOpen(false)} className="py-2 px-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
               FAQ
             </a>
           </nav>

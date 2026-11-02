@@ -5,6 +5,7 @@ import { Footer } from '../components/layout/Footer';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
+import { FounderSection } from '../components/landing/FounderSection';
 import {
   Sparkles,
   ArrowRight,
@@ -418,6 +419,9 @@ export const Landing: React.FC = () => {
           </Card>
         </div>
       </section>
+
+      {/* Meet the Founder Section */}
+      <FounderSection />
 
       {/* FAQ Section */}
       <section id="faq" className="py-20 bg-slate-50 dark:bg-slate-900/40 border-t border-slate-200/80 dark:border-slate-800">
