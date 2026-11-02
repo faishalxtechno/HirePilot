@@ -71,7 +71,7 @@ export const HirePilotLogo: React.FC<HirePilotLogoProps> = ({
 
   const imageElement = (
     <div
-      className={`relative inline-flex items-center select-none transition-transform duration-150 rounded-lg bg-white/95 dark:bg-white p-1 dark:p-1.5 shadow-xs dark:shadow-md ${currentConfig.container} ${className}`}
+      className={`relative inline-flex items-center select-none transition-transform duration-150 rounded-[8px] bg-white p-1 sm:p-1.5 shadow-sm border border-white/10 ${currentConfig.container} ${className}`}
     >
       <img
         src="/images/hirepilot-logo.png"
@@ -90,7 +90,7 @@ export const HirePilotLogo: React.FC<HirePilotLogoProps> = ({
       <Link
         to={to}
         onClick={onClick}
-        className="inline-flex items-center focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 rounded-lg group"
+        className="inline-flex items-center focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[#9382ff] rounded-[8px] group"
         aria-label="HirePilot Home - Practice, Prepare, Get Hired"
       >
         {imageElement}

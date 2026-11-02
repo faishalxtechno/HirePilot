@@ -23,34 +23,34 @@ export const StatCard: React.FC<StatCardProps> = ({
   accentColor = 'brand',
 }) => {
   const accentColors = {
-    brand: 'bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-400',
-    emerald: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400',
-    amber: 'bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400',
-    purple: 'bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400',
+    brand: 'bg-[#10093a] text-[#9382ff] border border-[#5046e4]/30',
+    emerald: 'bg-[#062016] text-emerald-300 border border-emerald-500/30',
+    amber: 'bg-[#241705] text-amber-300 border border-amber-500/30',
+    purple: 'bg-[#1a0f3d] text-[#ba9cff] border border-[#9382ff]/30',
   };
 
   return (
     <Card className="p-5 flex flex-col justify-between" hoverable>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{title}</p>
-          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight font-mono">
+          <p className="text-xs font-medium text-[#a8a6b7]">{title}</p>
+          <h3 className="text-2xl font-medium text-[#f4f0ff] mt-1 tracking-tight font-mono">
             {value}
           </h3>
         </div>
-        <div className={cn('p-2.5 rounded-xl shrink-0', accentColors[accentColor])}>
+        <div className={cn('p-2.5 rounded-[8px] shrink-0', accentColors[accentColor])}>
           {icon}
         </div>
       </div>
 
       {(subtitle || trend) && (
-        <div className="mt-4 flex items-center justify-between text-xs pt-2 border-t border-slate-100 dark:border-slate-800/80">
-          {subtitle && <span className="text-slate-500 dark:text-slate-400">{subtitle}</span>}
+        <div className="mt-4 flex items-center justify-between text-xs pt-2 border-t border-white/10">
+          {subtitle && <span className="text-[#918ea0]">{subtitle}</span>}
           {trend && (
             <span
               className={cn(
-                'font-semibold',
-                trend.isPositive ? 'text-emerald-600' : 'text-slate-500'
+                'font-medium',
+                trend.isPositive ? 'text-emerald-400' : 'text-[#918ea0]'
               )}
             >
               {trend.value}

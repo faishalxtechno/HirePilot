@@ -24,12 +24,12 @@ export const RecentInterviewsTable: React.FC<{ interviews: Interview[] }> = ({ i
       <CardContent className="p-0">
         {interviews.length === 0 ? (
           <div className="text-center py-12 px-4 space-y-3">
-            <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mx-auto">
+            <div className="w-12 h-12 rounded-full bg-[#10093a] text-[#9382ff] border border-white/10 flex items-center justify-center mx-auto">
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No interviews completed yet</p>
-              <p className="text-xs text-slate-500 mt-0.5">Start your first AI mock interview to generate reports and track progress.</p>
+              <p className="text-sm font-medium text-[#f4f0ff]">No interviews completed yet</p>
+              <p className="text-xs text-[#a8a6b7] mt-0.5">Start your first AI mock interview to generate reports and track progress.</p>
             </div>
             <Link to="/interview/setup">
               <Button variant="primary" size="sm" leftIcon={<Play className="w-3.5 h-3.5" />}>
@@ -40,7 +40,7 @@ export const RecentInterviewsTable: React.FC<{ interviews: Interview[] }> = ({ i
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800 uppercase tracking-wider font-semibold">
+              <thead className="bg-[#030014] text-[#918ea0] border-b border-white/10 uppercase tracking-wider font-medium">
                 <tr>
                   <th className="px-6 py-3.5">Role</th>
                   <th className="px-6 py-3.5">Type</th>
@@ -50,10 +50,10 @@ export const RecentInterviewsTable: React.FC<{ interviews: Interview[] }> = ({ i
                   <th className="px-6 py-3.5 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+              <tbody className="divide-y divide-white/10 text-[#a8a6b7]">
                 {interviews.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">
+                  <tr key={item.id} className="hover:bg-white/[0.02] transition-colors">
+                    <td className="px-6 py-4 font-medium text-[#f4f0ff]">
                       {item.role}
                     </td>
                     <td className="px-6 py-4">
@@ -75,14 +75,14 @@ export const RecentInterviewsTable: React.FC<{ interviews: Interview[] }> = ({ i
                     </td>
                     <td className="px-6 py-4">
                       {item.score != null ? (
-                        <span className={`font-mono font-bold px-2 py-0.5 rounded-md border text-xs ${getScoreBadgeBg(item.score)}`}>
+                        <span className={`font-mono font-medium px-2 py-0.5 rounded-[5px] border text-xs ${getScoreBadgeBg(item.score)}`}>
                           {item.score}%
                         </span>
                       ) : (
                         <Badge variant="default" size="sm">In Progress</Badge>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-slate-500 dark:text-slate-400">
+                    <td className="px-6 py-4 text-[#918ea0]">
                       {formatDate(item.started_at)}
                     </td>
                     <td className="px-6 py-4 text-right">

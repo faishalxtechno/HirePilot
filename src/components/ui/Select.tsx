@@ -16,7 +16,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="w-full space-y-1.5">
         {label && (
-          <label htmlFor={selectId} className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <label htmlFor={selectId} className="block text-xs font-medium text-[#a8a6b7]">
             {label}
           </label>
         )}
@@ -25,24 +25,24 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             id={selectId}
             ref={ref}
             className={cn(
-              'block w-full appearance-none rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900/90 px-3.5 py-2.5 pr-10 text-sm text-slate-900 dark:text-white transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:bg-slate-50 disabled:text-slate-500',
-              error && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20',
+              'block w-full appearance-none rounded-[5px] border border-white/10 bg-[#060317] px-3.5 py-2.5 pr-10 text-sm text-[#f4f0ff] transition-colors shadow-[inset_0_0_12px_rgba(255,255,255,0.02)] focus:border-[#9382ff] focus:outline-none focus:ring-1 focus:ring-[#9382ff]/50 disabled:bg-[#030014] disabled:text-[#54525f]',
+              error && 'border-rose-500/60 focus:border-rose-500 focus:ring-rose-500/20 text-rose-300',
               className
             )}
             {...props}
           >
             {options.map((opt) => (
-              <option key={opt.value} value={opt.value} disabled={opt.disabled} className="dark:bg-slate-900">
+              <option key={opt.value} value={opt.value} disabled={opt.disabled} className="bg-[#060317] text-[#f4f0ff]">
                 {opt.label}
               </option>
             ))}
           </select>
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#918ea0]">
             <ChevronDown className="w-4 h-4" />
           </div>
         </div>
-        {error && <p className="text-xs text-rose-500 font-medium">{error}</p>}
-        {!error && helperText && <p className="text-xs text-slate-500 dark:text-slate-400">{helperText}</p>}
+        {error && <p className="text-xs text-rose-400 font-medium">{error}</p>}
+        {!error && helperText && <p className="text-xs text-[#918ea0]">{helperText}</p>}
       </div>
     );
   }

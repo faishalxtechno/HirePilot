@@ -70,22 +70,22 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-[#030014] starfield-bg px-4 py-12">
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-3">
           <HirePilotLogo variant="auth" asLink to="/" />
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <h2 className="text-xl font-medium text-[#f4f0ff]">Welcome back</h2>
+            <p className="text-xs text-[#a8a6b7] mt-1">
               Sign in to continue your interview practice sessions
             </p>
           </div>
         </div>
 
-        <Card className="p-6 sm:p-8 space-y-5 shadow-xl border-slate-200 dark:border-slate-800">
+        <Card className="p-6 sm:p-8 space-y-5 bg-[#060317] border border-white/10 rounded-[16px] shadow-[inset_0_0_24px_rgba(255,255,255,0.04)]">
           {error && (
-            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
+            <div className="p-3 rounded-[5px] bg-rose-950/40 border border-rose-900/50 text-xs text-rose-300 flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -94,11 +94,11 @@ export const Login: React.FC = () => {
           {/* Social Sign-in */}
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             size="md"
             onClick={handleGoogleLogin}
             disabled={isLoading}
-            className="w-full"
+            className="w-full border-white/10 hover:border-white/20"
             leftIcon={
               <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                 <path
@@ -124,8 +124,8 @@ export const Login: React.FC = () => {
           </Button>
 
           <div className="relative flex items-center justify-center">
-            <div className="border-t border-slate-200 dark:border-slate-800 w-full" />
-            <span className="bg-white dark:bg-slate-900 px-3 text-[11px] uppercase tracking-wider text-slate-400 font-semibold absolute">
+            <div className="border-t border-white/10 w-full" />
+            <span className="bg-[#060317] px-3 text-[11px] uppercase tracking-wider text-[#918ea0] font-medium absolute">
               Or with email
             </span>
           </div>
@@ -144,12 +144,12 @@ export const Login: React.FC = () => {
 
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <label className="block text-xs font-medium text-[#a8a6b7]">
                   Password
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-xs text-brand-600 hover:text-brand-700 font-medium"
+                  className="text-xs text-[#9382ff] hover:text-[#ba9cff] font-medium transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -169,7 +169,7 @@ export const Login: React.FC = () => {
               variant="primary"
               size="md"
               isLoading={isLoading}
-              className="w-full shadow-sm shadow-brand-500/20"
+              className="w-full"
               rightIcon={<ArrowRight className="w-4 h-4" />}
             >
               Sign In
@@ -178,9 +178,9 @@ export const Login: React.FC = () => {
         </Card>
 
         {/* Footer Link */}
-        <p className="text-center text-xs text-slate-500">
+        <p className="text-center text-xs text-[#a8a6b7]">
           Don't have an account?{' '}
-          <Link to="/signup" className="text-brand-600 hover:text-brand-700 font-semibold">
+          <Link to="/signup" className="text-[#9382ff] hover:text-[#ba9cff] font-medium transition-colors">
             Create a free account
           </Link>
         </p>

@@ -48,12 +48,12 @@ export const Dashboard: React.FC = () => {
     <DashboardLayout>
       <div className="space-y-8 animate-fade-in pb-12">
         {/* Top Header & Greeting */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/10">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-medium text-[#f4f0ff] tracking-tight">
               Welcome back, {displayName}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-[#a8a6b7] mt-1">
               Ready for your next interview? Track your performance and sharpen your skills.
             </p>
           </div>
@@ -63,7 +63,6 @@ export const Dashboard: React.FC = () => {
               <Button
                 variant="primary"
                 size="md"
-                className="shadow-md shadow-brand-500/20"
                 leftIcon={<Play className="w-4 h-4 fill-white" />}
               >
                 Start New Interview
@@ -74,22 +73,22 @@ export const Dashboard: React.FC = () => {
 
         {/* Quota Banner */}
         {data?.stats && (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl bg-brand-50/70 dark:bg-brand-950/40 border border-brand-200/80 dark:border-brand-900/60 gap-3">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-brand-600 text-white flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-[8px] bg-[#10093a] text-[#9382ff] border border-white/10 flex items-center justify-center shrink-0">
                 <Zap className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-xs font-bold text-brand-900 dark:text-brand-200">
+                <p className="text-xs font-medium text-[#f4f0ff]">
                   {data.stats.monthlyRemaining} interview{data.stats.monthlyRemaining === 1 ? '' : 's'} remaining this month
                 </p>
-                <p className="text-[11px] text-brand-700/80 dark:text-brand-400">
+                <p className="text-[11px] text-[#918ea0]">
                   Standard free plan allows 3 comprehensive AI evaluations each month.
                 </p>
               </div>
             </div>
 
-            <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 shrink-0">
+            <span className="text-xs font-mono font-medium px-2.5 py-1 rounded-[5px] bg-[#10093a] text-[#9382ff] border border-white/10 shrink-0">
               {data.stats.monthlyUsed} / {data.stats.monthlyMax} Used
             </span>
           </div>

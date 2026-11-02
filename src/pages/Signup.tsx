@@ -78,52 +78,52 @@ export const Signup: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-[#030014] starfield-bg px-4 py-12">
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-3">
           <HirePilotLogo variant="auth" asLink to="/" />
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Create your account</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <h2 className="text-xl font-medium text-[#f4f0ff]">Create your account</h2>
+            <p className="text-xs text-[#a8a6b7] mt-1">
               Start your free AI mock interviews today
             </p>
           </div>
         </div>
 
-        <Card className="p-6 sm:p-8 space-y-5 shadow-xl border-slate-200 dark:border-slate-800">
+        <Card className="p-6 sm:p-8 space-y-5 bg-[#060317] border border-white/10 rounded-[16px] shadow-[inset_0_0_24px_rgba(255,255,255,0.04)]">
           {isSuccess ? (
             <div className="text-center space-y-4 py-4">
-              <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-full bg-[#10093a] text-[#9382ff] border border-[#5046e4]/40 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Verification email sent!</h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                We sent a confirmation link to <strong>{email}</strong>. Please check your inbox to activate your account and access your dashboard.
+              <h3 className="text-lg font-medium text-[#f4f0ff]">Verification email sent!</h3>
+              <p className="text-xs text-[#a8a6b7] leading-relaxed">
+                We've sent a verification link to <strong className="text-[#f4f0ff]">{email}</strong>. Please check your inbox to confirm your account and begin practicing.
               </p>
               <Link to="/login" className="block pt-2">
                 <Button variant="primary" size="md" className="w-full">
-                  Go to Login
+                  Return to Sign In
                 </Button>
               </Link>
             </div>
           ) : (
             <>
               {error && (
-                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
+                <div className="p-3 rounded-[5px] bg-rose-950/40 border border-rose-900/50 text-xs text-rose-300 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
 
-              {/* Social Sign-in */}
+              {/* Social Google Signup */}
               <Button
                 type="button"
-                variant="outline"
+                variant="secondary"
                 size="md"
                 onClick={handleGoogleSignup}
                 disabled={isLoading}
-                className="w-full"
+                className="w-full border-white/10 hover:border-white/20"
                 leftIcon={
                   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                     <path
@@ -149,8 +149,8 @@ export const Signup: React.FC = () => {
               </Button>
 
               <div className="relative flex items-center justify-center">
-                <div className="border-t border-slate-200 dark:border-slate-800 w-full" />
-                <span className="bg-white dark:bg-slate-900 px-3 text-[11px] uppercase tracking-wider text-slate-400 font-semibold absolute">
+                <div className="border-t border-white/10 w-full" />
+                <span className="bg-[#060317] px-3 text-[11px] uppercase tracking-wider text-[#918ea0] font-medium absolute">
                   Or with email
                 </span>
               </div>
@@ -160,7 +160,7 @@ export const Signup: React.FC = () => {
                 <Input
                   label="Full Name"
                   type="text"
-                  placeholder="Alex Morgan"
+                  placeholder="Alex Mercer"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   leftIcon={<User className="w-4 h-4" />}
@@ -180,10 +180,11 @@ export const Signup: React.FC = () => {
                 <Input
                   label="Password"
                   type="password"
-                  placeholder="At least 6 characters"
+                  placeholder="Min 6 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   leftIcon={<Lock className="w-4 h-4" />}
+                  helperText="Must be at least 6 characters"
                   required
                 />
 
@@ -192,10 +193,10 @@ export const Signup: React.FC = () => {
                   variant="primary"
                   size="md"
                   isLoading={isLoading}
-                  className="w-full shadow-sm shadow-brand-500/20"
+                  className="w-full"
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                 >
-                  Create Account
+                  Create Free Account
                 </Button>
               </form>
             </>
@@ -203,9 +204,9 @@ export const Signup: React.FC = () => {
         </Card>
 
         {/* Footer Link */}
-        <p className="text-center text-xs text-slate-500">
+        <p className="text-center text-xs text-[#a8a6b7]">
           Already have an account?{' '}
-          <Link to="/login" className="text-brand-600 hover:text-brand-700 font-semibold">
+          <Link to="/login" className="text-[#9382ff] hover:text-[#ba9cff] font-medium transition-colors">
             Sign in
           </Link>
         </p>
