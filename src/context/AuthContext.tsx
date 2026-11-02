@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          fetchUserProfile(session.user.id, session.user.email);
+          fetchUserProfile(session.user.id, session.user.email, session.user.user_metadata);
         } else if (savedGuest) {
           setProfile(JSON.parse(savedGuest));
           setUser({ id: 'guest-user-123', email: 'alex.morgan@hirepilot.dev' } as any);
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          fetchUserProfile(session.user.id, session.user.email);
+          fetchUserProfile(session.user.id, session.user.email, session.user.user_metadata);
         } else {
           setProfile(null);
         }
@@ -82,13 +82,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const fetchUserProfile = async (userId: string, email?: string) => {
+  const fetchUserProfile = async (userId: string, email?: string, userMetadata?: any) => {
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (data) {
         setProfile(data);
@@ -96,8 +96,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Fallback default profile if trigger hasn't fired yet
         setProfile({
           id: userId,
-          name: email?.split('@')[0] || 'Candidate',
+          name: userMetadata?.full_name || userMetadata?.name || email?.split('@')[0] || 'Candidate',
           email: email || '',
+          avatar_url: userMetadata?.avatar_url || userMetadata?.picture,
           target_role: 'Software Engineer',
           experience_level: 'Fresher',
         });
