@@ -8,6 +8,20 @@ export default {
   theme: {
     extend: {
       colors: {
+        reflect: {
+          void: '#030014',
+          midnight: '#060317',
+          indigo: '#10093a',
+          lilac: '#f4f0ff',
+          pearl: '#ffffff',
+          ash: '#a8a6b7',
+          fog: '#918ea0',
+          steel: '#54525f',
+          mercury: '#cdccd0',
+          dusk: '#72707b',
+          lavender: '#9382ff',
+          iris: '#5046e4',
+        },
         brand: {
           50: '#f0f7ff',
           100: '#e0effe',
@@ -30,10 +44,19 @@ export default {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
+      borderRadius: {
+        'reflect-button': '5px',
+        'reflect-card': '16px',
+        'reflect-badge': '32px',
+        'reflect-block': '24px',
+      },
       boxShadow: {
         'subtle': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
         'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
         'glow': '0 0 25px -5px rgba(14, 142, 233, 0.25)',
+        'reflect-rim': 'rgba(255, 255, 255, 0.04) 0px 0px 24px 0px inset',
+        'reflect-rim-bright': 'rgba(255, 255, 255, 0.06) 0px 0px 24px 0px inset',
+        'reflect-badge': 'rgba(164, 143, 255, 0.12) 0px -7px 11px 0px inset',
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-in-out',

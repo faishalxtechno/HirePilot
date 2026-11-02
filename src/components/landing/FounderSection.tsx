@@ -19,9 +19,6 @@ import {
   CheckCircle2,
   GraduationCap,
 } from 'lucide-react';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
 
 /**
  * Verified Founder & Developer Profile Details for Faishal Naushad
@@ -54,19 +51,19 @@ export const FOUNDER_DATA = {
       label: 'LinkedIn',
       href: 'https://www.linkedin.com/in/faishal-naushad-b28807273/',
       icon: Linkedin,
-      color: 'hover:text-[#0A66C2] hover:border-[#0A66C2]/40',
+      color: 'hover:text-[#9382ff] hover:border-[#9382ff]/50',
     },
     {
       label: 'GitHub',
       href: 'https://github.com/faishalxtechno',
       icon: Github,
-      color: 'hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-slate-600',
+      color: 'hover:text-[#f4f0ff] hover:border-white/30',
     },
     {
       label: 'Email',
       href: 'mailto:connectwithfaishal@gmail.com',
       icon: Mail,
-      color: 'hover:text-brand-600 dark:hover:text-brand-400 hover:border-brand-500/40',
+      color: 'hover:text-[#9382ff] hover:border-[#9382ff]/50',
     },
   ],
 };
@@ -75,33 +72,23 @@ export const FounderSection: React.FC = () => {
   return (
     <section
       id="founder"
-      className="relative py-20 sm:py-28 bg-white dark:bg-slate-900/40 border-t border-slate-200/80 dark:border-slate-800 overflow-hidden"
+      className="relative py-24 sm:py-28 bg-[#030014] text-[#f4f0ff] overflow-hidden"
       aria-labelledby="founder-heading"
     >
-      {/* Ambient background glows */}
-      <div
-        className="absolute top-1/3 left-10 w-96 h-96 bg-brand-500/5 dark:bg-brand-500/10 rounded-full blur-3xl pointer-events-none -z-10"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute bottom-10 right-10 w-80 h-80 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-3xl pointer-events-none -z-10"
-        aria-hidden="true"
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-semibold shadow-xs">
-            <Sparkles className="w-3.5 h-3.5" />
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-[32px] bg-[#060317] border border-[#5046e4] text-[#f4f0ff] text-xs font-medium shadow-[inset_0_-7px_11px_rgba(164,143,255,0.12)]">
+            <Sparkles className="w-3.5 h-3.5 text-[#9382ff]" />
             <span>Meet the Founder</span>
           </div>
           <h2
             id="founder-heading"
-            className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight"
+            className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight"
           >
             The Mind Behind HirePilot
           </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400">
+          <p className="text-sm text-[#a8a6b7] font-normal">
             A developer-led platform created to empower job seekers through accessible, AI-powered preparation.
           </p>
         </div>
@@ -111,22 +98,16 @@ export const FounderSection: React.FC = () => {
           {/* Left Column: Real Photograph & Frame */}
           <div className="lg:col-span-5 flex flex-col items-center">
             <div className="relative w-full max-w-sm">
-              {/* Soft decorative backplate */}
-              <div
-                className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-brand-500/20 via-indigo-500/15 to-transparent blur-xl pointer-events-none"
-                aria-hidden="true"
-              />
-
               {/* Main Photo Card Frame */}
-              <div className="relative rounded-3xl p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xl shadow-slate-900/5 dark:shadow-black/40">
+              <div className="relative rounded-[16px] p-3 sm:p-4 bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)]">
                 {/* Floating Status Pill (Top-Right) */}
-                <div className="absolute -top-3 right-4 px-3 py-1 rounded-full bg-slate-900 text-white dark:bg-slate-800 dark:text-slate-100 text-[11px] font-mono font-medium flex items-center gap-1.5 shadow-lg border border-slate-700/60 z-10">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <div className="absolute -top-3 right-4 px-3 py-1 rounded-[32px] bg-[#10093a] text-[#f4f0ff] text-[11px] font-mono font-medium flex items-center gap-1.5 border border-[#5046e4]/40 z-10 shadow-[inset_0_0_12px_rgba(255,255,255,0.05)]">
+                  <span className="w-2 h-2 rounded-full bg-[#9382ff] animate-pulse" />
                   <span>Founder & Developer</span>
                 </div>
 
-                {/* Founder Image Container with cover and center top position */}
-                <div className="relative rounded-2xl overflow-hidden aspect-[4/4.5] bg-slate-100 dark:bg-slate-850 border border-slate-100 dark:border-slate-800">
+                {/* Founder Image Container */}
+                <div className="relative rounded-[12px] overflow-hidden aspect-[4/4.5] bg-[#10093a] border border-white/5">
                   <img
                     src={FOUNDER_DATA.photoUrl}
                     alt={`${FOUNDER_DATA.name} — ${FOUNDER_DATA.title} of ${FOUNDER_DATA.product}`}
@@ -139,17 +120,17 @@ export const FounderSection: React.FC = () => {
                 </div>
 
                 {/* Sub-card: Credentials & University */}
-                <div className="mt-3.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-850/80 border border-slate-100 dark:border-slate-800 space-y-1.5">
+                <div className="mt-3.5 p-3 rounded-[10px] bg-[#10093a]/50 border border-white/5 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+                    <p className="text-xs font-medium text-[#f4f0ff] flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#9382ff]" />
                       <span>{FOUNDER_DATA.name}</span>
                     </p>
-                    <Badge variant="brand" size="sm">
+                    <span className="px-2 py-0.5 rounded-[32px] text-[10px] font-medium bg-[#5046e4]/20 text-[#ba9cff] border border-[#5046e4]/40">
                       Galgotias Univ
-                    </Badge>
+                    </span>
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                  <p className="text-[11px] text-[#918ea0] leading-snug font-normal">
                     B.Tech CSE (AI &amp; ML) Specialization
                   </p>
                 </div>
@@ -161,46 +142,46 @@ export const FounderSection: React.FC = () => {
           <div className="lg:col-span-7 space-y-6">
             {/* Name, Title & Academic Specialization */}
             <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-widest text-brand-600 dark:text-brand-400 font-bold block">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#9382ff] font-medium block">
                 Founder &amp; Developer
               </span>
-              <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              <h3 className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
                 {FOUNDER_DATA.name}
               </h3>
-              <p className="text-sm font-semibold text-brand-600 dark:text-brand-400">
+              <p className="text-sm font-medium text-[#ba9cff]">
                 {FOUNDER_DATA.title} • {FOUNDER_DATA.product}
               </p>
-              <div className="inline-flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 bg-slate-100/80 dark:bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-200/60 dark:border-slate-700/60">
-                <GraduationCap className="w-4 h-4 text-brand-600 dark:text-brand-400 shrink-0" />
+              <div className="inline-flex items-center gap-2 text-xs text-[#a8a6b7] bg-[#060317] px-3 py-1.5 rounded-[5px] border border-white/10 shadow-[inset_0_0_12px_rgba(255,255,255,0.03)]">
+                <GraduationCap className="w-4 h-4 text-[#9382ff] shrink-0" />
                 <span>{FOUNDER_DATA.background}</span>
               </div>
             </div>
 
             {/* Biography paragraphs */}
-            <div className="space-y-3.5 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+            <div className="space-y-3.5 text-sm sm:text-base text-[#a8a6b7] font-normal leading-relaxed">
               {FOUNDER_DATA.bio.map((paragraph, idx) => (
                 <p key={idx}>{paragraph}</p>
               ))}
             </div>
 
             {/* Mission Section Quote */}
-            <Card className="p-4 sm:p-5 bg-gradient-to-br from-brand-50/60 to-white dark:from-brand-950/20 dark:to-slate-900 border-l-4 border-l-brand-600 dark:border-l-brand-500 border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div className="p-4 sm:p-5 rounded-[16px] bg-[#060317] border border-white/10 border-l-2 border-l-[#9382ff] shadow-[inset_0_0_24px_rgba(255,255,255,0.04)]">
               <div className="flex items-start gap-3">
-                <Quote className="w-5 h-5 text-brand-600 dark:text-brand-400 shrink-0 mt-0.5 opacity-80" />
+                <Quote className="w-5 h-5 text-[#9382ff] shrink-0 mt-0.5 opacity-80" />
                 <div className="space-y-1">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                  <h4 className="text-xs font-medium text-[#f4f0ff] uppercase tracking-wider">
                     {FOUNDER_DATA.missionTitle}
                   </h4>
-                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 italic leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#f4f0ff]/90 italic leading-relaxed font-normal">
                     &ldquo;{FOUNDER_DATA.missionQuote}&rdquo;
                   </p>
                 </div>
               </div>
-            </Card>
+            </div>
 
             {/* Technology & Expertise: What I Work With */}
             <div className="space-y-2 pt-1">
-              <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+              <h4 className="text-xs font-medium text-[#f4f0ff] uppercase tracking-wider">
                 What I Work With
               </h4>
               <div className="flex flex-wrap gap-2">
@@ -209,9 +190,9 @@ export const FounderSection: React.FC = () => {
                   return (
                     <span
                       key={tech.name}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[5px] text-xs font-medium bg-[#10093a]/70 text-[#f4f0ff] border border-white/10 shadow-[inset_0_0_12px_rgba(255,255,255,0.02)]"
                     >
-                      <Icon className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400 shrink-0" />
+                      <Icon className="w-3.5 h-3.5 text-[#9382ff] shrink-0" />
                       <span>{tech.name}</span>
                     </span>
                   );
@@ -222,14 +203,13 @@ export const FounderSection: React.FC = () => {
             {/* CTAs: Link to Dedicated /founder page & Social Links */}
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Link to="/founder" className="shrink-0">
-                <Button
-                  variant="primary"
-                  size="md"
-                  className="w-full sm:w-auto shadow-md shadow-brand-500/20"
-                  rightIcon={<ArrowRight className="w-4 h-4" />}
+                <button
+                  type="button"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-[5px] bg-[#5046e4] hover:bg-[#10093a] text-white text-sm font-medium transition-colors shadow-[0_0_16px_rgba(80,70,228,0.35)]"
                 >
-                  Meet the Founder (Full Page)
-                </Button>
+                  <span>Meet the Founder (Full Page)</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
               </Link>
 
               <div className="flex items-center gap-2 flex-wrap">
@@ -242,12 +222,12 @@ export const FounderSection: React.FC = () => {
                       target={link.href.startsWith('mailto:') ? '_self' : '_blank'}
                       rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                       title={link.label}
-                      className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-slate-850 border border-slate-200/90 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-all duration-200 hover:shadow-xs hover:-translate-y-0.5 ${link.color}`}
+                      className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-[5px] bg-[#060317] border border-white/10 text-xs font-medium text-[#f4f0ff] transition-all duration-200 hover:bg-[#10093a] ${link.color}`}
                     >
                       <Icon className="w-4 h-4 shrink-0" />
                       <span>{link.label}</span>
                       {!link.href.startsWith('mailto:') && (
-                        <ArrowUpRight className="w-3 h-3 text-slate-400" />
+                        <ArrowUpRight className="w-3 h-3 text-[#918ea0]" />
                       )}
                     </a>
                   );

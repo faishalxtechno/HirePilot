@@ -152,7 +152,7 @@ export const Founder: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white selection:bg-brand-500 selection:text-white">
-      <Navbar />
+      <Navbar variant="standard" />
 
       {/* Breadcrumb / Top Bar */}
       <div className="border-b border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
