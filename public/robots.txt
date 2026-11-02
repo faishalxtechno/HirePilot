@@ -1,0 +1,17 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Allow: /founder
+Allow: /login
+Allow: /signup
+
+# Disallow private user sessions and dashboard routes
+Disallow: /dashboard
+Disallow: /interview/
+Disallow: /history
+Disallow: /profile
+Disallow: /api/
+
+# Host & Sitemap
+Sitemap: https://hire-pilot-dusky.vercel.app/sitemap.xml
+
