@@ -119,3 +119,130 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #5046e4;
 }
+
+/* ========================================================= */
+/* 3D LOGO INTRO EXPERIENCE ANIMATIONS                       */
+/* ========================================================= */
+
+@keyframes logo-3d-stage-emerge {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) translate3d(0, 36px, -240px) rotateX(24deg) rotateY(-20deg) scale(0.82);
+    filter: blur(14px);
+  }
+  50% {
+    opacity: 1;
+    transform: perspective(1200px) translate3d(0, -6px, 20px) rotateX(-4deg) rotateY(3deg) scale(1.02);
+    filter: blur(0px);
+  }
+  75% {
+    transform: perspective(1200px) translate3d(0, 2px, 6px) rotateX(1.5deg) rotateY(-1deg) scale(1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1200px) translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes logo-specular-sweep {
+  0% {
+    transform: translateX(-160%) rotate(25deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(260%) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+@keyframes logo-ambient-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+}
+
+@keyframes logo-floor-shadow {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(30px);
+  }
+  60% {
+    opacity: 0.7;
+    transform: scale(1.1) translateY(-2px);
+  }
+  100% {
+    opacity: 0.45;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes logo-tagline-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+    letter-spacing: 0.35em;
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateY(0);
+    letter-spacing: 0.25em;
+  }
+}
+
+.animate-logo-3d-stage {
+  animation: logo-3d-stage-emerge 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+}
+
+.animate-logo-specular {
+  animation: logo-specular-sweep 1.25s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards;
+  will-change: transform, opacity;
+}
+
+.animate-logo-ambient {
+  animation: logo-ambient-bloom 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-logo-shadow {
+  animation: logo-floor-shadow 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-logo-tagline {
+  animation: logo-tagline-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
+  opacity: 0;
+  will-change: transform, opacity, letter-spacing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-logo-3d-stage,
+  .animate-logo-specular,
+  .animate-logo-ambient,
+  .animate-logo-shadow,
+  .animate-logo-tagline {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
+

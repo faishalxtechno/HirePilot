@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test": "jiti test/interviewEngine.test.mjs",
+    "test": "jiti test/interviewEngine.test.mjs && node test/logoIntro.test.mjs",
     "worker:dev": "wrangler dev worker/index.ts",
     "worker:deploy": "wrangler deploy worker/index.ts"
   },

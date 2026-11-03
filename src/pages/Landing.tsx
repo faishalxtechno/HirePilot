@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { FounderSection } from '../components/landing/FounderSection';
+import { LogoIntro } from '../components/ui/LogoIntro';
 import {
   HeroHeading,
   AnimatedHeading,
@@ -126,6 +127,9 @@ export const Landing: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white text-[#111827] font-sans selection:bg-[#2563EB] selection:text-white relative overflow-x-hidden">
+      {/* Cinematic 3D Logo Intro Overlay (Plays once per session on initial visit) */}
+      <LogoIntro />
+
       {/* Light Frosted Navbar */}
       <Navbar variant="light" />
 
