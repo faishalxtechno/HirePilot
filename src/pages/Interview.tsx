@@ -22,6 +22,7 @@ export const Interview: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submittingStatus, setSubmittingStatus] = useState<string>('Evaluating Answer with Gemini AI...');
   const [isLoadingNext, setIsLoadingNext] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [retryAction, setRetryAction] = useState<'submit' | 'next' | null>(null);
@@ -65,19 +66,32 @@ export const Interview: React.FC = () => {
     setIsSubmitting(true);
     setError(null);
     setRetryAction(null);
+    setSubmittingStatus('Evaluating Answer with Gemini AI...');
 
     try {
-      const evalResult = await api.submitAnswer(id, {
-        question_id: currentQuestion.id,
-        user_answer: userAnswer.trim(),
-      });
+      const evalResult = await api.submitAnswer(
+        id,
+        {
+          question_id: currentQuestion.id,
+          user_answer: userAnswer.trim(),
+        },
+        (statusText) => {
+          setSubmittingStatus(statusText);
+        }
+      );
       setEvaluation(evalResult);
     } catch (err: any) {
       console.error('Error evaluating answer:', err);
-      setError(err.message || 'Failed to evaluate answer. Your response is saved below; click Retry.');
+      const isBusy = err.message?.includes('busy') || err.message?.includes('503') || err.message?.includes('429');
+      setError(
+        isBusy
+          ? 'AI evaluation is temporarily busy. Your answer is preserved; please click Retry below.'
+          : (err.message || 'Failed to evaluate answer. Your response is saved below; click Retry.')
+      );
       setRetryAction('submit');
     } finally {
       setIsSubmitting(false);
+      setSubmittingStatus('Evaluating Answer with Gemini AI...');
     }
   };
 
@@ -239,6 +253,7 @@ export const Interview: React.FC = () => {
                 onChange={setUserAnswer}
                 onSubmit={handleSubmitAnswer}
                 isSubmitting={isSubmitting}
+                submittingMessage={submittingStatus}
                 disabled={isSubmitting}
               />
             )}

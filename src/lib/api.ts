@@ -60,53 +60,91 @@ export const api = {
     return await res.json();
   },
 
-  // 2. Submit Answer & Receive AI Evaluation (Real AI Answer Evaluation)
-  async submitAnswer(interviewId: string, payload: { question_id: string; user_answer: string }): Promise<AnswerEvaluation> {
-    const headers = await getAuthHeader();
-    let res: Response;
+  // 2. Submit Answer & Receive AI Evaluation (Real AI Answer Evaluation with Automatic 503/429 Retry)
+  async submitAnswer(
+    interviewId: string,
+    payload: { question_id: string; user_answer: string },
+    onStatusUpdate?: (status: string) => void
+  ): Promise<AnswerEvaluation> {
+    const maxClientRetries = 2;
+    let lastError: Error | null = null;
 
-    try {
-      res = await fetch(`${WORKER_URL}/interviews/${interviewId}/answer`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload),
-      });
-    } catch (networkErr: any) {
-      console.error('Network error during answer submission:', networkErr);
-      throw new Error(
-        'Unable to connect to the interview evaluation service. Please check your internet connection and retry. Your answer has been preserved.'
-      );
-    }
-
-    if (!res.ok) {
-      let errorMessage = `Failed to evaluate answer (${res.status})`;
+    for (let attempt = 0; attempt <= maxClientRetries; attempt++) {
       try {
-        const errorJson = await res.json();
-        if (errorJson.error) {
-          errorMessage = errorJson.error;
+        const headers = await getAuthHeader();
+        let res: Response;
+
+        try {
+          res = await fetch(`${WORKER_URL}/interviews/${interviewId}/answer`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload),
+          });
+        } catch (networkErr: any) {
+          console.error('Network error during answer submission:', networkErr);
+          if (attempt < maxClientRetries) {
+            onStatusUpdate?.('AI evaluation is temporarily busy. Retrying...');
+            await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+            continue;
+          }
+          throw new Error(
+            'Unable to connect to the interview evaluation service. Please check your internet connection and retry. Your answer has been preserved.'
+          );
         }
-      } catch {
-        if (res.status === 405) {
-          errorMessage = 'HTTP 405 Method Not Allowed: The evaluation endpoint rejected the request method. Please ensure requests use POST to the API worker.';
-        } else if (res.status === 401) {
-          errorMessage = 'Authentication expired or invalid. Please refresh and log in again.';
-        } else if (res.status === 404) {
-          errorMessage = 'Interview session or question not found. It may have expired or belongs to another user.';
-        } else if (res.status === 429) {
-          errorMessage = 'Monthly interview evaluation quota reached.';
-        } else if (res.status >= 500) {
-          errorMessage = 'The AI evaluation service encountered a temporary error. Your answer is preserved; please click Retry.';
+
+        if (!res.ok) {
+          let errorMessage = `Failed to evaluate answer (${res.status})`;
+          let isRetryable = res.status === 503 || res.status === 429;
+
+          try {
+            const errorJson = await res.json();
+            if (errorJson.error) {
+              errorMessage = errorJson.error;
+            }
+            if (errorJson.retryable || errorJson.code === 'AI_SERVICE_BUSY') {
+              isRetryable = true;
+            }
+          } catch {
+            if (res.status === 405) {
+              errorMessage = 'HTTP 405 Method Not Allowed: The evaluation endpoint rejected the request method. Please ensure requests use POST to the API worker.';
+            } else if (res.status === 401) {
+              errorMessage = 'Authentication expired or invalid. Please refresh and log in again.';
+            } else if (res.status === 404) {
+              errorMessage = 'Interview session or question not found. It may have expired or belongs to another user.';
+            } else if (res.status === 429) {
+              errorMessage = 'AI evaluation service is temporarily rate limited. Retrying...';
+              isRetryable = true;
+            } else if (res.status >= 500) {
+              errorMessage = 'The AI evaluation service is temporarily busy. Your answer is preserved; please click Retry.';
+              isRetryable = res.status === 503 || res.status === 502 || res.status === 504;
+            }
+          }
+
+          if (isRetryable && attempt < maxClientRetries) {
+            onStatusUpdate?.('AI evaluation is temporarily busy. Retrying...');
+            await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+            continue;
+          }
+
+          throw new Error(errorMessage);
+        }
+
+        const data = await res.json();
+        if (!data.evaluation) {
+          throw new Error('AI evaluation response was incomplete. Please retry submission.');
+        }
+
+        return data.evaluation;
+      } catch (err: any) {
+        lastError = err;
+        const isPermanent = err.message?.includes('401') || err.message?.includes('404') || err.message?.includes('405');
+        if (isPermanent || attempt >= maxClientRetries) {
+          break;
         }
       }
-      throw new Error(errorMessage);
     }
 
-    const data = await res.json();
-    if (!data.evaluation) {
-      throw new Error('AI evaluation response was incomplete. Please retry submission.');
-    }
-
-    return data.evaluation;
+    throw lastError || new Error('Failed to evaluate answer. Your response is saved below; click Retry.');
   },
 
   // 3. Get Next Question (Real Adaptive AI Generation)

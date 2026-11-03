@@ -9,6 +9,7 @@ interface AnswerEditorProps {
   onChange: (val: string) => void;
   onSubmit: () => void;
   isSubmitting: boolean;
+  submittingMessage?: string;
   disabled?: boolean;
 }
 
@@ -17,6 +18,7 @@ export const AnswerEditor: React.FC<AnswerEditorProps> = ({
   onChange,
   onSubmit,
   isSubmitting,
+  submittingMessage,
   disabled = false,
 }) => {
   const [isListening, setIsListening] = useState(false);
@@ -172,7 +174,7 @@ export const AnswerEditor: React.FC<AnswerEditorProps> = ({
           leftIcon={!isSubmitting ? <Send className="w-4 h-4" /> : undefined}
           className="shadow-xs bg-[#2563EB] hover:bg-[#1D4ED8]"
         >
-          {isSubmitting ? 'Evaluating Answer with Gemini AI...' : 'Submit Answer'}
+          {isSubmitting ? (submittingMessage || 'Evaluating Answer with Gemini AI...') : 'Submit Answer'}
         </Button>
       </div>
     </Card>

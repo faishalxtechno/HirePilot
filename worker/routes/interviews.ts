@@ -317,10 +317,26 @@ interviewRouter.post('/:id/answer', async (c) => {
       },
     });
   } catch (evalErr: any) {
-    console.error('Answer evaluation failure:', evalErr);
+    console.error('Answer evaluation failure:', evalErr?.message || 'Unknown error');
+    const isBusy =
+      evalErr?.status === 503 ||
+      evalErr?.status === 429 ||
+      evalErr?.status === 502 ||
+      evalErr?.status === 504 ||
+      evalErr?.message?.includes('503') ||
+      evalErr?.message?.includes('429') ||
+      evalErr?.message?.includes('temporarily');
+
+    const statusCode = isBusy ? 503 : 500;
+    const userMessage = isBusy
+      ? 'AI evaluation is temporarily busy. Retrying...'
+      : (evalErr?.message || 'Failed to evaluate answer with AI. Please retry submission.');
+
     return c.json({
-      error: evalErr.message || 'Failed to evaluate answer with AI. Please retry submission.',
-    }, 500);
+      error: userMessage,
+      code: isBusy ? 'AI_SERVICE_BUSY' : 'AI_EVALUATION_ERROR',
+      retryable: isBusy,
+    }, statusCode);
   }
 });
 
