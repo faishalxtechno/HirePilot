@@ -10,6 +10,11 @@ import {
   InterviewType,
   DifficultyLevel,
 } from '../types';
+import {
+  calculateWeightedAnswerScore,
+  calculateInterviewAggregates,
+  parseDimensionScore,
+} from './scoringRubric';
 
 const WORKER_URL = import.meta.env.VITE_WORKER_API_URL || '/api';
 
@@ -27,12 +32,7 @@ async function getAuthHeader(): Promise<HeadersInit> {
 // -----------------------------------------------------------------------------
 export const api = {
   // 1. Create Interview & First Question
-  async createInterview(payload: {
-    role: RoleType;
-    interview_type: InterviewType;
-    difficulty: DifficultyLevel;
-    total_questions: number;
-  }): Promise<{ interview: Interview; firstQuestion: Question }> {
+  async createInterview(payload: CreateInterviewPayload): Promise<{ interview: Interview; firstQuestion: Question }> {
     try {
       const headers = await getAuthHeader();
       const res = await fetch(`${WORKER_URL}/interviews`, {
@@ -74,6 +74,10 @@ export const api = {
       const data = await res.json();
       return data.evaluation;
     } catch (err: any) {
+      // If error from backend worker, throw it so UI preserves answer and shows retry
+      if (err.message && !err.message.includes('Failed to fetch')) {
+        throw err;
+      }
       console.warn('Backend worker unavailable, using client-side fallback:', err.message);
       return fallbackSubmitAnswer(interviewId, payload);
     }
@@ -328,13 +332,38 @@ function fallbackCreateInterview(payload: CreateInterviewPayload): { interview: 
 }
 
 function fallbackSubmitAnswer(interviewId: string, payload: { question_id: string; user_answer: string }): AnswerEvaluation {
-  const ansLen = payload.user_answer.trim().length;
+  const trimmed = payload.user_answer.trim();
   
-  // Calculate dynamic scores based on answer quality & length
-  const relevance = Math.min(10, Math.max(5, Math.floor(ansLen / 60) + 5));
-  const accuracy = Math.min(10, Math.max(4, Math.floor(ansLen / 70) + 5));
-  const completeness = Math.min(10, Math.max(4, Math.floor(ansLen / 80) + 4));
-  const clarity = Math.min(10, Math.max(5, Math.floor(ansLen / 65) + 5));
+  if (!trimmed) {
+    return {
+      id: 'eval-' + Math.random().toString(36).substring(2, 9),
+      question_id: payload.question_id,
+      relevance: 0,
+      accuracy: 0,
+      completeness: 0,
+      clarity: 0,
+      weighted_score: 0,
+      feedback: 'No answer was submitted. In an actual technical interview, leaving a question unattempted receives no credit.',
+      what_went_well: [],
+      missing_points: ['No response provided to demonstrate technical or behavioral understanding.'],
+      how_to_improve: ['Always attempt every interview question, even by laying out an initial approach or clarifying assumptions.'],
+      suggested_answer: 'A strong answer would directly define the core architecture, discuss runtime trade-offs, and cite concrete examples from past experience.',
+    };
+  }
+
+  // Objective content analysis across domain concepts & structure
+  const lower = trimmed.toLowerCase();
+  const techKeywords = ['architecture', 'trade-off', 'performance', 'latency', 'scale', 'cache', 'database', 'complexity', 'state', 'security', 'test', 'async', 'concurrency', 'memory'];
+  const matchedKeywords = techKeywords.filter(k => lower.includes(k)).length;
+  const hasStructure = trimmed.includes('\n') || trimmed.includes('.') || trimmed.includes('1.') || trimmed.includes('-');
+
+  // Score independently (0 - 10)
+  const accuracy = Math.min(10, Math.max(3, Math.round(5.0 + matchedKeywords * 0.8)));
+  const relevance = Math.min(10, Math.max(4, Math.round(6.0 + (lower.length > 50 ? 2 : 0))));
+  const completeness = Math.min(10, Math.max(3, Math.round(4.5 + matchedKeywords * 0.6 + (lower.length > 150 ? 1.5 : 0))));
+  const clarity = Math.min(10, Math.max(4, hasStructure ? 8.5 : 6.0));
+
+  const weighted_score = calculateWeightedAnswerScore({ accuracy, relevance, completeness, clarity });
 
   const evaluation: AnswerEvaluation = {
     id: 'eval-' + Math.random().toString(36).substring(2, 9),
@@ -343,18 +372,20 @@ function fallbackSubmitAnswer(interviewId: string, payload: { question_id: strin
     accuracy,
     completeness,
     clarity,
-    feedback: `Your response shows clear understanding of the core concept. To further strengthen your answer, consider walking through concrete edge-case trade-offs and real-world system constraints.`,
+    weighted_score,
+    feedback: `Your response addresses the core mechanism effectively with clear terminology. To further elevate your evaluation, incorporate specific runtime trade-offs, scaling limits, and real-world failure mitigation.`,
     what_went_well: [
-      'Directly addressed the primary mechanism in question',
-      'Articulated the answer with clear, structured technical terminology',
+      'Directly addressed the primary technical or behavioral intent',
+      'Articulated the answer with clear, structured terminology',
     ],
     missing_points: [
-      'Mention of specific runtime performance characteristics or space/time complexity trade-offs',
-      'Consideration of failure scenarios and mitigation strategies',
+      'Detailed discussion of edge cases, failover strategies, or resource constraints',
+      'Quantified runtime benchmarks or production trade-offs',
     ],
     how_to_improve: [
-      'Use concrete real-world numbers and code structure examples to reinforce your technical explanations.',
+      'Structure technical explanations using problem-solution-tradeoff format to demonstrate senior-level judgment.',
     ],
+    suggested_answer: 'In production systems, I approach this by decoupling state, employing idempotent messaging, and benchmarking under 99th-percentile latency constraints to ensure high availability and resilient failure recovery.',
   };
 
   const answers = getLocalData<any[]>(LOCAL_STORAGE_KEY_ANSWERS, []);
@@ -387,6 +418,14 @@ function fallbackNextQuestion(interviewId: string): { question?: Question; finis
   const pool = mockQuestionsDatabase[interview.role] || mockQuestionsDatabase['Software Engineer'];
   const qText = pool[(nextNum - 1) % pool.length] || `Discuss performance optimizations and testing strategies for a high-traffic ${interview.role} system.`;
 
+  const hints: Record<string, string> = {
+    'Software Engineer': 'Consider memory layout, garbage collection cycles, and resource cleanup patterns.',
+    'Frontend Developer': 'Think about virtual DOM reconciliation, component memoization, and paint/layout costs.',
+    'Backend Developer': 'Address database indexing, transaction isolation levels, and connection pooling.',
+    'DSA': 'Focus on asymptotic time complexity O(N) and auxiliary space trade-offs.',
+    'Behavioral': 'Structure your response using the STAR method: Situation, Task, Action, Result.',
+  };
+
   const newQuestion: Question = {
     id: 'q-' + Math.random().toString(36).substring(2, 9),
     interview_id: interviewId,
@@ -394,6 +433,7 @@ function fallbackNextQuestion(interviewId: string): { question?: Question; finis
     question_text: qText,
     category: nextNum % 2 === 0 ? 'System Design' : 'Core Fundamentals',
     difficulty: interview.difficulty,
+    hint: hints[interview.role] || 'Highlight fundamental design principles, edge cases, and architectural trade-offs.',
     created_at: new Date().toISOString(),
   };
 
@@ -412,19 +452,26 @@ function fallbackCompleteInterview(interviewId: string): { report: InterviewRepo
   const interview = interviews.find(i => i.id === interviewId);
 
   const answers = getLocalData<any[]>(LOCAL_STORAGE_KEY_ANSWERS, []).filter(a => a.interview_id === interviewId);
-  const avg = answers.length > 0
-    ? Math.round(answers.reduce((acc, a) => acc + ((a.relevance + a.accuracy + a.completeness + a.clarity) / 4) * 10, 0) / answers.length)
-    : 78;
+  
+  // Calculate verified mathematical aggregates from rubric
+  const aggregates = calculateInterviewAggregates(
+    answers.map(a => ({
+      accuracy: parseDimensionScore(a.accuracy, 0),
+      relevance: parseDimensionScore(a.relevance, 0),
+      completeness: parseDimensionScore(a.completeness, 0),
+      clarity: parseDimensionScore(a.clarity, 0),
+    }))
+  );
 
   const report: InterviewReport = {
     id: 'rep-' + Math.random().toString(36).substring(2, 9),
     interview_id: interviewId,
     user_id: 'local-user',
-    overall_score: avg,
-    technical_score: Math.min(100, avg + 3),
-    problem_solving_score: Math.max(0, avg - 2),
-    communication_score: Math.min(100, avg + 2),
-    answer_quality_score: avg,
+    overall_score: aggregates.overallScore,
+    technical_score: aggregates.technicalScore,
+    problem_solving_score: aggregates.problemSolvingScore,
+    communication_score: aggregates.communicationScore,
+    answer_quality_score: aggregates.answerQualityScore,
     strengths: [
       `Strong foundational understanding of ${interview?.role || 'software engineering'} principles`,
       'Clear, logical explanations and good technical terminology',
@@ -440,7 +487,7 @@ function fallbackCompleteInterview(interviewId: string): { report: InterviewRepo
       'Deep Dive into Asynchronous Concurrency',
       'Behavioral STAR Method for Architectural Leadership',
     ],
-    ai_summary: `Overall solid performance demonstrating good baseline competence for a ${interview?.role || 'Developer'} role. Continuing deliberate practice on edge cases will take your interview performance to the next level.`,
+    ai_summary: `Your interview session was evaluated across ${answers.length} questions resulting in a verified aggregate score of ${aggregates.overallScore}%. Solid baseline competence demonstrated for ${interview?.role || 'Developer'}; targeted practice on edge cases will further elevate your performance.`,
     created_at: new Date().toISOString(),
   };
 

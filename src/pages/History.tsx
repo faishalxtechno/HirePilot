@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import { Interview } from '../types';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
+import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Badge } from '../components/ui/Badge';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
-import { formatDate, getScoreBadgeBg } from '../lib/utils';
+import { formatDate } from '../lib/utils';
 import {
   History as HistoryIcon,
   Search,
@@ -17,6 +16,8 @@ import {
   FileText,
   Play,
   RotateCcw,
+  Clock,
+  ArrowRight,
 } from 'lucide-react';
 
 export const HistoryPage: React.FC = () => {
@@ -58,25 +59,25 @@ export const HistoryPage: React.FC = () => {
     <DashboardLayout>
       <div className="space-y-8 animate-fade-in pb-12">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E5E7EB]">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight">
               Interview History
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Review past AI evaluations, track your score progression, and inspect detailed question feedback.
+            <p className="text-xs sm:text-sm text-[#64748B] mt-0.5">
+              Review past AI evaluations, inspect transcripts, and track your performance trends over time.
             </p>
           </div>
 
           <Link to="/interview/setup">
-            <Button variant="primary" size="md" leftIcon={<PlusCircle className="w-4 h-4" />}>
+            <Button variant="primary" size="md" className="bg-[#2563EB] hover:bg-[#1D4ED8]" leftIcon={<PlusCircle className="w-4 h-4" />}>
               Start New Interview
             </Button>
           </Link>
         </div>
 
         {/* Filter Toolbar */}
-        <Card className="p-4 sm:p-5">
+        <Card className="p-4 sm:p-5 rounded-[12px] bg-white border border-[#E5E7EB] shadow-2xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Search Role */}
             <Input
@@ -91,12 +92,12 @@ export const HistoryPage: React.FC = () => {
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
               options={[
-                { value: 'all', label: 'All Interview Types' },
+                { value: 'all', label: 'All Interview Formats' },
                 { value: 'technical', label: 'Technical' },
                 { value: 'dsa', label: 'DSA' },
                 { value: 'behavioral', label: 'Behavioral' },
                 { value: 'hr', label: 'HR' },
-                { value: 'mixed', label: 'Mixed' },
+                { value: 'mixed', label: 'Mixed Loop' },
               ]}
             />
 
@@ -126,113 +127,135 @@ export const HistoryPage: React.FC = () => {
         </Card>
 
         {/* Interviews Table Card */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-4">
+        <Card className="rounded-[14px] bg-white border border-[#E5E7EB] shadow-2xs overflow-hidden">
+          <div className="p-5 pb-3 border-b border-[#F1F5F9] flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Completed & Active Sessions</CardTitle>
-              <CardDescription>
-                Showing {filteredInterviews.length} of {interviews.length} recorded mock interviews
-              </CardDescription>
+              <h3 className="text-sm font-semibold text-[#111827]">
+                Recorded Mock Sessions
+              </h3>
+              <p className="text-xs text-[#64748B]">
+                Showing {filteredInterviews.length} of {interviews.length} mock sessions
+              </p>
             </div>
-          </CardHeader>
-          <CardContent className="p-0">
+          </div>
+
+          <div className="p-0">
             {filteredInterviews.length === 0 ? (
               <div className="text-center py-16 px-4 space-y-3">
-                <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mx-auto">
+                <div className="w-12 h-12 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center mx-auto border border-blue-200">
                   <FileText className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  <p className="text-sm font-semibold text-[#111827]">
                     No matching interviews found
                   </p>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Try adjusting your filters or launch a new mock interview session.
+                  <p className="text-xs text-[#64748B] mt-0.5">
+                    Adjust your filter criteria or start a new mock interview session.
                   </p>
                 </div>
+                <Link to="/interview/setup" className="inline-block pt-1">
+                  <Button variant="primary" size="sm" className="bg-[#2563EB]">
+                    Launch First Session
+                  </Button>
+                </Link>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800 uppercase tracking-wider font-semibold">
+                  <thead className="bg-[#F8FAFC] text-[#64748B] border-b border-[#E5E7EB] uppercase tracking-wider font-semibold">
                     <tr>
                       <th className="px-6 py-3.5">Date</th>
-                      <th className="px-6 py-3.5">Role</th>
-                      <th className="px-6 py-3.5">Type</th>
+                      <th className="px-6 py-3.5">Target Role</th>
+                      <th className="px-6 py-3.5">Format</th>
                       <th className="px-6 py-3.5">Difficulty</th>
                       <th className="px-6 py-3.5">Score</th>
                       <th className="px-6 py-3.5">Status</th>
-                      <th className="px-6 py-3.5 text-right">Actions</th>
+                      <th className="px-6 py-3.5 text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                    {filteredInterviews.map((item) => (
-                      <tr key={item.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
-                        <td className="px-6 py-4 text-slate-500 dark:text-slate-400 font-mono">
-                          {formatDate(item.started_at)}
-                        </td>
-                        <td className="px-6 py-4 font-bold text-slate-900 dark:text-white">
-                          {item.role}
-                        </td>
-                        <td className="px-6 py-4 capitalize font-medium">
-                          {item.interview_type}
-                        </td>
-                        <td className="px-6 py-4">
-                          <Badge
-                            variant={
-                              item.difficulty === 'hard'
-                                ? 'danger'
-                                : item.difficulty === 'medium'
-                                ? 'warning'
-                                : 'success'
-                            }
-                            size="sm"
-                            className="capitalize"
-                          >
-                            {item.difficulty}
-                          </Badge>
-                        </td>
-                        <td className="px-6 py-4">
-                          {item.score != null ? (
-                            <span className={`font-mono font-bold px-2 py-0.5 rounded-md border text-xs ${getScoreBadgeBg(item.score)}`}>
-                              {item.score}%
+                  <tbody className="divide-y divide-[#F1F5F9] text-[#111827]">
+                    {filteredInterviews.map((item) => {
+                      const scoreNum = Number(item.score);
+                      const isCompleted = item.status === 'completed';
+
+                      return (
+                        <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="px-6 py-4 text-[#64748B] font-mono">
+                            {formatDate(item.started_at)}
+                          </td>
+                          <td className="px-6 py-4 font-semibold text-[#111827]">
+                            {item.role}
+                          </td>
+                          <td className="px-6 py-4 capitalize text-[#64748B]">
+                            {item.interview_type}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-slate-100 text-[#64748B] border border-[#E5E7EB]">
+                              {item.difficulty}
                             </span>
-                          ) : (
-                            <span className="text-slate-400 italic">—</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          <Badge
-                            variant={item.status === 'completed' ? 'success' : 'default'}
-                            size="sm"
-                            className="capitalize"
-                          >
-                            {item.status === 'completed' ? 'Completed' : 'In Progress'}
-                          </Badge>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          {item.status === 'completed' ? (
-                            <Link to={`/interview/${item.id}/result`}>
-                              <Button variant="outline" size="sm">
-                                View Report
-                              </Button>
-                            </Link>
-                          ) : (
-                            <Link to={`/interview/${item.id}`}>
-                              <Button variant="primary" size="sm">
-                                Resume
-                              </Button>
-                            </Link>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className="px-6 py-4">
+                            {isCompleted && item.score != null ? (
+                              <span
+                                className={`font-mono font-bold px-2.5 py-0.5 rounded-full text-xs border ${
+                                  scoreNum >= 80
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                    : scoreNum >= 65
+                                    ? 'bg-blue-50 text-[#2563EB] border-blue-200'
+                                    : 'bg-amber-50 text-amber-700 border-amber-200'
+                                }`}
+                              >
+                                {scoreNum}%
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 italic">—</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider border ${
+                                isCompleted
+                                  ? 'bg-emerald-50 text-[#16A34A] border-emerald-200'
+                                  : 'bg-blue-50 text-[#2563EB] border-blue-200'
+                              }`}
+                            >
+                              {isCompleted ? 'Completed' : 'In Progress'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            {isCompleted ? (
+                              <Link to={`/interview/${item.id}/result`}>
+                                <button
+                                  type="button"
+                                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8]"
+                                >
+                                  <span>View Report</span>
+                                  <ArrowRight className="w-3 h-3" />
+                                </button>
+                              </Link>
+                            ) : (
+                              <Link to={`/interview/${item.id}`}>
+                                <button
+                                  type="button"
+                                  className="inline-flex items-center gap-1 px-3 py-1 rounded-[6px] bg-[#2563EB] text-white text-xs font-medium hover:bg-[#1D4ED8]"
+                                >
+                                  <span>Resume</span>
+                                </button>
+                              </Link>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
             )}
-          </CardContent>
+          </div>
         </Card>
       </div>
     </DashboardLayout>
   );
 };
+
+export default HistoryPage;

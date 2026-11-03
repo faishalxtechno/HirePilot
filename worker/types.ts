@@ -17,12 +17,16 @@ export type RoleType =
 
 export type InterviewType = 'technical' | 'hr' | 'behavioral' | 'dsa' | 'mixed';
 export type DifficultyLevel = 'easy' | 'medium' | 'hard';
+export type ExperienceLevel = 'beginner' | 'intermediate' | 'advanced';
 
 export interface CreateInterviewPayload {
   role: RoleType;
   interview_type: InterviewType;
   difficulty: DifficultyLevel;
   total_questions?: number;
+  experience_level?: ExperienceLevel;
+  programming_language?: string;
+  job_description?: string;
 }
 
 export interface SubmitAnswerPayload {
@@ -31,20 +35,23 @@ export interface SubmitAnswerPayload {
 }
 
 export interface AnswerEvaluation {
-  relevance: number; // 1-10
-  accuracy: number; // 1-10
-  completeness: number; // 1-10
-  clarity: number; // 1-10
+  relevance: number; // 0-10
+  accuracy: number; // 0-10
+  completeness: number; // 0-10
+  clarity: number; // 0-10
+  weighted_score?: number; // 0-100
   feedback: string;
   what_went_well: string[];
   missing_points: string[];
   how_to_improve: string[];
+  suggested_answer?: string;
 }
 
 export interface QuestionOutput {
   question_text: string;
   category: string;
   difficulty: DifficultyLevel;
+  hint?: string;
 }
 
 export interface FinalReportOutput {

@@ -1,6 +1,6 @@
 import { callGemini, parseJsonFromAi } from './client';
 import { SYSTEM_PROMPT_INTERVIEWER } from './prompts';
-import { DifficultyLevel, InterviewType, QuestionOutput, RoleType } from '../types';
+import { DifficultyLevel, InterviewType, QuestionOutput, RoleType, ExperienceLevel } from '../types';
 
 export interface QuestionContext {
   role: RoleType;
@@ -8,6 +8,9 @@ export interface QuestionContext {
   currentDifficulty: DifficultyLevel;
   questionNumber: number;
   totalQuestions: number;
+  experienceLevel?: ExperienceLevel;
+  programmingLanguage?: string;
+  jobDescription?: string;
   history?: Array<{
     question: string;
     answer: string;
@@ -18,40 +21,65 @@ export interface QuestionContext {
 }
 
 export async function generateQuestion(apiKey: string, context: QuestionContext): Promise<QuestionOutput> {
-  const { role, interviewType, currentDifficulty, questionNumber, totalQuestions, history = [] } = context;
+  const {
+    role,
+    interviewType,
+    currentDifficulty,
+    questionNumber,
+    totalQuestions,
+    experienceLevel = 'intermediate',
+    programmingLanguage,
+    jobDescription,
+    history = [],
+  } = context;
 
-  // Determine dynamic difficulty guidance based on recent performance
-  let performanceSummary = 'First question of the interview. Start with a solid foundational question.';
+  // Adaptive difficulty guidance based on recent performance
+  let performanceSummary = 'Starting interview session. Present a strong, foundational question tailored to the role.';
   if (history.length > 0) {
     const recentScores = history.slice(-2).map(h => h.scoreAvg);
     const avgRecent = recentScores.reduce((a, b) => a + b, 0) / recentScores.length;
-    
+
     if (avgRecent >= 8.0) {
-      performanceSummary = `The candidate scored very high (~${avgRecent.toFixed(1)}/10) on recent questions. Increase challenge, probe deeper architectural or edge-case nuances.`;
+      performanceSummary = `Candidate scored exceptionally high (~${avgRecent.toFixed(1)}/10) on recent questions. Increase challenge, probe distributed trade-offs, failure modes, and edge cases.`;
     } else if (avgRecent <= 5.0) {
-      performanceSummary = `The candidate struggled (~${avgRecent.toFixed(1)}/10) on recent questions. Scale back slightly to test fundamental underlying concepts before building back up.`;
+      performanceSummary = `Candidate had difficulty (~${avgRecent.toFixed(1)}/10) on recent questions. Step back to core conceptual principles to establish baseline understanding.`;
     } else {
-      performanceSummary = `Candidate is performing moderately (~${avgRecent.toFixed(1)}/10). Maintain standard ${currentDifficulty} difficulty with practical real-world scenarios.`;
+      performanceSummary = `Candidate is performing steadily (~${avgRecent.toFixed(1)}/10). Maintain balanced ${currentDifficulty} difficulty with realistic scenario-based engineering questions.`;
     }
   }
 
-  const previousQuestionsList = history.map((h, i) => `${i + 1}. [${h.difficulty}] ${h.question}`).join('\n');
+  const previousQuestionsList = history
+    .map((h, i) => `${i + 1}. [${h.difficulty} - ${h.category || 'General'}] ${h.question}`)
+    .join('\n');
+
+  const contextAdditions = [
+    experienceLevel ? `- Candidate Experience Level: ${experienceLevel}` : '',
+    programmingLanguage ? `- Focus Language / Framework: ${programmingLanguage}` : '',
+    jobDescription ? `- Target Job Description Snippet: "${jobDescription.slice(0, 500)}"` : '',
+  ].filter(Boolean).join('\n');
 
   const userPrompt = `
 Generate Question ${questionNumber} of ${totalQuestions} for an interview with the following parameters:
 - Target Role: ${role}
-- Interview Type: ${interviewType.toUpperCase()} (e.g. technical concepts, system design, DSA, HR behavioral, or mixed)
-- Base Difficulty Level: ${currentDifficulty}
-- Candidate Performance Trend: ${performanceSummary}
+- Interview Format: ${interviewType.toUpperCase()} (technical concepts, system architecture, DSA, behavioral, or mixed)
+- Base Difficulty: ${currentDifficulty}
+${contextAdditions}
+- Performance Progression: ${performanceSummary}
 
-Already Asked Questions (DO NOT repeat or ask near-duplicates of these):
-${previousQuestionsList || 'None'}
+Previously Asked Questions in this Session (DO NOT repeat or ask duplicates):
+${previousQuestionsList || 'None (First Question)'}
 
-Return ONLY a JSON object adhering to this schema:
+Requirements:
+- Ask exactly ONE clear, thoughtful, realistic question.
+- Do NOT provide the answer or solution.
+- Provide a helpful, constructive "hint" (a thinking framework or key angles to consider without giving away the direct answer).
+
+Return ONLY a JSON object adhering to this exact schema:
 {
   "question_text": "The exact question text for the candidate to answer in text format. Keep it concise, engaging, and clear.",
-  "category": "Core category (e.g. Data Structures, React State, System Design, Behavioral Conflict, Database Indexing, etc.)",
-  "difficulty": "easy" | "medium" | "hard"
+  "category": "Core category (e.g. Distributed Caching, React State Architecture, Database Indexing, STAR Conflict Resolution, etc.)",
+  "difficulty": "easy" | "medium" | "hard",
+  "hint": "A concise hint or thinking framework (1-2 sentences) guiding how to structure a complete answer."
 }
 `;
 
@@ -60,36 +88,27 @@ Return ONLY a JSON object adhering to this schema:
       apiKey,
       systemInstruction: SYSTEM_PROMPT_INTERVIEWER,
       contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-      temperature: 0.5,
+      temperature: 0.4,
       responseMimeType: 'application/json',
     });
 
-    const parsed = parseJsonFromAi<QuestionOutput>(responseText, {
-      question_text: `Explain how you approach optimizing performance in a ${role} project.`,
-      category: 'System Performance',
-      difficulty: currentDifficulty,
-    });
+    const parsed = parseJsonFromAi<Partial<QuestionOutput>>(responseText, {});
 
-    return parsed;
-  } catch (error) {
+    if (!parsed.question_text || typeof parsed.question_text !== 'string' || !parsed.question_text.trim()) {
+      throw new Error('Gemini returned an invalid or empty question payload');
+    }
+
+    return {
+      question_text: parsed.question_text.trim(),
+      category: parsed.category && typeof parsed.category === 'string' ? parsed.category.trim() : 'Technical Fundamentals',
+      difficulty: (parsed.difficulty === 'easy' || parsed.difficulty === 'hard') ? parsed.difficulty : currentDifficulty,
+      hint: parsed.hint && typeof parsed.hint === 'string' ? parsed.hint.trim() : undefined,
+    };
+  } catch (error: any) {
     console.error('Error in generateQuestion AI call:', error);
-    // Safe fallback based on interview type and role
-    return getFallbackQuestion(role, interviewType, questionNumber, currentDifficulty);
+    // Explicit error throw - Never silently substitute unrelated hardcoded questions
+    throw new Error(
+      `Question generation failed: ${error.message || 'Unable to connect to Gemini AI'}. Please click retry to generate this question.`
+    );
   }
-}
-
-function getFallbackQuestion(role: string, type: InterviewType, qNum: number, diff: DifficultyLevel): QuestionOutput {
-  const defaults: Record<string, string> = {
-    technical: `In your experience as a ${role}, how do you ensure code maintainability, error handling, and testability in production environments?`,
-    dsa: `Explain the trade-offs between using a Hash Map versus a Balanced Binary Search Tree for lookups and insertions.`,
-    behavioral: `Tell me about a time you faced a complex technical disagreement with a team member. How did you handle it and what was the outcome?`,
-    hr: `Why are you interested in pursuing a ${role} position, and what strengths do you bring to a high-performing engineering team?`,
-    mixed: `Walk me through how you design an API endpoint from database schema to client response for high availability.`,
-  };
-
-  return {
-    question_text: defaults[type] || defaults.technical,
-    category: type === 'dsa' ? 'Algorithms' : type === 'behavioral' ? 'Collaboration' : 'Architecture',
-    difficulty: diff,
-  };
 }

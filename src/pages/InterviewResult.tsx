@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
-import { InterviewReport, Interview } from '../types';
+import { InterviewReport, Interview, Question, Answer } from '../types';
 import { ReportView } from '../components/interview/ReportView';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Loader2, AlertCircle } from 'lucide-react';
@@ -13,6 +13,8 @@ export const InterviewResult: React.FC = () => {
 
   const [report, setReport] = useState<InterviewReport | null>(null);
   const [interview, setInterview] = useState<Interview | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,6 +30,8 @@ export const InterviewResult: React.FC = () => {
     try {
       const data = await api.getInterview(interviewId);
       setInterview(data.interview);
+      if (data.questions) setQuestions(data.questions);
+      if (data.answers) setAnswers(data.answers);
 
       if (data.report) {
         setReport(data.report);
@@ -35,6 +39,7 @@ export const InterviewResult: React.FC = () => {
         // If not completed yet, trigger completion
         const completedData = await api.completeInterview(interviewId);
         setReport(completedData.report);
+        if (completedData.interview) setInterview(completedData.interview);
       }
     } catch (err: any) {
       console.error('Error fetching interview report:', err);
@@ -48,8 +53,8 @@ export const InterviewResult: React.FC = () => {
     return (
       <DashboardLayout>
         <div className="py-24 flex flex-col items-center justify-center space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin text-brand-600" />
-          <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+          <Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" />
+          <p className="text-sm font-medium text-[#64748B]">
             Synthesizing final evaluation report with Gemini AI...
           </p>
         </div>
@@ -61,12 +66,12 @@ export const InterviewResult: React.FC = () => {
     return (
       <DashboardLayout>
         <div className="py-24 text-center space-y-4 max-w-md mx-auto">
-          <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
             <AlertCircle className="w-6 h-6" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Report Unavailable</h2>
-          <p className="text-xs text-slate-500">{error || 'Could not load interview report.'}</p>
-          <Button variant="primary" size="md" onClick={() => navigate('/dashboard')}>
+          <h2 className="text-xl font-bold text-[#111827]">Report Unavailable</h2>
+          <p className="text-xs text-[#64748B]">{error || 'Could not load interview report.'}</p>
+          <Button variant="primary" size="md" onClick={() => navigate('/dashboard')} className="bg-[#2563EB]">
             Back to Dashboard
           </Button>
         </div>
@@ -76,7 +81,14 @@ export const InterviewResult: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <ReportView report={report} interview={interview || undefined} />
+      <ReportView
+        report={report}
+        interview={interview || undefined}
+        questions={questions}
+        answers={answers}
+      />
     </DashboardLayout>
   );
 };
+
+export default InterviewResult;

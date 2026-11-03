@@ -6,6 +6,7 @@ import { checkMonthlyInterviewQuota } from '../middleware/rateLimit';
 import { generateQuestion } from '../ai/questionGenerator';
 import { evaluateAnswer } from '../ai/answerEvaluator';
 import { generateFinalReport } from '../ai/reportGenerator';
+import { parseDimensionScore, calculateWeightedAnswerScore } from '../ai/scoringRubric';
 
 export const interviewRouter = new Hono<{ Bindings: Env; Variables: { user: AuthenticatedContext } }>();
 
@@ -15,7 +16,15 @@ interviewRouter.post('/', async (c) => {
   const supabase = getSupabaseAdmin(c.env);
   const body: CreateInterviewPayload = await c.req.json();
 
-  const { role, interview_type, difficulty, total_questions = 10 } = body;
+  const {
+    role,
+    interview_type,
+    difficulty,
+    total_questions = 10,
+    experience_level,
+    programming_language,
+    job_description,
+  } = body;
 
   if (!role || !interview_type || !difficulty) {
     return c.json({ error: 'Missing required interview configuration fields (role, interview_type, difficulty)' }, 400);
@@ -40,7 +49,7 @@ interviewRouter.post('/', async (c) => {
       role,
       interview_type,
       difficulty,
-      total_questions: Math.min(15, Math.max(5, total_questions)),
+      total_questions: Math.min(15, Math.max(3, total_questions)),
       current_question: 1,
       status: 'in_progress',
     })
@@ -52,43 +61,55 @@ interviewRouter.post('/', async (c) => {
     return c.json({ error: 'Failed to initialize interview session' }, 500);
   }
 
-  // Generate 1st question via Gemini
-  const questionOutput = await generateQuestion(c.env.GEMINI_API_KEY, {
-    role,
-    interviewType: interview_type,
-    currentDifficulty: difficulty,
-    questionNumber: 1,
-    totalQuestions: interview.total_questions,
-    history: [],
-  });
+  try {
+    // Generate 1st question via Gemini
+    const questionOutput = await generateQuestion(c.env.GEMINI_API_KEY, {
+      role,
+      interviewType: interview_type,
+      currentDifficulty: difficulty,
+      questionNumber: 1,
+      totalQuestions: interview.total_questions,
+      experienceLevel: experience_level,
+      programmingLanguage: programming_language,
+      jobDescription: job_description,
+      history: [],
+    });
 
-  // Save 1st question to DB
-  const { data: question, error: qError } = await supabase
-    .from('questions')
-    .insert({
-      interview_id: interview.id,
-      question_number: 1,
-      question_text: questionOutput.question_text,
-      category: questionOutput.category,
-      difficulty: questionOutput.difficulty,
-    })
-    .select()
-    .single();
+    // Save 1st question to DB
+    const { data: question, error: qError } = await supabase
+      .from('questions')
+      .insert({
+        interview_id: interview.id,
+        question_number: 1,
+        question_text: questionOutput.question_text,
+        category: questionOutput.category,
+        difficulty: questionOutput.difficulty,
+      })
+      .select()
+      .single();
 
-  if (qError) {
-    console.error('Error saving first question:', qError);
+    if (qError) {
+      console.error('Error saving first question:', qError);
+    }
+
+    return c.json({
+      interview,
+      firstQuestion: question || {
+        id: 'q-1',
+        question_number: 1,
+        question_text: questionOutput.question_text,
+        category: questionOutput.category,
+        difficulty: questionOutput.difficulty,
+        hint: questionOutput.hint,
+      },
+    }, 201);
+  } catch (err: any) {
+    console.error('Question generation failed on interview creation:', err);
+    return c.json({
+      interview,
+      error: err.message || 'Failed to generate first question. You can retry from the interview room.',
+    }, 201);
   }
-
-  return c.json({
-    interview,
-    firstQuestion: question || {
-      id: 'q-1',
-      question_number: 1,
-      question_text: questionOutput.question_text,
-      category: questionOutput.category,
-      difficulty: questionOutput.difficulty,
-    },
-  }, 201);
 });
 
 // 2. GET /api/interviews - List user's interviews
@@ -136,7 +157,7 @@ interviewRouter.get('/:id', async (c) => {
     .single();
 
   if (intError || !interview) {
-    return c.json({ error: 'Interview not found' }, 404);
+    return c.json({ error: 'Interview not found or unauthorized' }, 404);
   }
 
   const { data: questions } = await supabase
@@ -174,10 +195,6 @@ interviewRouter.post('/:id/answer', async (c) => {
 
   const { question_id, user_answer } = body;
 
-  if (!user_answer || !user_answer.trim()) {
-    return c.json({ error: 'Answer cannot be empty' }, 400);
-  }
-
   // Verify interview ownership
   const { data: interview, error: intError } = await supabase
     .from('interviews')
@@ -187,7 +204,7 @@ interviewRouter.post('/:id/answer', async (c) => {
     .single();
 
   if (intError || !interview) {
-    return c.json({ error: 'Interview not found' }, 404);
+    return c.json({ error: 'Interview not found or access denied' }, 404);
   }
 
   // Get question
@@ -202,44 +219,51 @@ interviewRouter.post('/:id/answer', async (c) => {
     return c.json({ error: 'Question not found' }, 404);
   }
 
-  // Evaluate with Gemini
-  const evaluation = await evaluateAnswer(c.env.GEMINI_API_KEY, {
-    role: interview.role,
-    questionText: question.question_text,
-    category: question.category,
-    difficulty: question.difficulty,
-    userAnswer: user_answer.trim(),
-  });
+  try {
+    // Evaluate with Gemini using weighted rubric
+    const evaluation = await evaluateAnswer(c.env.GEMINI_API_KEY, {
+      role: interview.role,
+      questionText: question.question_text,
+      category: question.category,
+      difficulty: question.difficulty,
+      userAnswer: (user_answer || '').trim(),
+    });
 
-  // Save answer to Supabase
-  const { data: answer, error: ansError } = await supabase
-    .from('answers')
-    .insert({
-      question_id: question.id,
-      interview_id: interviewId,
-      user_id: user.userId,
-      user_answer: user_answer.trim(),
-      relevance_score: evaluation.relevance,
-      accuracy_score: evaluation.accuracy,
-      completeness_score: evaluation.completeness,
-      clarity_score: evaluation.clarity,
-      feedback: evaluation.feedback,
-      missing_points: evaluation.missing_points,
-    })
-    .select()
-    .single();
+    // Save answer to Supabase
+    const { data: answer, error: ansError } = await supabase
+      .from('answers')
+      .insert({
+        question_id: question.id,
+        interview_id: interviewId,
+        user_id: user.userId,
+        user_answer: (user_answer || '').trim(),
+        relevance_score: evaluation.relevance,
+        accuracy_score: evaluation.accuracy,
+        completeness_score: evaluation.completeness,
+        clarity_score: evaluation.clarity,
+        feedback: evaluation.feedback,
+        missing_points: evaluation.missing_points,
+      })
+      .select()
+      .single();
 
-  if (ansError) {
-    console.error('Error saving answer:', ansError);
+    if (ansError) {
+      console.error('Error saving answer to DB:', ansError);
+    }
+
+    return c.json({
+      evaluation: {
+        ...evaluation,
+        id: answer?.id,
+        question_id: question.id,
+      },
+    });
+  } catch (evalErr: any) {
+    console.error('Answer evaluation failure:', evalErr);
+    return c.json({
+      error: evalErr.message || 'Failed to evaluate answer with AI. Please retry submission.',
+    }, 500);
   }
-
-  return c.json({
-    evaluation: {
-      ...evaluation,
-      id: answer?.id,
-      question_id: question.id,
-    },
-  });
 });
 
 // 5. POST /api/interviews/:id/next-question - Generate next adaptive question
@@ -256,7 +280,7 @@ interviewRouter.post('/:id/next-question', async (c) => {
     .single();
 
   if (intError || !interview) {
-    return c.json({ error: 'Interview not found' }, 404);
+    return c.json({ error: 'Interview not found or unauthorized' }, 404);
   }
 
   // Fetch all prior questions & answers
@@ -276,59 +300,74 @@ interviewRouter.post('/:id/next-question', async (c) => {
     });
   }
 
-  // Construct history for adaptive generation
+  // Construct history for adaptive generation using weighted scores
   const history = (questions || []).map((q: any) => {
     const ans = q.answers?.[0];
-    const avg = ans
-      ? (Number(ans.relevance_score) + Number(ans.accuracy_score) + Number(ans.completeness_score) + Number(ans.clarity_score)) / 4
-      : 7;
+    const acc = ans ? parseDimensionScore(ans.accuracy_score, 0) : 0;
+    const rel = ans ? parseDimensionScore(ans.relevance_score, 0) : 0;
+    const comp = ans ? parseDimensionScore(ans.completeness_score, 0) : 0;
+    const cla = ans ? parseDimensionScore(ans.clarity_score, 0) : 0;
+
+    const weightedScore = calculateWeightedAnswerScore({ accuracy: acc, relevance: rel, completeness: comp, clarity: cla });
     return {
       question: q.question_text,
       answer: ans?.user_answer || '',
-      scoreAvg: avg,
+      scoreAvg: weightedScore / 10,
       difficulty: q.difficulty || interview.difficulty,
       category: q.category,
     };
   });
 
-  // Call Gemini for adaptive next question
-  const questionOutput = await generateQuestion(c.env.GEMINI_API_KEY, {
-    role: interview.role,
-    interviewType: interview.interview_type,
-    currentDifficulty: interview.difficulty,
-    questionNumber: nextQuestionNumber,
-    totalQuestions: interview.total_questions,
-    history,
-  });
+  try {
+    // Call Gemini for adaptive next question
+    const questionOutput = await generateQuestion(c.env.GEMINI_API_KEY, {
+      role: interview.role,
+      interviewType: interview.interview_type,
+      currentDifficulty: interview.difficulty,
+      questionNumber: nextQuestionNumber,
+      totalQuestions: interview.total_questions,
+      history,
+    });
 
-  // Save new question
-  const { data: newQuestion, error: qError } = await supabase
-    .from('questions')
-    .insert({
-      interview_id: interviewId,
-      question_number: nextQuestionNumber,
-      question_text: questionOutput.question_text,
-      category: questionOutput.category,
-      difficulty: questionOutput.difficulty,
-    })
-    .select()
-    .single();
+    // Save new question
+    const { data: newQuestion, error: qError } = await supabase
+      .from('questions')
+      .insert({
+        interview_id: interviewId,
+        question_number: nextQuestionNumber,
+        question_text: questionOutput.question_text,
+        category: questionOutput.category,
+        difficulty: questionOutput.difficulty,
+      })
+      .select()
+      .single();
 
-  // Update interview's current_question
-  await supabase
-    .from('interviews')
-    .update({ current_question: nextQuestionNumber })
-    .eq('id', interviewId);
+    if (qError) {
+      console.error('Error saving next question to DB:', qError);
+    }
 
-  return c.json({
-    question: newQuestion || {
-      id: `q-${nextQuestionNumber}`,
-      question_number: nextQuestionNumber,
-      question_text: questionOutput.question_text,
-      category: questionOutput.category,
-      difficulty: questionOutput.difficulty,
-    },
-  });
+    // Update interview's current_question
+    await supabase
+      .from('interviews')
+      .update({ current_question: nextQuestionNumber })
+      .eq('id', interviewId);
+
+    return c.json({
+      question: newQuestion || {
+        id: `q-${nextQuestionNumber}`,
+        question_number: nextQuestionNumber,
+        question_text: questionOutput.question_text,
+        category: questionOutput.category,
+        difficulty: questionOutput.difficulty,
+        hint: questionOutput.hint,
+      },
+    });
+  } catch (genErr: any) {
+    console.error('Question generation failure:', genErr);
+    return c.json({
+      error: genErr.message || 'Failed to generate next question with AI. Please retry.',
+    }, 500);
+  }
 });
 
 // 6. POST /api/interviews/:id/complete - Complete interview & generate comprehensive final report
@@ -345,7 +384,7 @@ interviewRouter.post('/:id/complete', async (c) => {
     .single();
 
   if (intError || !interview) {
-    return c.json({ error: 'Interview not found' }, 404);
+    return c.json({ error: 'Interview not found or unauthorized' }, 404);
   }
 
   // Check if report already exists
@@ -373,15 +412,16 @@ interviewRouter.post('/:id/complete', async (c) => {
       questionText: q.question_text,
       category: q.category,
       userAnswer: ans.user_answer || '(No answer recorded)',
-      relevance: Number(ans.relevance_score) || 7,
-      accuracy: Number(ans.accuracy_score) || 7,
-      completeness: Number(ans.completeness_score) || 6,
-      clarity: Number(ans.clarity_score) || 7,
+      // Safe parsing: NEVER coerce valid 0 scores into 7
+      relevance: parseDimensionScore(ans.relevance_score, 0),
+      accuracy: parseDimensionScore(ans.accuracy_score, 0),
+      completeness: parseDimensionScore(ans.completeness_score, 0),
+      clarity: parseDimensionScore(ans.clarity_score, 0),
       feedback: ans.feedback,
     };
   });
 
-  // Call Gemini to generate full report
+  // Call Gemini to generate full report with mathematically verified rubric
   const reportOutput = await generateFinalReport(c.env.GEMINI_API_KEY, {
     role: interview.role,
     interviewType: interview.interview_type,
@@ -409,10 +449,10 @@ interviewRouter.post('/:id/complete', async (c) => {
     .single();
 
   if (repError) {
-    console.error('Error saving report:', repError);
+    console.error('Error saving report to DB:', repError);
   }
 
-  // Update interview status
+  // Update interview status and score consistently
   await supabase
     .from('interviews')
     .update({
@@ -427,6 +467,11 @@ interviewRouter.post('/:id/complete', async (c) => {
       ...reportOutput,
       interview_id: interviewId,
       user_id: user.userId,
+    },
+    interview: {
+      ...interview,
+      status: 'completed',
+      score: reportOutput.overall_score,
     },
   });
 });

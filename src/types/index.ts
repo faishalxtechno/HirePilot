@@ -18,6 +18,9 @@ export interface CreateInterviewPayload {
   interview_type: InterviewType;
   difficulty: DifficultyLevel;
   total_questions?: number;
+  experience_level?: 'beginner' | 'intermediate' | 'advanced';
+  programming_language?: string;
+  job_description?: string;
 }
 
 export interface SubmitAnswerPayload {
@@ -43,6 +46,7 @@ export interface Question {
   question_text: string;
   category?: string;
   difficulty: DifficultyLevel;
+  hint?: string;
   created_at?: string;
 }
 
@@ -58,20 +62,23 @@ export interface Answer {
   clarity_score: number;
   feedback?: string;
   missing_points?: string[];
+  suggested_answer?: string;
   created_at?: string;
 }
 
 export interface AnswerEvaluation {
   id?: string;
   question_id?: string;
-  relevance: number; // 1-10
-  accuracy: number; // 1-10
-  completeness: number; // 1-10
-  clarity: number; // 1-10
+  relevance: number; // 0-10
+  accuracy: number; // 0-10
+  completeness: number; // 0-10
+  clarity: number; // 0-10
+  weighted_score?: number; // 0-100
   feedback: string;
   what_went_well: string[];
   missing_points: string[];
   how_to_improve: string[];
+  suggested_answer?: string;
 }
 
 export interface InterviewReport {

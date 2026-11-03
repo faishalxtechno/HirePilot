@@ -1,6 +1,7 @@
 import { callGemini, parseJsonFromAi } from './client';
 import { SYSTEM_PROMPT_EVALUATOR } from './prompts';
 import { AnswerEvaluation, DifficultyLevel, RoleType } from '../types';
+import { parseDimensionScore, calculateWeightedAnswerScore } from './scoringRubric';
 
 export interface EvaluationContext {
   role: RoleType;
@@ -12,37 +13,64 @@ export interface EvaluationContext {
 
 export async function evaluateAnswer(apiKey: string, context: EvaluationContext): Promise<AnswerEvaluation> {
   const { role, questionText, category, difficulty, userAnswer } = context;
+  const trimmedAnswer = (userAnswer || '').trim();
+
+  // If answer is empty or completely blank, assign genuine zero scores without masking or falsy coercion
+  if (!trimmedAnswer) {
+    return {
+      accuracy: 0,
+      relevance: 0,
+      completeness: 0,
+      clarity: 0,
+      weighted_score: 0,
+      feedback: 'No answer was provided for this question. In an actual interview, submitting an empty response represents an unattempted question.',
+      what_went_well: [],
+      missing_points: ['No response submitted to evaluate domain knowledge or problem-solving approaches.'],
+      how_to_improve: ['Always attempt the question by outlining foundational concepts, asking clarifying questions, or explaining high-level approaches.'],
+      suggested_answer: 'A strong answer would directly define the core architecture, discuss runtime trade-offs, and cite concrete examples from past projects.',
+    };
+  }
 
   const userPrompt = `
 Evaluate the candidate's answer for the following interview question:
 
-- Role Context: ${role}
+- Target Role: ${role}
 - Question Category: ${category || 'General'}
-- Expected Difficulty: ${difficulty}
+- Expected Seniority/Difficulty: ${difficulty}
 - Question Asked: "${questionText}"
-- Candidate's Submitted Answer: "${userAnswer}"
+- Candidate's Submitted Answer: "${trimmedAnswer}"
 
-Please score each category from 1 to 10 (integer or one decimal place) and provide structured feedback.
-Do NOT give generic feedback; be specific to the technical and conceptual merits of their answer.
+Scoring Guidelines:
+1. accuracy (40% weight): Score 0.0 to 10.0. Technical precision and factual correctness.
+2. relevance (25% weight): Score 0.0 to 10.0. Direct addressal of the prompt without evasive padding.
+3. completeness (20% weight): Score 0.0 to 10.0. Coverage of edge cases, architectural trade-offs, scale, or failure modes.
+4. clarity (15% weight): Score 0.0 to 10.0. Structural conciseness, articulation, and professional phrasing.
 
-Return ONLY a JSON object with this exact schema:
+CRITICAL:
+- If the answer is nonsense, completely wrong, or a generic placeholder, assign 0 or near 0 scores.
+- Do NOT reward length over substance.
+- Do NOT penalize concise answers if factually and conceptually complete.
+- Provide a realistic 10/10 exemplar "suggested_answer" demonstrating how a seasoned engineer would answer this question concisely and effectively.
+
+Return ONLY a JSON object adhering to this exact schema:
 {
-  "relevance": 8,
-  "accuracy": 7,
-  "completeness": 6,
-  "clarity": 8,
-  "feedback": "Concise summary evaluation paragraph (2-3 sentences max).",
+  "accuracy": 8.0,
+  "relevance": 9.0,
+  "completeness": 7.5,
+  "clarity": 8.5,
+  "feedback": "Objective evaluation paragraph analyzing the technical and communication merits of their answer (2-3 sentences max).",
   "what_went_well": [
-    "Specific point 1",
-    "Specific point 2"
+    "Specific point 1 directly from their answer",
+    "Specific point 2 directly from their answer"
   ],
   "missing_points": [
-    "Key omitted technical nuance or concept 1",
-    "Key omitted detail 2"
+    "Concrete technical nuance, edge case, or trade-off omitted 1",
+    "Concrete detail omitted 2"
   ],
   "how_to_improve": [
-    "Concrete actionable advice for future interview responses"
-  ]
+    "Actionable guidance to elevate response to senior/staff level"
+  ],
+  "suggested_answer": "Exemplary 10/10 model response demonstrating ideal depth, structure, and technical terminology."
 }
 `;
 
@@ -51,43 +79,48 @@ Return ONLY a JSON object with this exact schema:
       apiKey,
       systemInstruction: SYSTEM_PROMPT_EVALUATOR,
       contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-      temperature: 0.3,
+      temperature: 0.2,
       responseMimeType: 'application/json',
     });
 
-    const parsed = parseJsonFromAi<AnswerEvaluation>(responseText, {
-      relevance: 7,
-      accuracy: 7,
-      completeness: 6,
-      clarity: 8,
-      feedback: 'Good overall answer that demonstrated core knowledge of the subject with clear expression.',
-      what_went_well: ['Addressed the main intent of the question directly', 'Clear communication'],
-      missing_points: ['Could elaborate on specific architectural trade-offs', 'Provide more concrete examples'],
-      how_to_improve: ['Structure technical explanations using the STAR or problem-solution-tradeoff format'],
-    });
+    const parsed = parseJsonFromAi<Partial<AnswerEvaluation>>(responseText, {});
 
-    // Ensure score bounds (1-10)
-    parsed.relevance = Math.min(10, Math.max(1, Number(parsed.relevance) || 7));
-    parsed.accuracy = Math.min(10, Math.max(1, Number(parsed.accuracy) || 7));
-    parsed.completeness = Math.min(10, Math.max(1, Number(parsed.completeness) || 6));
-    parsed.clarity = Math.min(10, Math.max(1, Number(parsed.clarity) || 7));
+    // Parse scores safely preserving genuine zeros (never use Number() || fallback)
+    const accuracy = parseDimensionScore(parsed.accuracy, 5);
+    const relevance = parseDimensionScore(parsed.relevance, 5);
+    const completeness = parseDimensionScore(parsed.completeness, 5);
+    const clarity = parseDimensionScore(parsed.clarity, 5);
 
-    if (!Array.isArray(parsed.what_went_well)) parsed.what_went_well = [];
-    if (!Array.isArray(parsed.missing_points)) parsed.missing_points = [];
-    if (!Array.isArray(parsed.how_to_improve)) parsed.how_to_improve = [];
+    const weighted_score = calculateWeightedAnswerScore({ accuracy, relevance, completeness, clarity });
 
-    return parsed;
-  } catch (error) {
-    console.error('Error in evaluateAnswer AI call:', error);
+    const feedback = typeof parsed.feedback === 'string' && parsed.feedback.trim()
+      ? parsed.feedback.trim()
+      : 'Your answer was evaluated across technical accuracy, relevance, completeness, and clarity.';
+
+    const what_went_well = Array.isArray(parsed.what_went_well) ? parsed.what_went_well.filter(Boolean) : [];
+    const missing_points = Array.isArray(parsed.missing_points) ? parsed.missing_points.filter(Boolean) : [];
+    const how_to_improve = Array.isArray(parsed.how_to_improve) ? parsed.how_to_improve.filter(Boolean) : [];
+    const suggested_answer = typeof parsed.suggested_answer === 'string' && parsed.suggested_answer.trim()
+      ? parsed.suggested_answer.trim()
+      : undefined;
+
     return {
-      relevance: 7,
-      accuracy: 7,
-      completeness: 6,
-      clarity: 7,
-      feedback: 'Your answer demonstrated good baseline understanding. Continue practicing concise explanations with practical examples.',
-      what_went_well: ['Clear presentation of concepts', 'Relevant to the question asked'],
-      missing_points: ['Deeper dive into edge cases and performance characteristics'],
-      how_to_improve: ['Mention real-world implementation details to reinforce your expertise'],
+      accuracy,
+      relevance,
+      completeness,
+      clarity,
+      weighted_score,
+      feedback,
+      what_went_well,
+      missing_points,
+      how_to_improve,
+      suggested_answer,
     };
+  } catch (error: any) {
+    console.error('Error in evaluateAnswer AI call:', error);
+    // Explicit evaluation error - Never silently substitute with fake constant scores
+    throw new Error(
+      `AI Answer Evaluation failed: ${error.message || 'Unable to analyze answer with Gemini AI'}. Please check your connection and retry submission.`
+    );
   }
 }
