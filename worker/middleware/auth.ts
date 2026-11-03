@@ -8,6 +8,11 @@ export interface AuthenticatedContext {
 }
 
 export async function authMiddleware(c: Context<{ Bindings: Env; Variables: { user: AuthenticatedContext } }>, next: Next) {
+  // Allow CORS preflight OPTIONS requests without requiring authentication headers
+  if (c.req.method === 'OPTIONS') {
+    return next();
+  }
+
   const authHeader = c.req.header('Authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return c.json({ error: 'Unauthorized: Missing or invalid Authorization header' }, 401);

@@ -266,6 +266,16 @@ interviewRouter.post('/:id/answer', async (c) => {
   }
 });
 
+// Explicit 405 Method Not Allowed handler for non-POST requests to /:id/answer
+interviewRouter.all('/:id/answer', (c) => {
+  if (c.req.method !== 'POST') {
+    c.header('Allow', 'POST, OPTIONS');
+    return c.json({
+      error: `Method ${c.req.method} not allowed on /api/interviews/:id/answer. Expected POST.`,
+    }, 405);
+  }
+});
+
 // 5. POST /api/interviews/:id/next-question - Generate next adaptive question
 interviewRouter.post('/:id/next-question', async (c) => {
   const user = c.get('user');

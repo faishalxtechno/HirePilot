@@ -16,7 +16,12 @@ import {
   parseDimensionScore,
 } from './scoringRubric';
 
-const WORKER_URL = import.meta.env.VITE_WORKER_API_URL || '/api';
+const PRODUCTION_WORKER_URL = 'https://hirepilot-api.hirepilotapp.workers.dev/api';
+
+// Prioritize explicit VITE_WORKER_API_URL, then live Cloudflare Worker in production, with /api proxy in development
+const WORKER_URL =
+  import.meta.env.VITE_WORKER_API_URL ||
+  (import.meta.env.PROD ? PRODUCTION_WORKER_URL : '/api');
 
 async function getAuthHeader(): Promise<HeadersInit> {
   const { data: { session } } = await supabase.auth.getSession();
@@ -58,29 +63,51 @@ export const api = {
 
   // 2. Submit Answer & Receive AI Evaluation
   async submitAnswer(interviewId: string, payload: { question_id: string; user_answer: string }): Promise<AnswerEvaluation> {
+    const headers = await getAuthHeader();
+    let res: Response;
+
     try {
-      const headers = await getAuthHeader();
-      const res = await fetch(`${WORKER_URL}/interviews/${interviewId}/answer`, {
+      res = await fetch(`${WORKER_URL}/interviews/${interviewId}/answer`, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload),
       });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Failed to evaluate answer (${res.status})`);
-      }
-
-      const data = await res.json();
-      return data.evaluation;
-    } catch (err: any) {
-      // If error from backend worker, throw it so UI preserves answer and shows retry
-      if (err.message && !err.message.includes('Failed to fetch')) {
-        throw err;
-      }
-      console.warn('Backend worker unavailable, using client-side fallback:', err.message);
-      return fallbackSubmitAnswer(interviewId, payload);
+    } catch (networkErr: any) {
+      console.error('Network error during answer submission:', networkErr);
+      throw new Error(
+        'Unable to connect to the interview evaluation service. Please check your internet connection and retry. Your answer has been preserved.'
+      );
     }
+
+    if (!res.ok) {
+      let errorMessage = `Failed to evaluate answer (${res.status})`;
+      try {
+        const errorJson = await res.json();
+        if (errorJson.error) {
+          errorMessage = errorJson.error;
+        }
+      } catch {
+        if (res.status === 405) {
+          errorMessage = 'HTTP 405 Method Not Allowed: The evaluation endpoint rejected the request method. Please ensure requests use POST to the API worker.';
+        } else if (res.status === 401) {
+          errorMessage = 'Authentication expired or invalid. Please refresh and log in again.';
+        } else if (res.status === 404) {
+          errorMessage = 'Interview session or question not found. It may have expired or belongs to another user.';
+        } else if (res.status === 429) {
+          errorMessage = 'Monthly interview evaluation quota reached.';
+        } else if (res.status >= 500) {
+          errorMessage = 'The AI evaluation service encountered a temporary error. Your answer is preserved; please click Retry.';
+        }
+      }
+      throw new Error(errorMessage);
+    }
+
+    const data = await res.json();
+    if (!data.evaluation) {
+      throw new Error('AI evaluation response was incomplete. Please retry submission.');
+    }
+
+    return data.evaluation;
   },
 
   // 3. Get Next Question

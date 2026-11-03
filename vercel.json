@@ -39,6 +39,10 @@
   ],
   "rewrites": [
     {
+      "source": "/api/:path*",
+      "destination": "https://hirepilot-api.hirepilotapp.workers.dev/api/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
