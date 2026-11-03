@@ -9,10 +9,16 @@ export interface EvaluationContext {
   category?: string;
   difficulty: DifficultyLevel;
   userAnswer: string;
+  model?: string;
 }
 
-export async function evaluateAnswer(apiKey: string, context: EvaluationContext): Promise<AnswerEvaluation> {
+export async function evaluateAnswer(
+  apiKey: string,
+  context: EvaluationContext,
+  model?: string
+): Promise<AnswerEvaluation> {
   const { role, questionText, category, difficulty, userAnswer } = context;
+  const selectedModel = model || context.model;
   const trimmedAnswer = (userAnswer || '').trim();
 
   // If answer is empty or completely blank, assign genuine zero scores without masking or falsy coercion
@@ -78,6 +84,7 @@ Return ONLY a JSON object adhering to this exact schema:
   try {
     const responseText = await callGemini({
       apiKey,
+      model: selectedModel,
       systemInstruction: SYSTEM_PROMPT_EVALUATOR,
       contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
       temperature: 0.1,

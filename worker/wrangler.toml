@@ -6,7 +6,11 @@ compatibility_flags = ["nodejs_compat"]
 [observability]
 enabled = true
 
-# Variables defined in Cloudflare dashboard or .dev.vars for local development:
-# GEMINI_API_KEY
-# SUPABASE_URL
-# SUPABASE_SERVICE_ROLE_KEY
+[vars]
+# Configurable Gemini Model (defaults to gemini-3.8-flash; can be overridden in Cloudflare dashboard)
+GEMINI_MODEL = "gemini-3.8-flash"
+
+# Secrets configured via Cloudflare Dashboard or `wrangler secret put`:
+# - GEMINI_API_KEY
+# - SUPABASE_URL
+# - SUPABASE_SERVICE_ROLE_KEY

@@ -7,8 +7,26 @@ import { generateQuestion } from '../ai/questionGenerator';
 import { evaluateAnswer } from '../ai/answerEvaluator';
 import { generateFinalReport } from '../ai/reportGenerator';
 import { parseDimensionScore, calculateWeightedAnswerScore } from '../ai/scoringRubric';
+import { getGeminiModel, DEFAULT_GEMINI_MODEL } from '../ai/client';
 
 export const interviewRouter = new Hono<{ Bindings: Env; Variables: { user: AuthenticatedContext } }>();
+
+// Safe diagnostic endpoint: identifies selected model without exposing secrets
+interviewRouter.get('/diagnostic', (c) => {
+  const model = getGeminiModel(c.env);
+  return c.json({
+    status: 'ok',
+    service: 'HirePilot Interview Engine',
+    ai: {
+      provider: 'Google Gemini',
+      model,
+      defaultModel: DEFAULT_GEMINI_MODEL,
+      isCustomModel: Boolean(c.env.GEMINI_MODEL),
+      hasApiKey: Boolean(c.env.GEMINI_API_KEY),
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // 1. POST /api/interviews - Create new interview & first question
 interviewRouter.post('/', async (c) => {
@@ -62,7 +80,7 @@ interviewRouter.post('/', async (c) => {
   }
 
   try {
-    // Generate 1st question via Gemini
+    // Generate 1st question via configured Gemini model
     const questionOutput = await generateQuestion(c.env.GEMINI_API_KEY, {
       role,
       interviewType: interview_type,
@@ -72,8 +90,9 @@ interviewRouter.post('/', async (c) => {
       experienceLevel: experience_level,
       programmingLanguage: programming_language,
       jobDescription: job_description,
+      model: c.env.GEMINI_MODEL,
       history: [],
-    });
+    }, c.env.GEMINI_MODEL);
 
     // Save 1st question to DB
     const { data: question, error: qError } = await supabase
@@ -258,14 +277,15 @@ interviewRouter.post('/:id/answer', async (c) => {
   }
 
   try {
-    // Evaluate with Gemini using weighted rubric
+    // Evaluate with configured Gemini model using weighted rubric
     const evaluation = await evaluateAnswer(c.env.GEMINI_API_KEY, {
       role: interview.role,
       questionText: question.question_text,
       category: question.category,
       difficulty: question.difficulty,
       userAnswer: (user_answer || '').trim(),
-    });
+      model: c.env.GEMINI_MODEL,
+    }, c.env.GEMINI_MODEL);
 
     // Save answer to Supabase
     const { data: answer, error: ansError } = await supabase
@@ -367,15 +387,16 @@ interviewRouter.post('/:id/next-question', async (c) => {
   });
 
   try {
-    // Call Gemini for adaptive next question
+    // Call configured Gemini model for adaptive next question
     const questionOutput = await generateQuestion(c.env.GEMINI_API_KEY, {
       role: interview.role,
       interviewType: interview.interview_type,
       currentDifficulty: interview.difficulty,
       questionNumber: nextQuestionNumber,
       totalQuestions: interview.total_questions,
+      model: c.env.GEMINI_MODEL,
       history,
-    });
+    }, c.env.GEMINI_MODEL);
 
     // Save new question
     const { data: newQuestion, error: qError } = await supabase
@@ -469,13 +490,14 @@ interviewRouter.post('/:id/complete', async (c) => {
     };
   });
 
-  // Call Gemini to generate full report with mathematically verified rubric
+  // Call configured Gemini model to generate full report with mathematically verified rubric
   const reportOutput = await generateFinalReport(c.env.GEMINI_API_KEY, {
     role: interview.role,
     interviewType: interview.interview_type,
     difficulty: interview.difficulty,
+    model: c.env.GEMINI_MODEL,
     items: sessionItems,
-  });
+  }, c.env.GEMINI_MODEL);
 
   // Save report to Supabase
   const { data: report, error: repError } = await supabase

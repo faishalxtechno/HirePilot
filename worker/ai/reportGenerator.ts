@@ -7,6 +7,7 @@ export interface InterviewSessionData {
   role: RoleType;
   interviewType: InterviewType;
   difficulty: DifficultyLevel;
+  model?: string;
   items: Array<{
     questionNumber: number;
     questionText: string;
@@ -20,8 +21,13 @@ export interface InterviewSessionData {
   }>;
 }
 
-export async function generateFinalReport(apiKey: string, session: InterviewSessionData): Promise<FinalReportOutput> {
+export async function generateFinalReport(
+  apiKey: string,
+  session: InterviewSessionData,
+  model?: string
+): Promise<FinalReportOutput> {
   const { role, interviewType, difficulty, items } = session;
+  const selectedModel = model || session.model;
 
   // Compute strictly verified mathematical scores from the rubric
   const mathAggregates = calculateInterviewAggregates(
@@ -86,6 +92,7 @@ Return ONLY a JSON object adhering to this exact schema:
   try {
     const responseText = await callGemini({
       apiKey,
+      model: selectedModel,
       systemInstruction: SYSTEM_PROMPT_REPORT,
       contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
       temperature: 0.3,

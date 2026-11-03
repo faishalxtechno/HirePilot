@@ -1,5 +1,19 @@
+export const DEFAULT_GEMINI_MODEL = 'gemini-3.8-flash';
+
+export function getGeminiModel(env?: { GEMINI_MODEL?: string }): string {
+  const model = (env?.GEMINI_MODEL || DEFAULT_GEMINI_MODEL).trim();
+  return model.startsWith('models/') ? model.slice(7) : model;
+}
+
+export function buildGeminiEndpoint(apiKey: string, model?: string): string {
+  const rawModel = (model || DEFAULT_GEMINI_MODEL).trim();
+  const cleanModel = rawModel.startsWith('models/') ? rawModel.slice(7) : rawModel;
+  return `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:generateContent?key=${apiKey}`;
+}
+
 export interface GeminiRequestOptions {
   apiKey: string;
+  model?: string;
   systemInstruction?: string;
   contents: Array<{
     role: 'user' | 'model';
@@ -10,14 +24,14 @@ export interface GeminiRequestOptions {
 }
 
 export async function callGemini(options: GeminiRequestOptions, retries = 2): Promise<string> {
-  const { apiKey, systemInstruction, contents, temperature = 0.4, responseMimeType } = options;
+  const { apiKey, model, systemInstruction, contents, temperature = 0.4, responseMimeType } = options;
 
   if (!apiKey) {
     throw new Error('Gemini API key is not configured');
   }
 
-  // Use the modern Gemini 1.5/2.0 API endpoint
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  // Use the configured Gemini API endpoint (defaults to gemini-3.8-flash)
+  const endpoint = buildGeminiEndpoint(apiKey, model);
 
   const payload: any = {
     contents,

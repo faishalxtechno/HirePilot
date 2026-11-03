@@ -11,6 +11,7 @@ export interface QuestionContext {
   experienceLevel?: ExperienceLevel;
   programmingLanguage?: string;
   jobDescription?: string;
+  model?: string;
   history?: Array<{
     question: string;
     answer: string;
@@ -20,7 +21,11 @@ export interface QuestionContext {
   }>;
 }
 
-export async function generateQuestion(apiKey: string, context: QuestionContext): Promise<QuestionOutput> {
+export async function generateQuestion(
+  apiKey: string,
+  context: QuestionContext,
+  model?: string
+): Promise<QuestionOutput> {
   const {
     role,
     interviewType,
@@ -32,6 +37,8 @@ export async function generateQuestion(apiKey: string, context: QuestionContext)
     jobDescription,
     history = [],
   } = context;
+
+  const selectedModel = model || context.model;
 
   // Adaptive difficulty guidance based on recent performance
   let performanceSummary = 'Starting interview session. Present a strong, foundational question tailored to the role.';
@@ -86,6 +93,7 @@ Return ONLY a JSON object adhering to this exact schema:
   try {
     const responseText = await callGemini({
       apiKey,
+      model: selectedModel,
       systemInstruction: SYSTEM_PROMPT_INTERVIEWER,
       contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
       temperature: 0.4,

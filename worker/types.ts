@@ -1,5 +1,6 @@
 export interface Env {
   GEMINI_API_KEY: string;
+  GEMINI_MODEL?: string;
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
 }
