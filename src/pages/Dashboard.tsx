@@ -10,6 +10,7 @@ import { RecentInterviewsTable } from '../components/dashboard/RecentInterviewsT
 import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Link } from 'react-router-dom';
+import { AnimatedHeading, FadeInText, ScrollReveal } from '../components/motion';
 import {
   Play,
   Trophy,
@@ -50,12 +51,22 @@ export const Dashboard: React.FC = () => {
         {/* Top Header & Greeting */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/10">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-medium text-[#f4f0ff] tracking-tight">
+            <AnimatedHeading
+              as="h1"
+              duration={600}
+              distance={12}
+              className="text-2xl sm:text-3xl font-medium text-[#f4f0ff] tracking-tight"
+            >
               Welcome back, {displayName}
-            </h1>
-            <p className="text-xs sm:text-sm text-[#a8a6b7] mt-1">
+            </AnimatedHeading>
+            <FadeInText
+              delay={150}
+              duration={550}
+              distance={8}
+              className="text-xs sm:text-sm text-[#a8a6b7] mt-1"
+            >
               Ready for your next interview? Track your performance and sharpen your skills.
-            </p>
+            </FadeInText>
           </div>
 
           <div className="flex items-center gap-3">
@@ -73,7 +84,10 @@ export const Dashboard: React.FC = () => {
 
         {/* Quota Banner */}
         {data?.stats && (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] gap-3">
+          <ScrollReveal
+            delay={100}
+            className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] gap-3"
+          >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-[8px] bg-[#10093a] text-[#9382ff] border border-white/10 flex items-center justify-center shrink-0">
                 <Zap className="w-4 h-4" />
@@ -91,7 +105,7 @@ export const Dashboard: React.FC = () => {
             <span className="text-xs font-mono font-medium px-2.5 py-1 rounded-[5px] bg-[#10093a] text-[#9382ff] border border-white/10 shrink-0">
               {data.stats.monthlyUsed} / {data.stats.monthlyMax} Used
             </span>
-          </div>
+          </ScrollReveal>
         )}
 
         {/* 4 Statistics Cards */}
@@ -102,7 +116,10 @@ export const Dashboard: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <ScrollReveal
+            staggerChildren={70}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+          >
             <StatCard
               title="Interviews Completed"
               value={data?.stats.interviewsCompleted ?? 0}
@@ -131,16 +148,18 @@ export const Dashboard: React.FC = () => {
               icon={<Flame className="w-5 h-5 text-amber-600 fill-amber-500/20" />}
               accentColor="amber"
             />
-          </div>
+          </ScrollReveal>
         )}
 
         {/* AI Recommendation Card */}
         {data?.recommendation && (
-          <RecommendationCard recommendation={data.recommendation} />
+          <ScrollReveal delay={120}>
+            <RecommendationCard recommendation={data.recommendation} />
+          </ScrollReveal>
         )}
 
         {/* Skill Breakdown & Recent Interviews Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <ScrollReveal delay={150} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Performance Radar/Progress Breakdown (1 Col) */}
           <div className="lg:col-span-1">
             {isLoading || !data ? (
@@ -158,7 +177,7 @@ export const Dashboard: React.FC = () => {
               <RecentInterviewsTable interviews={data.recentInterviews} />
             )}
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </DashboardLayout>
   );

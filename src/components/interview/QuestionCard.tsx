@@ -3,6 +3,7 @@ import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Bot, Sparkles } from 'lucide-react';
 import { Question } from '../../types';
+import { FadeInText } from '../motion';
 
 export const QuestionCard: React.FC<{ question: Question }> = ({ question }) => {
   return (
@@ -29,9 +30,15 @@ export const QuestionCard: React.FC<{ question: Question }> = ({ question }) => 
 
       {/* Question Text */}
       <div className="pt-1">
-        <p className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white leading-relaxed">
+        <FadeInText
+          key={question.id || question.question_text}
+          duration={500}
+          distance={10}
+          blur={true}
+          className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white leading-relaxed"
+        >
           {question.question_text}
-        </p>
+        </FadeInText>
       </div>
 
       <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-500 dark:text-slate-400">

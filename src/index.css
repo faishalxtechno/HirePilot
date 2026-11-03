@@ -35,6 +35,32 @@
   -webkit-text-fill-color: transparent;
 }
 
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient-text {
+  background: linear-gradient(90deg, #e59cff, #ba9cff, #9382ff, #7cc8fb, #ba9cff, #e59cff);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 7s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-gradient-text {
+    animation: none !important;
+  }
+}
+
 .aurora-divider {
   height: 1px;
   width: 100%;

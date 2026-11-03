@@ -4,6 +4,13 @@ import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { FounderSection } from '../components/landing/FounderSection';
 import {
+  HeroHeading,
+  AnimatedHeading,
+  FadeInText,
+  ScrollReveal,
+  GradientText,
+} from '../components/motion';
+import {
   Sparkles,
   ArrowRight,
   ChevronRight,
@@ -185,31 +192,39 @@ export const Landing: React.FC = () => {
       <section className="relative pt-24 pb-24 md:pt-36 md:pb-32 overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
           {/* AI Badge Pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-[32px] bg-[#060317] border border-[#5046e4] text-[#f4f0ff] text-xs font-medium shadow-[inset_0_-7px_11px_rgba(164,143,255,0.12)]">
+          <FadeInText
+            duration={500}
+            distance={8}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-[32px] bg-[#060317] border border-[#5046e4] text-[#f4f0ff] text-xs font-medium shadow-[inset_0_-7px_11px_rgba(164,143,255,0.12)]"
+          >
             <Sparkles className="w-3.5 h-3.5 text-[#9382ff]" />
             <span>Next-Gen AI Mock Interview Platform</span>
-          </div>
+          </FadeInText>
 
-          {/* Headline (AeonikPro / Inter medium 500, never bold) */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium text-[#f4f0ff] tracking-tight max-w-4xl mx-auto leading-[1.12]">
-            Practice Smarter.{' '}
-            <span className="cosmic-text-gradient">
-              Interview Better.
-            </span>{' '}
-            Get Hired.
-          </h1>
+          {/* Headline (Line-by-line word reveal with blur-to-sharp & cosmic gradient) */}
+          <HeroHeading />
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg md:text-xl text-[#a8a6b7] max-w-2xl mx-auto leading-relaxed font-normal">
+          <FadeInText
+            delay={350}
+            duration={650}
+            distance={14}
+            className="text-base sm:text-lg md:text-xl text-[#a8a6b7] max-w-2xl mx-auto leading-relaxed font-normal"
+          >
             Practice realistic technical and HR interviews with an AI interviewer that evaluates your answers in real time and helps you improve.
-          </p>
+          </FadeInText>
 
           {/* Primary CTA & Secondary Action */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <FadeInText
+            delay={500}
+            duration={600}
+            distance={12}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+          >
             <Link to="/signup" className="w-full sm:w-auto">
               <button
                 type="button"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-[5px] bg-[#5046e4] hover:bg-[#10093a] text-white text-sm font-medium transition-all shadow-[0_0_24px_rgba(80,70,228,0.4)]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-[5px] bg-[#5046e4] hover:bg-[#10093a] text-white text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 shadow-[0_0_24px_rgba(80,70,228,0.4)]"
               >
                 <span>Start Free Interview</span>
                 <ArrowRight className="w-4 h-4" />
@@ -223,10 +238,10 @@ export const Landing: React.FC = () => {
               <span>See How It Works</span>
               <ChevronRight className="w-3.5 h-3.5 text-[#9382ff]" />
             </a>
-          </div>
+          </FadeInText>
 
           {/* Hero Product Showcase (Mockup Chamber) */}
-          <div className="pt-12 max-w-4xl mx-auto">
+          <ScrollReveal delay={250} distance={24} blur={true} className="pt-12 max-w-4xl mx-auto">
             <div className="rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] overflow-hidden text-left">
               {/* Window Header */}
               <div className="bg-[#10093a]/40 px-5 py-3 border-b border-white/10 flex items-center justify-between">
@@ -285,7 +300,7 @@ export const Landing: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -298,22 +313,25 @@ export const Landing: React.FC = () => {
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[32px] bg-[#060317] border border-[#5046e4]/50 text-xs font-medium text-[#9382ff] shadow-[inset_0_-7px_11px_rgba(164,143,255,0.12)]">
             <span>Capabilities</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
+          <AnimatedHeading as="h2" className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
             Engineered for genuine interview mastery
-          </h2>
-          <p className="text-sm text-[#a8a6b7] font-normal">
+          </AnimatedHeading>
+          <FadeInText delay={120} className="text-sm text-[#a8a6b7] font-normal">
             Everything you need to eliminate stage fright, refine technical communication, and secure top offers.
-          </p>
+          </FadeInText>
         </div>
 
-        {/* 4-Column Grid: 8 features in 2 rows of 4 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 4-Column Grid: 8 features in 2 rows of 4 with staggered reveals */}
+        <ScrollReveal
+          staggerChildren={60}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
           {features.map((f) => {
             const Icon = f.icon;
             return (
               <div
                 key={f.title}
-                className="p-6 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] space-y-3 transition-colors hover:border-[#9382ff]/40"
+                className="h-full p-6 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] space-y-3 transition-colors hover:border-[#9382ff]/40"
               >
                 {/* Outlined Icon: 1.5px stroke weight, white outlined */}
                 <div className="w-10 h-10 rounded-[5px] bg-[#10093a]/60 text-[#f4f0ff] flex items-center justify-center border border-white/5">
@@ -326,7 +344,7 @@ export const Landing: React.FC = () => {
               </div>
             );
           })}
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Aurora Divider */}
@@ -338,19 +356,22 @@ export const Landing: React.FC = () => {
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[32px] bg-[#060317] border border-[#5046e4]/50 text-xs font-medium text-[#9382ff] shadow-[inset_0_-7px_11px_rgba(164,143,255,0.12)]">
             <span>Workflow</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
+          <AnimatedHeading as="h2" className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
             How HirePilot Works
-          </h2>
-          <p className="text-sm text-[#a8a6b7] font-normal">
+          </AnimatedHeading>
+          <FadeInText delay={120} className="text-sm text-[#a8a6b7] font-normal">
             From setup to complete performance report in four streamlined steps.
-          </p>
+          </FadeInText>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <ScrollReveal
+          staggerChildren={75}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
           {steps.map((s) => (
             <div
               key={s.step}
-              className="p-6 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] space-y-3 relative overflow-hidden"
+              className="h-full p-6 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] space-y-3 relative overflow-hidden"
             >
               <div className="font-mono text-3xl font-medium text-[#9382ff]/50">
                 {s.step}
@@ -359,7 +380,7 @@ export const Landing: React.FC = () => {
               <p className="text-xs text-[#918ea0] leading-relaxed font-normal">{s.desc}</p>
             </div>
           ))}
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Aurora Divider */}
@@ -371,21 +392,24 @@ export const Landing: React.FC = () => {
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[32px] bg-[#060317] border border-[#5046e4]/50 text-xs font-medium text-[#9382ff] shadow-[inset_0_-7px_11px_rgba(164,143,255,0.12)]">
             <span>Catalog</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
+          <AnimatedHeading as="h2" className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
             Specialized Interview Modes
-          </h2>
-          <p className="text-sm text-[#a8a6b7] font-normal">
+          </AnimatedHeading>
+          <FadeInText delay={120} className="text-sm text-[#a8a6b7] font-normal">
             Practice the exact format matching your upcoming company loops.
-          </p>
+          </FadeInText>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <ScrollReveal
+          staggerChildren={60}
+          className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4"
+        >
           {interviewTypes.map((t) => {
             const Icon = t.icon;
             return (
               <div
                 key={t.type}
-                className="p-5 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] flex flex-col justify-between space-y-4 hover:border-[#9382ff]/40 transition-colors"
+                className="h-full p-5 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] flex flex-col justify-between space-y-4 hover:border-[#9382ff]/40 transition-colors"
               >
                 <div className="space-y-3">
                   <div className="w-10 h-10 rounded-[5px] bg-[#10093a]/70 text-[#f4f0ff] flex items-center justify-center border border-white/5">
@@ -409,7 +433,7 @@ export const Landing: React.FC = () => {
               </div>
             );
           })}
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Aurora Divider */}
@@ -422,19 +446,22 @@ export const Landing: React.FC = () => {
             <Quote className="w-3.5 h-3.5" />
             <span>Wall of Love</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
+          <AnimatedHeading as="h2" className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
             Loved by candidates landing tech offers
-          </h2>
-          <p className="text-sm text-[#a8a6b7] font-normal">
+          </AnimatedHeading>
+          <FadeInText delay={120} className="text-sm text-[#a8a6b7] font-normal">
             Real feedback from developers who trained with HirePilot before their company rounds.
-          </p>
+          </FadeInText>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <ScrollReveal
+          staggerChildren={90}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
           {testimonials.map((testi) => (
             <div
               key={testi.name}
-              className="p-6 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] space-y-4"
+              className="h-full p-6 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] space-y-4"
             >
               {/* Circular Avatar + Author Info */}
               <div className="flex items-center gap-3">
@@ -456,7 +483,7 @@ export const Landing: React.FC = () => {
               />
             </div>
           ))}
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Aurora Divider */}
@@ -468,15 +495,15 @@ export const Landing: React.FC = () => {
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[32px] bg-[#060317] border border-[#5046e4]/50 text-xs font-medium text-[#9382ff] shadow-[inset_0_-7px_11px_rgba(164,143,255,0.12)]">
             <span>Free Tier</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
+          <AnimatedHeading as="h2" className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
             Free forever for early-career candidates
-          </h2>
-          <p className="text-sm text-[#a8a6b7] font-normal">
+          </AnimatedHeading>
+          <FadeInText delay={120} className="text-sm text-[#a8a6b7] font-normal">
             Transparent monthly quotas designed to keep AI career preparation accessible to all.
-          </p>
+          </FadeInText>
         </div>
 
-        <div className="max-w-lg mx-auto">
+        <ScrollReveal delay={150} className="max-w-lg mx-auto">
           <div className="p-8 rounded-[16px] bg-[#060317] border border-[#5046e4]/60 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] space-y-6 relative">
             <div className="absolute -top-3 right-6">
               <span className="px-3 py-0.5 rounded-[32px] text-xs font-medium bg-[#10093a] text-[#ba9cff] border border-[#5046e4] shadow-[inset_0_-7px_11px_rgba(164,143,255,0.12)]">
@@ -525,7 +552,7 @@ export const Landing: React.FC = () => {
               </button>
             </Link>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Aurora Divider */}
@@ -543,12 +570,12 @@ export const Landing: React.FC = () => {
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[32px] bg-[#060317] border border-[#5046e4]/50 text-xs font-medium text-[#9382ff] shadow-[inset_0_-7px_11px_rgba(164,143,255,0.12)]">
             <span>Got Questions?</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
+          <AnimatedHeading as="h2" className="text-3xl sm:text-4xl font-medium text-[#f4f0ff] tracking-tight">
             Frequently Asked Questions
-          </h2>
+          </AnimatedHeading>
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-3">
+        <ScrollReveal delay={150} className="max-w-3xl mx-auto space-y-3">
           {faqs.map((faq, idx) => (
             <div
               key={idx}
@@ -572,7 +599,7 @@ export const Landing: React.FC = () => {
               )}
             </div>
           ))}
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Aurora Divider */}
@@ -580,13 +607,20 @@ export const Landing: React.FC = () => {
 
       {/* Final Call to Action */}
       <section className="py-20 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="p-8 sm:p-12 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] text-center space-y-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium text-[#f4f0ff] tracking-tight">
-            Ready to ace your next <span className="cosmic-text-gradient">technical interview</span>?
-          </h2>
-          <p className="text-sm text-[#a8a6b7] max-w-xl mx-auto font-normal leading-relaxed">
+        <ScrollReveal
+          delay={100}
+          className="p-8 sm:p-12 rounded-[16px] bg-[#060317] border border-white/10 shadow-[inset_0_0_24px_rgba(255,255,255,0.04)] text-center space-y-6"
+        >
+          <AnimatedHeading as="h2" className="text-2xl sm:text-3xl md:text-4xl font-medium text-[#f4f0ff] tracking-tight">
+            Ready to ace your next{' '}
+            <GradientText animated variant="cosmic">
+              technical interview
+            </GradientText>
+            ?
+          </AnimatedHeading>
+          <FadeInText delay={120} className="text-sm text-[#a8a6b7] max-w-xl mx-auto font-normal leading-relaxed">
             Join hundreds of candidates using HirePilot to isolate weak concepts, hone explanations, and walk into interviews with unshakeable confidence.
-          </p>
+          </FadeInText>
           <div>
             <Link to="/signup">
               <button
@@ -598,7 +632,7 @@ export const Landing: React.FC = () => {
               </button>
             </Link>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Footer */}

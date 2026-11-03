@@ -7,6 +7,7 @@ import { InterviewReport, Interview } from '../../types';
 import { getScoreColor, getScoreVerdict, formatDate } from '../../lib/utils';
 import { Link, useNavigate } from 'react-router-dom';
 import confetti from 'canvas-confetti';
+import { CountUp, ScrollReveal } from '../motion';
 import {
   Trophy,
   CheckCircle2,
@@ -83,7 +84,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview }) => 
           <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shrink-0 min-w-[180px]">
             <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Overall Score</span>
             <div className="font-mono text-5xl font-black text-white mt-1">
-              {report.overall_score}
+              <CountUp value={report.overall_score} duration={1200} />
               <span className="text-xl text-slate-400 font-normal">/100</span>
             </div>
             <div className="mt-2">
@@ -105,35 +106,39 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview }) => 
       </Card>
 
       {/* Category Breakdown Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <ScrollReveal staggerChildren={70} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {categories.map((c) => (
-          <Card key={c.label} className="p-4 space-y-2">
+          <Card key={c.label} className="h-full p-4 space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-600 dark:text-slate-400">{c.label}</span>
-              <span className="font-mono font-bold text-slate-900 dark:text-white">{c.score}%</span>
+              <span className="font-mono font-bold text-slate-900 dark:text-white">
+                <CountUp value={c.score} duration={1000} />%
+              </span>
             </div>
             <Progress value={c.score} size="md" variant="brand" />
           </Card>
         ))}
-      </div>
+      </ScrollReveal>
 
       {/* AI Executive Summary Card */}
       {report.ai_summary && (
-        <Card className="p-6 bg-brand-50/40 dark:bg-brand-950/20 border-brand-200/70 dark:border-brand-900/60 space-y-2.5">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300">
-            <Sparkles className="w-4 h-4" />
-            AI Executive Recommendation
-          </div>
-          <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
-            "{report.ai_summary}"
-          </p>
-        </Card>
+        <ScrollReveal delay={120}>
+          <Card className="p-6 bg-brand-50/40 dark:bg-brand-950/20 border-brand-200/70 dark:border-brand-900/60 space-y-2.5">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300">
+              <Sparkles className="w-4 h-4" />
+              AI Executive Recommendation
+            </div>
+            <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
+              "{report.ai_summary}"
+            </p>
+          </Card>
+        </ScrollReveal>
       )}
 
       {/* Detailed Analysis Grid: Strengths, Weaknesses, Recommended Topics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <ScrollReveal staggerChildren={80} className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Strengths */}
-        <Card className="p-6 space-y-4">
+        <Card className="h-full p-6 space-y-4">
           <div className="flex items-center gap-2 text-sm font-bold text-emerald-700 dark:text-emerald-400 border-b border-slate-100 dark:border-slate-800 pb-3">
             <CheckCircle2 className="w-4 h-4" />
             Key Strengths
@@ -149,7 +154,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview }) => 
         </Card>
 
         {/* Weaknesses */}
-        <Card className="p-6 space-y-4">
+        <Card className="h-full p-6 space-y-4">
           <div className="flex items-center gap-2 text-sm font-bold text-amber-700 dark:text-amber-400 border-b border-slate-100 dark:border-slate-800 pb-3">
             <AlertCircle className="w-4 h-4" />
             Areas to Improve
@@ -165,7 +170,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview }) => 
         </Card>
 
         {/* Recommended Topics */}
-        <Card className="p-6 space-y-4">
+        <Card className="h-full p-6 space-y-4">
           <div className="flex items-center gap-2 text-sm font-bold text-brand-700 dark:text-brand-400 border-b border-slate-100 dark:border-slate-800 pb-3">
             <BookOpen className="w-4 h-4" />
             Recommended Topics
@@ -181,39 +186,41 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, interview }) => 
             ))}
           </ol>
         </Card>
-      </div>
+      </ScrollReveal>
 
       {/* Action Footer */}
-      <Card className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-slate-200 dark:border-slate-800">
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Link to="/dashboard" className="w-full sm:w-auto">
-            <Button variant="outline" size="md" className="w-full" leftIcon={<LayoutDashboard className="w-4 h-4" />}>
-              Back to Dashboard
-            </Button>
-          </Link>
-          <Link to="/history" className="w-full sm:w-auto">
-            <Button variant="ghost" size="md" className="w-full">
-              View History
-            </Button>
-          </Link>
-        </div>
+      <ScrollReveal delay={120}>
+        <Card className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-slate-200 dark:border-slate-800">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <Link to="/dashboard" className="w-full sm:w-auto">
+              <Button variant="outline" size="md" className="w-full" leftIcon={<LayoutDashboard className="w-4 h-4" />}>
+                Back to Dashboard
+              </Button>
+            </Link>
+            <Link to="/history" className="w-full sm:w-auto">
+              <Button variant="ghost" size="md" className="w-full">
+                View History
+              </Button>
+            </Link>
+          </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <Link
-            to={`/interview/setup?role=${encodeURIComponent(interview?.role || 'Software Engineer')}&type=${interview?.interview_type || 'technical'}`}
-            className="w-full sm:w-auto"
-          >
-            <Button variant="secondary" size="md" className="w-full" leftIcon={<RotateCcw className="w-4 h-4" />}>
-              Try Again
-            </Button>
-          </Link>
-          <Link to="/interview/setup" className="w-full sm:w-auto">
-            <Button variant="primary" size="md" className="w-full" leftIcon={<PlusCircle className="w-4 h-4" />}>
-              Start New Interview
-            </Button>
-          </Link>
-        </div>
-      </Card>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <Link
+              to={`/interview/setup?role=${encodeURIComponent(interview?.role || 'Software Engineer')}&type=${interview?.interview_type || 'technical'}`}
+              className="w-full sm:w-auto"
+            >
+              <Button variant="secondary" size="md" className="w-full" leftIcon={<RotateCcw className="w-4 h-4" />}>
+                Try Again
+              </Button>
+            </Link>
+            <Link to="/interview/setup" className="w-full sm:w-auto">
+              <Button variant="primary" size="md" className="w-full" leftIcon={<PlusCircle className="w-4 h-4" />}>
+                Start New Interview
+              </Button>
+            </Link>
+          </div>
+        </Card>
+      </ScrollReveal>
     </div>
   );
 };

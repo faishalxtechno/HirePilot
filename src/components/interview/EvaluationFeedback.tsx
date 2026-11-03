@@ -3,6 +3,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { AnswerEvaluation } from '../../types';
+import { CountUp, ScrollReveal } from '../motion';
 import {
   CheckCircle2,
   AlertTriangle,
@@ -55,13 +56,13 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
         <div className="flex items-center gap-2">
           <span className="text-xs text-slate-500 font-medium">Question Score:</span>
           <span className="font-mono text-sm font-bold px-2.5 py-1 rounded-lg bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
-            {avgScore}%
+            <CountUp value={avgScore} duration={800} />%
           </span>
         </div>
       </div>
 
       {/* 4 Score Gauges */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <ScrollReveal staggerChildren={70} className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {scores.map((s) => (
           <div
             key={s.label}
@@ -71,12 +72,12 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
               {s.label}
             </span>
             <span className="font-mono text-lg font-bold text-slate-900 dark:text-white">
-              {s.value}
+              <CountUp value={s.value} duration={800} />
               <span className="text-xs text-slate-400 font-normal">/10</span>
             </span>
           </div>
         ))}
-      </div>
+      </ScrollReveal>
 
       {/* Feedback Summary Paragraph */}
       {evaluation.feedback && (
@@ -86,9 +87,9 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
       )}
 
       {/* Detailed Analysis Breakdown */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+      <ScrollReveal staggerChildren={80} className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
         {/* What Went Well */}
-        <div className="p-4 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/50 space-y-2.5">
+        <div className="h-full p-4 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/50 space-y-2.5">
           <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
             <CheckCircle2 className="w-3.5 h-3.5" />
             What You Did Well
@@ -108,7 +109,7 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
         </div>
 
         {/* What You Missed */}
-        <div className="p-4 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/50 space-y-2.5">
+        <div className="h-full p-4 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/50 space-y-2.5">
           <div className="flex items-center gap-1.5 text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
             <AlertTriangle className="w-3.5 h-3.5" />
             What You Missed
@@ -128,7 +129,7 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
         </div>
 
         {/* How to Improve */}
-        <div className="p-4 rounded-xl bg-brand-50/50 dark:bg-brand-950/20 border border-brand-200/60 dark:border-brand-900/50 space-y-2.5">
+        <div className="h-full p-4 rounded-xl bg-brand-50/50 dark:bg-brand-950/20 border border-brand-200/60 dark:border-brand-900/50 space-y-2.5">
           <div className="flex items-center gap-1.5 text-xs font-bold text-brand-800 dark:text-brand-300 uppercase tracking-wider">
             <Lightbulb className="w-3.5 h-3.5" />
             How to Improve
@@ -146,7 +147,7 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
             )}
           </ul>
         </div>
-      </div>
+      </ScrollReveal>
 
       {/* CTA Button */}
       <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">

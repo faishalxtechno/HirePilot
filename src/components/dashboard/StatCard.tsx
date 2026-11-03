@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from '../ui/Card';
 import { cn } from '../../lib/utils';
+import { CountUp } from '../motion';
 
 interface StatCardProps {
   title: string;
@@ -35,7 +36,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         <div>
           <p className="text-xs font-medium text-[#a8a6b7]">{title}</p>
           <h3 className="text-2xl font-medium text-[#f4f0ff] mt-1 tracking-tight font-mono">
-            {value}
+            <CountUp value={value} duration={1100} />
           </h3>
         </div>
         <div className={cn('p-2.5 rounded-[8px] shrink-0', accentColors[accentColor])}>
