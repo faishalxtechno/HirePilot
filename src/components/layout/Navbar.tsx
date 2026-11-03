@@ -5,8 +5,8 @@ import { HirePilotLogo } from '../ui/HirePilotLogo';
 import { Menu, X, ArrowRight, User as UserIcon, LayoutDashboard, LogOut } from 'lucide-react';
 
 export interface NavbarProps {
-  /** Visual variant: 'floating' (Reflect Notes style) or 'standard' */
-  variant?: 'floating' | 'standard';
+  /** Visual variant: 'floating' (Reflect Notes style), 'light' (Stripe/Linear style), or 'standard' */
+  variant?: 'floating' | 'standard' | 'light';
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ variant = 'floating' }) => {
@@ -14,6 +14,205 @@ export const Navbar: React.FC<NavbarProps> = ({ variant = 'floating' }) => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+
+  if (variant === 'light') {
+    return (
+      <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-[#E5E7EB] transition-all">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          {/* Brand Logo */}
+          <div className="flex items-center shrink-0">
+            <HirePilotLogo variant="navbar" asLink to="/" className="border-0 shadow-none p-0 bg-transparent" imgClassName="max-h-8 max-w-[150px]" />
+          </div>
+
+          {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center gap-7 text-[14px] font-medium text-[#4B5563]">
+            <a href="#problem-solution" className="hover:text-[#2563EB] transition-colors">
+              Why HirePilot
+            </a>
+            <a href="#features" className="hover:text-[#2563EB] transition-colors">
+              Features
+            </a>
+            <a href="#how-it-works" className="hover:text-[#2563EB] transition-colors">
+              How It Works
+            </a>
+            <a href="#showcase" className="hover:text-[#2563EB] transition-colors">
+              Product
+            </a>
+            <Link to="/founder" className="hover:text-[#2563EB] transition-colors">
+              Founder
+            </Link>
+          </nav>
+
+          {/* Right Action / Auth Buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="flex items-center gap-2 p-1.5 pr-3 rounded-full border border-[#E5E7EB] bg-white hover:bg-slate-50 text-[#111827] transition-colors shadow-2xs"
+                >
+                  <div className="w-7 h-7 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-xs font-semibold overflow-hidden">
+                    {profile?.avatar_url ? (
+                      <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover" />
+                    ) : (
+                      profile?.name?.charAt(0).toUpperCase() || 'U'
+                    )}
+                  </div>
+                  <span className="text-xs font-medium max-w-[110px] truncate text-[#111827]">
+                    {profile?.name || user.email?.split('@')[0]}
+                  </span>
+                </button>
+
+                {userDropdownOpen && (
+                  <div
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-[12px] border border-[#E5E7EB] shadow-lg py-2 z-50 animate-slide-up"
+                    onMouseLeave={() => setUserDropdownOpen(false)}
+                  >
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#111827] hover:bg-slate-50 hover:text-[#2563EB] transition-colors"
+                    >
+                      <LayoutDashboard className="w-4 h-4 text-[#2563EB]" />
+                      Dashboard
+                    </Link>
+                    <Link
+                      to="/profile"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#4B5563] hover:bg-slate-50 hover:text-[#111827] transition-colors"
+                    >
+                      <UserIcon className="w-4 h-4 text-[#64748B]" />
+                      Profile & Settings
+                    </Link>
+                    <div className="h-px bg-[#E5E7EB] my-1.5" />
+                    <button
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        signOut();
+                        navigate('/');
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="text-[14px] font-medium text-[#4B5563] hover:text-[#111827] px-3 py-2 transition-colors rounded-[6px]"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[6px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-[14px] font-medium transition-all shadow-xs hover:shadow-sm"
+                >
+                  <span>Get Started</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-[6px] text-[#4B5563] hover:text-[#111827] hover:bg-slate-100 transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-[#E5E7EB] bg-white px-4 py-4 space-y-4 animate-slide-up shadow-lg">
+            <nav className="flex flex-col gap-1 text-[14px] font-medium text-[#4B5563]">
+              <a
+                href="#problem-solution"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-[6px] hover:bg-slate-50 hover:text-[#2563EB] transition-colors"
+              >
+                Why HirePilot
+              </a>
+              <a
+                href="#features"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-[6px] hover:bg-slate-50 hover:text-[#2563EB] transition-colors"
+              >
+                Features
+              </a>
+              <a
+                href="#how-it-works"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-[6px] hover:bg-slate-50 hover:text-[#2563EB] transition-colors"
+              >
+                How It Works
+              </a>
+              <a
+                href="#showcase"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-[6px] hover:bg-slate-50 hover:text-[#2563EB] transition-colors"
+              >
+                Product
+              </a>
+              <Link
+                to="/founder"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-[6px] hover:bg-slate-50 hover:text-[#2563EB] transition-colors"
+              >
+                Founder
+              </Link>
+            </nav>
+
+            <div className="pt-3 border-t border-[#E5E7EB] flex flex-col gap-2">
+              {user ? (
+                <>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-2.5 px-4 rounded-[6px] bg-[#2563EB] text-white text-center text-sm font-medium hover:bg-[#1D4ED8] transition-colors shadow-xs"
+                  >
+                    Go to Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      signOut();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full py-2 text-xs text-rose-600 font-medium text-center"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-2 px-4 rounded-[6px] border border-[#E5E7EB] text-center text-sm font-medium text-[#111827] hover:bg-slate-50 transition-colors"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-2.5 px-4 rounded-[6px] bg-[#2563EB] text-white text-center text-sm font-medium hover:bg-[#1D4ED8] transition-colors shadow-xs"
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </header>
+    );
+  }
 
   if (variant === 'floating') {
     return (

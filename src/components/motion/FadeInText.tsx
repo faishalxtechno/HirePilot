@@ -71,4 +71,5 @@ export const FadeInText: React.FC<FadeInTextProps> = ({
 };
 
 export const AnimatedText = FadeInText;
+export const FadeUpText = FadeInText;
 

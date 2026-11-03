@@ -4,7 +4,7 @@ export { WordReveal } from './WordReveal';
 export { CharacterReveal } from './CharacterReveal';
 export { AnimatedHeading } from './AnimatedHeading';
 export { HeroHeading } from './HeroHeading';
-export { FadeInText, AnimatedText } from './FadeInText';
+export { FadeInText, AnimatedText, FadeUpText } from './FadeInText';
 export { ScrollReveal } from './ScrollReveal';
 export { GradientText } from './GradientText';
 export { CountUp } from './CountUp';
