@@ -195,6 +195,10 @@ interviewRouter.post('/:id/answer', async (c) => {
 
   const { question_id, user_answer } = body;
 
+  if (!question_id) {
+    return c.json({ error: 'Missing question_id in answer submission payload' }, 400);
+  }
+
   // Verify interview ownership
   const { data: interview, error: intError } = await supabase
     .from('interviews')
@@ -217,6 +221,40 @@ interviewRouter.post('/:id/answer', async (c) => {
 
   if (qError || !question) {
     return c.json({ error: 'Question not found' }, 404);
+  }
+
+  // Check for duplicate answer submission
+  const { data: existingAnswer } = await supabase
+    .from('answers')
+    .select('*')
+    .eq('question_id', question.id)
+    .eq('interview_id', interviewId)
+    .maybeSingle();
+
+  if (existingAnswer) {
+    const acc = parseDimensionScore(existingAnswer.accuracy_score, 0);
+    const rel = parseDimensionScore(existingAnswer.relevance_score, 0);
+    const comp = parseDimensionScore(existingAnswer.completeness_score, 0);
+    const cla = parseDimensionScore(existingAnswer.clarity_score, 0);
+    const weighted_score = calculateWeightedAnswerScore({ accuracy: acc, relevance: rel, completeness: comp, clarity: cla });
+
+    return c.json({
+      evaluation: {
+        id: existingAnswer.id,
+        question_id: question.id,
+        accuracy: acc,
+        relevance: rel,
+        completeness: comp,
+        clarity: cla,
+        weighted_score,
+        feedback: existingAnswer.feedback,
+        what_went_well: Array.isArray(existingAnswer.what_went_well) ? existingAnswer.what_went_well : [],
+        missing_points: Array.isArray(existingAnswer.missing_points) ? existingAnswer.missing_points : [],
+        how_to_improve: Array.isArray(existingAnswer.how_to_improve) ? existingAnswer.how_to_improve : [],
+        suggested_answer: existingAnswer.suggested_answer,
+      },
+      message: 'Answer was already submitted and evaluated for this question.',
+    });
   }
 
   try {

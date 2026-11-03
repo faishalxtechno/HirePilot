@@ -1,4 +1,4 @@
-import { callGemini, parseJsonFromAi } from './client';
+import { callGemini, extractJsonFromAi } from './client';
 import { SYSTEM_PROMPT_INTERVIEWER } from './prompts';
 import { DifficultyLevel, InterviewType, QuestionOutput, RoleType, ExperienceLevel } from '../types';
 
@@ -92,7 +92,7 @@ Return ONLY a JSON object adhering to this exact schema:
       responseMimeType: 'application/json',
     });
 
-    const parsed = parseJsonFromAi<Partial<QuestionOutput>>(responseText, {});
+    const parsed = extractJsonFromAi<Partial<QuestionOutput>>(responseText);
 
     if (!parsed.question_text || typeof parsed.question_text !== 'string' || !parsed.question_text.trim()) {
       throw new Error('Gemini returned an invalid or empty question payload');

@@ -36,32 +36,31 @@ async function getAuthHeader(): Promise<HeadersInit> {
 // Real Backend API Client
 // -----------------------------------------------------------------------------
 export const api = {
-  // 1. Create Interview & First Question
+  // 1. Create Interview & First Question (Real AI Question Generation)
   async createInterview(payload: CreateInterviewPayload): Promise<{ interview: Interview; firstQuestion: Question }> {
+    const headers = await getAuthHeader();
+    let res: Response;
+
     try {
-      const headers = await getAuthHeader();
-      const res = await fetch(`${WORKER_URL}/interviews`, {
+      res = await fetch(`${WORKER_URL}/interviews`, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload),
       });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Failed to create interview (${res.status})`);
-      }
-
-      return await res.json();
-    } catch (err: any) {
-      if (err.message && err.message.includes('monthly interview limit')) {
-        throw err;
-      }
-      console.warn('Backend worker unavailable, using client-side fallback:', err.message);
-      return fallbackCreateInterview(payload);
+    } catch (networkErr: any) {
+      console.error('Network error during interview creation:', networkErr);
+      throw new Error('Unable to connect to the interview initialization service. Please check your network and retry.');
     }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Failed to create interview session (${res.status})`);
+    }
+
+    return await res.json();
   },
 
-  // 2. Submit Answer & Receive AI Evaluation
+  // 2. Submit Answer & Receive AI Evaluation (Real AI Answer Evaluation)
   async submitAnswer(interviewId: string, payload: { question_id: string; user_answer: string }): Promise<AnswerEvaluation> {
     const headers = await getAuthHeader();
     let res: Response;
@@ -110,88 +109,96 @@ export const api = {
     return data.evaluation;
   },
 
-  // 3. Get Next Question
+  // 3. Get Next Question (Real Adaptive AI Generation)
   async getNextQuestion(interviewId: string): Promise<{ question?: Question; finished?: boolean; message?: string }> {
+    const headers = await getAuthHeader();
+    let res: Response;
+
     try {
-      const headers = await getAuthHeader();
-      const res = await fetch(`${WORKER_URL}/interviews/${interviewId}/next-question`, {
+      res = await fetch(`${WORKER_URL}/interviews/${interviewId}/next-question`, {
         method: 'POST',
         headers,
       });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Failed to fetch next question (${res.status})`);
-      }
-
-      return await res.json();
-    } catch (err: any) {
-      console.warn('Backend worker unavailable, using client-side fallback:', err.message);
-      return fallbackNextQuestion(interviewId);
+    } catch (networkErr: any) {
+      console.error('Network error fetching next question:', networkErr);
+      throw new Error('Unable to connect to the question generation service. Please check your network and retry.');
     }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Failed to fetch next question (${res.status})`);
+    }
+
+    return await res.json();
   },
 
   // 4. Complete Interview & Generate Report
   async completeInterview(interviewId: string): Promise<{ report: InterviewReport; interview?: Interview }> {
+    const headers = await getAuthHeader();
+    let res: Response;
+
     try {
-      const headers = await getAuthHeader();
-      const res = await fetch(`${WORKER_URL}/interviews/${interviewId}/complete`, {
+      res = await fetch(`${WORKER_URL}/interviews/${interviewId}/complete`, {
         method: 'POST',
         headers,
       });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Failed to complete interview (${res.status})`);
-      }
-
-      return await res.json();
-    } catch (err: any) {
-      console.warn('Backend worker unavailable, using client-side fallback:', err.message);
-      return fallbackCompleteInterview(interviewId);
+    } catch (networkErr: any) {
+      console.error('Network error completing interview:', networkErr);
+      throw new Error('Unable to connect to the report generation service. Please check your network and retry.');
     }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Failed to complete interview (${res.status})`);
+    }
+
+    return await res.json();
   },
 
   // 5. Get Interview Details
   async getInterview(interviewId: string): Promise<{ interview: Interview; questions: Question[]; answers: any[]; report: InterviewReport | null }> {
+    const headers = await getAuthHeader();
+    let res: Response;
+
     try {
-      const headers = await getAuthHeader();
-      const res = await fetch(`${WORKER_URL}/interviews/${interviewId}`, {
+      res = await fetch(`${WORKER_URL}/interviews/${interviewId}`, {
         method: 'GET',
         headers,
       });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Failed to fetch interview (${res.status})`);
-      }
-
-      return await res.json();
-    } catch (err: any) {
-      console.warn('Backend worker unavailable, using client-side fallback:', err.message);
-      return fallbackGetInterview(interviewId);
+    } catch (networkErr: any) {
+      console.error('Network error fetching interview details:', networkErr);
+      throw new Error('Unable to connect to interview service. Please check your network and retry.');
     }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Failed to fetch interview (${res.status})`);
+    }
+
+    return await res.json();
   },
 
   // 6. Get Interview Report
   async getReport(interviewId: string): Promise<{ report: InterviewReport }> {
+    const headers = await getAuthHeader();
+    let res: Response;
+
     try {
-      const headers = await getAuthHeader();
-      const res = await fetch(`${WORKER_URL}/interviews/${interviewId}/report`, {
+      res = await fetch(`${WORKER_URL}/interviews/${interviewId}/report`, {
         method: 'GET',
         headers,
       });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Failed to fetch report (${res.status})`);
-      }
-
-      return await res.json();
-    } catch (err: any) {
-      console.warn('Backend worker unavailable, using client-side fallback:', err.message);
-      return fallbackGetReport(interviewId);
+    } catch (networkErr: any) {
+      console.error('Network error fetching report:', networkErr);
+      throw new Error('Unable to connect to report service. Please check your network and retry.');
     }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Failed to fetch report (${res.status})`);
+    }
+
+    return await res.json();
   },
 
   // 7. Get All Interviews (History)

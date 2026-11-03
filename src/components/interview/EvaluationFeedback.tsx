@@ -107,6 +107,17 @@ export const EvaluationFeedback: React.FC<EvaluationFeedbackProps> = ({
         </div>
       )}
 
+      {/* Technical Accuracy Assessment */}
+      {evaluation.accuracy_explanation && (
+        <div className="p-4 rounded-[10px] bg-slate-50 border border-[#E5E7EB] text-xs text-[#111827] leading-relaxed">
+          <p className="font-semibold text-xs text-[#475569] uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <Award className="w-3.5 h-3.5 text-[#2563EB]" />
+            <span>Technical Accuracy Verification</span>
+          </p>
+          <p>{evaluation.accuracy_explanation}</p>
+        </div>
+      )}
+
       {/* Structured Analysis Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
         {/* What Went Well */}

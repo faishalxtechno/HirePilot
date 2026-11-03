@@ -75,6 +75,7 @@ export interface AnswerEvaluation {
   clarity: number; // 0-10
   weighted_score?: number; // 0-100
   feedback: string;
+  accuracy_explanation?: string;
   what_went_well: string[];
   missing_points: string[];
   how_to_improve: string[];

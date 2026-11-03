@@ -74,16 +74,43 @@ export async function callGemini(options: GeminiRequestOptions, retries = 2): Pr
   throw lastError || new Error('Failed to generate response from Gemini AI');
 }
 
+export function extractJsonFromAi<T>(rawText: string): T {
+  if (!rawText || typeof rawText !== 'string' || !rawText.trim()) {
+    throw new Error('AI returned an empty or non-string response');
+  }
+
+  const trimmed = rawText.trim();
+
+  // 1. Try stripping markdown code fences
+  const stripped = trimmed
+    .replace(/^```json\s*/i, '')
+    .replace(/^```\s*/i, '')
+    .replace(/```\s*$/i, '')
+    .trim();
+
+  try {
+    return JSON.parse(stripped) as T;
+  } catch {
+    // 2. Extract substring between first '{' and last '}'
+    const firstBrace = trimmed.indexOf('{');
+    const lastBrace = trimmed.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      const candidateJson = trimmed.substring(firstBrace, lastBrace + 1);
+      try {
+        return JSON.parse(candidateJson) as T;
+      } catch (innerErr: any) {
+        throw new Error(`Failed to parse extracted JSON from AI: ${innerErr.message}`);
+      }
+    }
+    throw new Error(`AI response did not contain a valid JSON object. Raw response: ${trimmed.slice(0, 150)}...`);
+  }
+}
+
 export function parseJsonFromAi<T>(rawText: string, fallback: T): T {
   try {
-    // Strip markdown code fences if present
-    const cleaned = rawText
-      .replace(/```json\s*/gi, '')
-      .replace(/```\s*$/gi, '')
-      .trim();
-    return JSON.parse(cleaned) as T;
+    return extractJsonFromAi<T>(rawText);
   } catch (err) {
-    console.error('Failed to parse JSON from AI response:', err, 'Raw:', rawText);
+    console.error('Failed to parse JSON from AI response:', err);
     return fallback;
   }
 }
